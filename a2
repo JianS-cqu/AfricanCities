@@ -1,0 +1,568 @@
+
+##2. from inflow to material
+
+library(tidyverse)
+
+
+read_csv("./inflow_ALL.csv") -> df
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+
+cof %>% 
+  dplyr::filter(bud=="b1") -> c1
+c1 %>% 
+  dplyr::select(Laterite) %>% pull() -> b1_Laterite
+c1 %>% 
+  dplyr::select(Steel) %>% pull() -> b1_Steel
+c1 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b1_Aluminum
+c1 %>% 
+  dplyr::select(Copper) %>% pull() -> b1_Copper
+c1 %>% 
+  dplyr::select(Cement) %>% pull() -> b1_Cement
+c1 %>% 
+  dplyr::select(Gravel) %>% pull() -> b1_Gravel
+c1 %>% 
+  dplyr::select(Sand) %>% pull() -> b1_Sand
+c1 %>% 
+  dplyr::select(Glass) %>% pull() -> b1_Glass
+c1 %>% 
+  dplyr::select(Wood) %>% pull() -> b1_Wood
+c1 %>% 
+  dplyr::select(Brick) %>% pull() -> b1_Brick
+c1 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b1_Asphalt
+c1 %>% 
+  dplyr::select(Plastic) %>% pull() -> b1_Plastic
+c1 %>% 
+  dplyr::select(Rubber) %>% pull() -> b1_Rubber
+
+
+cof %>% 
+  dplyr::filter(bud=="b2") -> c2
+c2 %>% 
+  dplyr::select(Laterite) %>% pull() -> b2_Laterite
+c2 %>% 
+  dplyr::select(Steel) %>% pull() -> b2_Steel
+c2 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b2_Aluminum
+c2 %>% 
+  dplyr::select(Copper) %>% pull() -> b2_Copper
+c2 %>% 
+  dplyr::select(Cement) %>% pull() -> b2_Cement
+c2 %>% 
+  dplyr::select(Gravel) %>% pull() -> b2_Gravel
+c2 %>% 
+  dplyr::select(Sand) %>% pull() -> b2_Sand
+c2 %>% 
+  dplyr::select(Glass) %>% pull() -> b2_Glass
+c2 %>% 
+  dplyr::select(Wood) %>% pull() -> b2_Wood
+c2 %>% 
+  dplyr::select(Brick) %>% pull() -> b2_Brick
+c2 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b2_Asphalt
+c2 %>% 
+  dplyr::select(Plastic) %>% pull() -> b2_Plastic
+c2 %>% 
+  dplyr::select(Rubber) %>% pull() -> b2_Rubber
+
+cof %>% 
+  dplyr::filter(bud=="b3") -> c3
+c3 %>% 
+  dplyr::select(Laterite) %>% pull() -> b3_Laterite
+c3 %>% 
+  dplyr::select(Steel) %>% pull() -> b3_Steel
+c3 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b3_Aluminum
+c3 %>% 
+  dplyr::select(Copper) %>% pull() -> b3_Copper
+c3 %>% 
+  dplyr::select(Cement) %>% pull() -> b3_Cement
+c3 %>% 
+  dplyr::select(Gravel) %>% pull() -> b3_Gravel
+c3 %>% 
+  dplyr::select(Sand) %>% pull() -> b3_Sand
+c3 %>% 
+  dplyr::select(Glass) %>% pull() -> b3_Glass
+c3 %>% 
+  dplyr::select(Wood) %>% pull() -> b3_Wood
+c3 %>% 
+  dplyr::select(Brick) %>% pull() -> b3_Brick
+c3 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b3_Asphalt
+c3 %>% 
+  dplyr::select(Plastic) %>% pull() -> b3_Plastic
+c3 %>% 
+  dplyr::select(Rubber) %>% pull() -> b3_Rubber
+
+cof %>% 
+  dplyr::filter(bud=="b4") -> c4
+c4 %>% 
+  dplyr::select(Laterite) %>% pull() -> b4_Laterite
+c4 %>% 
+  dplyr::select(Steel) %>% pull() -> b4_Steel
+c4 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b4_Aluminum
+c4 %>% 
+  dplyr::select(Copper) %>% pull() -> b4_Copper
+c4 %>% 
+  dplyr::select(Cement) %>% pull() -> b4_Cement
+c4 %>% 
+  dplyr::select(Gravel) %>% pull() -> b4_Gravel
+c4 %>% 
+  dplyr::select(Sand) %>% pull() -> b4_Sand
+c4 %>% 
+  dplyr::select(Glass) %>% pull() -> b4_Glass
+c4 %>% 
+  dplyr::select(Wood) %>% pull() -> b4_Wood
+c4 %>% 
+  dplyr::select(Brick) %>% pull() -> b4_Brick
+c4 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b4_Asphalt
+c4 %>% 
+  dplyr::select(Plastic) %>% pull() -> b4_Plastic
+c4 %>% 
+  dplyr::select(Rubber) %>% pull() -> b4_Rubber
+
+cof %>% 
+  dplyr::filter(bud=="b5") -> c5
+c5 %>% 
+  dplyr::select(Laterite) %>% pull() -> b5_Laterite
+c5 %>% 
+  dplyr::select(Steel) %>% pull() -> b5_Steel
+c5 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b5_Aluminum
+c5 %>% 
+  dplyr::select(Copper) %>% pull() -> b5_Copper
+c5 %>% 
+  dplyr::select(Cement) %>% pull() -> b5_Cement
+c5 %>% 
+  dplyr::select(Gravel) %>% pull() -> b5_Gravel
+c5 %>% 
+  dplyr::select(Sand) %>% pull() -> b5_Sand
+c5 %>% 
+  dplyr::select(Glass) %>% pull() -> b5_Glass
+c5 %>% 
+  dplyr::select(Wood) %>% pull() -> b5_Wood
+c5 %>% 
+  dplyr::select(Brick) %>% pull() -> b5_Brick
+c5 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b5_Asphalt
+c5 %>% 
+  dplyr::select(Plastic) %>% pull() -> b5_Plastic
+c5 %>% 
+  dplyr::select(Rubber) %>% pull() -> b5_Rubber
+
+df %>% 
+  mutate(
+    i1_bud_Steel=in_bs_b1*3*b1_Steel/1000,
+    i2_bud_Steel=in_bs_b2*3*b2_Steel/1000,
+    i3_bud_Steel=in_bs_b3*3*b3_Steel/1000,
+    i4_bud_Steel=in_bs_b4*3.5*b4_Steel/1000,
+    i5_bud_Steel=in_bs_b5*5*b5_Steel/1000,
+    
+    i1_bud_Aluminum=in_bs_b1*3*b1_Aluminum/1000,
+    i2_bud_Aluminum=in_bs_b2*3*b2_Aluminum/1000,
+    i3_bud_Aluminum=in_bs_b3*3*b3_Aluminum/1000,
+    i4_bud_Aluminum=in_bs_b4*3.5*b4_Aluminum/1000,
+    i5_bud_Aluminum=in_bs_b5*5*b5_Aluminum/1000,
+    
+    i1_bud_Copper=in_bs_b1*3*b1_Copper/1000,
+    i2_bud_Copper=in_bs_b2*3*b2_Copper/1000,
+    i3_bud_Copper=in_bs_b3*3*b3_Copper/1000,
+    i4_bud_Copper=in_bs_b4*3.5*b4_Copper/1000,
+    i5_bud_Copper=in_bs_b5*5*b5_Copper/1000,
+    
+    i1_bud_Cement=in_bs_b1*3*b1_Cement/1000,
+    i2_bud_Cement=in_bs_b2*3*b2_Cement/1000,
+    i3_bud_Cement=in_bs_b3*3*b3_Cement/1000,
+    i4_bud_Cement=in_bs_b4*3.5*b4_Cement/1000,
+    i5_bud_Cement=in_bs_b5*5*b5_Cement/1000,
+    
+    i1_bud_Gravel=in_bs_b1*3*b1_Gravel/1000,
+    i2_bud_Gravel=in_bs_b2*3*b2_Gravel/1000,
+    i3_bud_Gravel=in_bs_b3*3*b3_Gravel/1000,
+    i4_bud_Gravel=in_bs_b4*3.5*b4_Gravel/1000,
+    i5_bud_Gravel=in_bs_b5*5*b5_Gravel/1000,
+    
+    i1_bud_Sand=in_bs_b1*3*b1_Sand/1000,
+    i2_bud_Sand=in_bs_b2*3*b2_Sand/1000,
+    i3_bud_Sand=in_bs_b3*3*b3_Sand/1000,
+    i4_bud_Sand=in_bs_b4*3.5*b4_Sand/1000,
+    i5_bud_Sand=in_bs_b5*5*b5_Sand/1000,
+    
+    i1_bud_Glass=in_bs_b1*3*b1_Glass/1000,
+    i2_bud_Glass=in_bs_b2*3*b2_Glass/1000,
+    i3_bud_Glass=in_bs_b3*3*b3_Glass/1000,
+    i4_bud_Glass=in_bs_b4*3.5*b4_Glass/1000,
+    i5_bud_Glass=in_bs_b5*5*b5_Glass/1000,
+    
+    i1_bud_Wood=in_bs_b1*3*b1_Wood/1000,
+    i2_bud_Wood=in_bs_b2*3*b2_Wood/1000,
+    i3_bud_Wood=in_bs_b3*3*b3_Wood/1000,
+    i4_bud_Wood=in_bs_b4*3.5*b4_Wood/1000,
+    i5_bud_Wood=in_bs_b5*5*b5_Wood/1000,
+    
+    i1_bud_Brick=in_bs_b1*3*b1_Brick/1000,
+    i2_bud_Brick=in_bs_b2*3*b2_Brick/1000,
+    i3_bud_Brick=in_bs_b3*3*b3_Brick/1000,
+    i4_bud_Brick=in_bs_b4*3.5*b4_Brick/1000,
+    i5_bud_Brick=in_bs_b5*5*b5_Brick/1000,
+    
+    i1_bud_Asphalt=in_bs_b1*3*b1_Asphalt/1000,
+    i2_bud_Asphalt=in_bs_b2*3*b2_Asphalt/1000,
+    i3_bud_Asphalt=in_bs_b3*3*b3_Asphalt/1000,
+    i4_bud_Asphalt=in_bs_b4*3.5*b4_Asphalt/1000,
+    i5_bud_Asphalt=in_bs_b5*5*b5_Asphalt/1000,
+    
+    i1_bud_Plastic=in_bs_b1*3*b1_Plastic/1000,
+    i2_bud_Plastic=in_bs_b2*3*b2_Plastic/1000,
+    i3_bud_Plastic=in_bs_b3*3*b3_Plastic/1000,
+    i4_bud_Plastic=in_bs_b4*3.5*b4_Plastic/1000,
+    i5_bud_Plastic=in_bs_b5*5*b5_Plastic/1000,
+    
+    i1_bud_Rubber=in_bs_b1*3*b1_Rubber/1000,
+    i2_bud_Rubber=in_bs_b2*3*b2_Rubber/1000,
+    i3_bud_Rubber=in_bs_b3*3*b3_Rubber/1000,
+    i4_bud_Rubber=in_bs_b4*3.5*b4_Rubber/1000,
+    i5_bud_Rubber=in_bs_b5*5*b5_Rubber/1000) -> df1
+
+
+##road
+readxl::read_xlsx("./MI_road.xlsx") -> cof
+cof %>% 
+  dplyr::filter(road=="b1") -> c1
+
+c1 %>% 
+  dplyr::select(Steel) %>% pull() -> b1_Steel
+c1 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b1_Aluminum
+c1 %>% 
+  dplyr::select(Copper) %>% pull() -> b1_Copper
+c1 %>% 
+  dplyr::select(Cement) %>% pull() -> b1_Cement
+c1 %>% 
+  dplyr::select(Gravel) %>% pull() -> b1_Gravel
+c1 %>% 
+  dplyr::select(Sand) %>% pull() -> b1_Sand
+c1 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b1_Asphalt
+
+cof %>% 
+  dplyr::filter(road=="b2") -> c2
+c2 %>% 
+  dplyr::select(Steel) %>% pull() -> b2_Steel
+c2 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b2_Aluminum
+c2 %>% 
+  dplyr::select(Copper) %>% pull() -> b2_Copper
+c2 %>% 
+  dplyr::select(Cement) %>% pull() -> b2_Cement
+c2 %>% 
+  dplyr::select(Gravel) %>% pull() -> b2_Gravel
+c2 %>% 
+  dplyr::select(Sand) %>% pull() -> b2_Sand
+c2 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b2_Asphalt
+
+cof %>% 
+  dplyr::filter(road=="b3") -> c3
+c3 %>% 
+  dplyr::select(Steel) %>% pull() -> b3_Steel
+c3 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b3_Aluminum
+c3 %>% 
+  dplyr::select(Copper) %>% pull() -> b3_Copper
+c3 %>% 
+  dplyr::select(Cement) %>% pull() -> b3_Cement
+c3 %>% 
+  dplyr::select(Gravel) %>% pull() -> b3_Gravel
+c3 %>% 
+  dplyr::select(Sand) %>% pull() -> b3_Sand
+c3 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b3_Asphalt
+
+cof %>% 
+  dplyr::filter(road=="b4") -> c4
+c4 %>% 
+  dplyr::select(Steel) %>% pull() -> b4_Steel
+c4 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b4_Aluminum
+c4 %>% 
+  dplyr::select(Copper) %>% pull() -> b4_Copper
+c4 %>% 
+  dplyr::select(Cement) %>% pull() -> b4_Cement
+c4 %>% 
+  dplyr::select(Gravel) %>% pull() -> b4_Gravel
+c4 %>% 
+  dplyr::select(Sand) %>% pull() -> b4_Sand
+c4 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b4_Asphalt
+
+cof %>% 
+  dplyr::filter(road=="b5") -> c5
+c5 %>% 
+  dplyr::select(Steel) %>% pull() -> b5_Steel
+c5 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b5_Aluminum
+c5 %>% 
+  dplyr::select(Copper) %>% pull() -> b5_Copper
+c5 %>% 
+  dplyr::select(Cement) %>% pull() -> b5_Cement
+c5 %>% 
+  dplyr::select(Gravel) %>% pull() -> b5_Gravel
+c5 %>% 
+  dplyr::select(Sand) %>% pull() -> b5_Sand
+c5 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b5_Asphalt
+
+cof %>% 
+  dplyr::filter(road=="b6") -> c6
+c6 %>% 
+  dplyr::select(Steel) %>% pull() -> b6_Steel
+c6 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b6_Aluminum
+c6 %>% 
+  dplyr::select(Copper) %>% pull() -> b6_Copper
+c6 %>% 
+  dplyr::select(Cement) %>% pull() -> b6_Cement
+c6 %>% 
+  dplyr::select(Gravel) %>% pull() -> b6_Gravel
+c6 %>% 
+  dplyr::select(Sand) %>% pull() -> b6_Sand
+c6 %>% 
+  dplyr::select(Asphalt) %>% pull() -> b6_Asphalt
+
+df1 %>% 
+  mutate(
+    
+    i1_road_Steel=in_road_b1*b1_Steel,
+    i2_road_Steel=in_road_b2*b2_Steel,
+    i3_road_Steel=in_road_b3*b3_Steel,
+    i4_road_Steel=in_road_b4*b4_Steel,
+    i5_road_Steel=in_road_b5*b5_Steel,
+    i6_road_Steel=in_road_b6*b6_Steel,
+    
+    i1_road_Aluminum=in_road_b1*b1_Aluminum,
+    i2_road_Aluminum=in_road_b2*b2_Aluminum,
+    i3_road_Aluminum=in_road_b3*b3_Aluminum,
+    i4_road_Aluminum=in_road_b4*b4_Aluminum,
+    i5_road_Aluminum=in_road_b5*b5_Aluminum,
+    i6_road_Aluminum=in_road_b6*b6_Aluminum,
+    
+    i1_road_Copper=in_road_b1*b1_Copper,
+    i2_road_Copper=in_road_b2*b2_Copper,
+    i3_road_Copper=in_road_b3*b3_Copper,
+    i4_road_Copper=in_road_b4*b4_Copper,
+    i5_road_Copper=in_road_b5*b5_Copper,
+    i6_road_Copper=in_road_b6*b6_Copper,
+    
+    i1_road_Cement=in_road_b1*b1_Cement,
+    i2_road_Cement=in_road_b2*b2_Cement,
+    i3_road_Cement=in_road_b3*b3_Cement,
+    i4_road_Cement=in_road_b4*b4_Cement,
+    i5_road_Cement=in_road_b5*b5_Cement,
+    i6_road_Cement=in_road_b6*b6_Cement,
+    
+    i1_road_Gravel=in_road_b1*b1_Gravel,
+    i2_road_Gravel=in_road_b2*b2_Gravel,
+    i3_road_Gravel=in_road_b3*b3_Gravel,
+    i4_road_Gravel=in_road_b4*b4_Gravel,
+    i5_road_Gravel=in_road_b5*b5_Gravel,
+    i6_road_Gravel=in_road_b6*b6_Gravel,
+    
+    i1_road_Sand=in_road_b1*b1_Sand,
+    i2_road_Sand=in_road_b2*b2_Sand,
+    i3_road_Sand=in_road_b3*b3_Sand,
+    i4_road_Sand=in_road_b4*b4_Sand,
+    i5_road_Sand=in_road_b5*b5_Sand,
+    i6_road_Sand=in_road_b6*b6_Sand,
+    
+    i1_road_Asphalt=in_road_b1*b1_Asphalt,
+    i2_road_Asphalt=in_road_b2*b2_Asphalt,
+    i3_road_Asphalt=in_road_b3*b3_Asphalt,
+    i4_road_Asphalt=in_road_b4*b4_Asphalt,
+    i5_road_Asphalt=in_road_b5*b5_Asphalt,
+    i6_road_Asphalt=in_road_b6*b6_Asphalt,
+    
+    i_rail_Steel=in_road_rail*209.8689333,
+    i_rail_Aluminum=in_road_rail*24.69046275,
+    i_rail_Copper=in_road_rail*12.34523137,
+    i_rail_Cement=in_road_rail*316.2713287,
+    i_rail_Gravel=in_road_rail*4233.578989,
+    i_rail_Sand=in_road_rail*1813.909091,
+    i_rail_Wood=in_road_rail*99.0228) -> df2
+
+
+##power
+readxl::read_xlsx("./MI_epoint2.xlsx") -> cof
+
+cof %>% 
+  dplyr::filter(ppp=="b1") -> c1
+c1 %>% 
+  dplyr::select(Steel) %>% pull() -> b1_Steel
+c1 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b1_Aluminum
+c1 %>% 
+  dplyr::select(Copper) %>% pull() -> b1_Copper
+c1 %>% 
+  dplyr::select(Cement) %>% pull() -> b1_Cement
+c1 %>% 
+  dplyr::select(Gravel) %>% pull() -> b1_Gravel
+c1 %>% 
+  dplyr::select(Sand) %>% pull() -> b1_Sand
+
+
+cof %>% 
+  dplyr::filter(ppp=="b2") -> c2
+c2 %>% 
+  dplyr::select(Steel) %>% pull() -> b2_Steel
+c2 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b2_Aluminum
+c2 %>% 
+  dplyr::select(Copper) %>% pull() -> b2_Copper
+c2 %>% 
+  dplyr::select(Cement) %>% pull() -> b2_Cement
+c2 %>% 
+  dplyr::select(Gravel) %>% pull() -> b2_Gravel
+c2 %>% 
+  dplyr::select(Sand) %>% pull() -> b2_Sand
+
+
+cof %>% 
+  dplyr::filter(ppp=="b3") -> c3
+c3 %>% 
+  dplyr::select(Steel) %>% pull() -> b3_Steel
+c3 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b3_Aluminum
+c3 %>% 
+  dplyr::select(Copper) %>% pull() -> b3_Copper
+c3 %>% 
+  dplyr::select(Cement) %>% pull() -> b3_Cement
+c3 %>% 
+  dplyr::select(Gravel) %>% pull() -> b3_Gravel
+c3 %>% 
+  dplyr::select(Sand) %>% pull() -> b3_Sand
+
+cof %>% 
+  dplyr::filter(ppp=="b4") -> c4
+c4 %>% 
+  dplyr::select(Steel) %>% pull() -> b4_Steel
+c4 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b4_Aluminum
+c4 %>% 
+  dplyr::select(Copper) %>% pull() -> b4_Copper
+c4 %>% 
+  dplyr::select(Cement) %>% pull() -> b4_Cement
+c4 %>% 
+  dplyr::select(Gravel) %>% pull() -> b4_Gravel
+c4 %>% 
+  dplyr::select(Sand) %>% pull() -> b4_Sand
+
+cof %>% 
+  dplyr::filter(ppp=="b5") -> c5
+c5 %>% 
+  dplyr::select(Steel) %>% pull() -> b5_Steel
+c5 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b5_Aluminum
+c5 %>% 
+  dplyr::select(Copper) %>% pull() -> b5_Copper
+c5 %>% 
+  dplyr::select(Cement) %>% pull() -> b5_Cement
+c5 %>% 
+  dplyr::select(Gravel) %>% pull() -> b5_Gravel
+c5 %>% 
+  dplyr::select(Sand) %>% pull() -> b5_Sand
+
+cof %>% 
+  dplyr::filter(ppp=="b6") -> c6
+c6 %>% 
+  dplyr::select(Steel) %>% pull() -> b6_Steel
+c6 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b6_Aluminum
+c6 %>% 
+  dplyr::select(Copper) %>% pull() -> b6_Copper
+c6 %>% 
+  dplyr::select(Cement) %>% pull() -> b6_Cement
+c6 %>% 
+  dplyr::select(Gravel) %>% pull() -> b6_Gravel
+c6 %>% 
+  dplyr::select(Sand) %>% pull() -> b6_Sand
+
+cof %>% 
+  dplyr::filter(ppp=="b7") -> c7
+c7 %>% 
+  dplyr::select(Steel) %>% pull() -> b7_Steel
+c7 %>% 
+  dplyr::select(Aluminum) %>% pull() -> b7_Aluminum
+c7 %>% 
+  dplyr::select(Copper) %>% pull() -> b7_Copper
+c7 %>% 
+  dplyr::select(Cement) %>% pull() -> b7_Cement
+c7 %>% 
+  dplyr::select(Gravel) %>% pull() -> b7_Gravel
+c7 %>% 
+  dplyr::select(Sand) %>% pull() -> b7_Sand
+
+
+df2 %>% 
+  mutate(
+    
+    i1_elec_Steel=in_elec_b1/1000/2500*b1_Steel,
+    i2_elec_Steel=in_elec_b2/1000/4500*b2_Steel,
+    i3_elec_Steel=in_elec_b3/1000/1500*b3_Steel,
+    i4_elec_Steel=in_elec_b4/1000/7000*b4_Steel,
+    i5_elec_Steel=in_elec_b5/1000/6000*b5_Steel,
+    i6_elec_Steel=in_elec_b6/1000/5500*b6_Steel,
+    i7_elec_Steel=in_elec_b7/1000/6500*b7_Steel,
+    
+    i1_elec_Aluminum=in_elec_b1/1000/2500*b1_Aluminum,
+    i2_elec_Aluminum=in_elec_b2/1000/4500*b2_Aluminum,
+    i3_elec_Aluminum=in_elec_b3/1000/1500*b3_Aluminum,
+    i4_elec_Aluminum=in_elec_b4/1000/7000*b4_Aluminum,
+    i5_elec_Aluminum=in_elec_b5/1000/6000*b5_Aluminum,
+    i6_elec_Aluminum=in_elec_b6/1000/5500*b6_Aluminum,
+    i7_elec_Aluminum=in_elec_b7/1000/6500*b7_Aluminum,
+    
+    i1_elec_Copper=in_elec_b1/1000/2500*b1_Copper,
+    i2_elec_Copper=in_elec_b2/1000/4500*b2_Copper,
+    i3_elec_Copper=in_elec_b3/1000/1500*b3_Copper,
+    i4_elec_Copper=in_elec_b4/1000/7000*b4_Copper,
+    i5_elec_Copper=in_elec_b5/1000/6000*b5_Copper,
+    i6_elec_Copper=in_elec_b6/1000/5500*b6_Copper,
+    i7_elec_Copper=in_elec_b7/1000/6500*b7_Copper,
+    
+    i1_elec_Cement=in_elec_b1/1000/2500*b1_Cement,
+    i2_elec_Cement=in_elec_b2/1000/4500*b2_Cement,
+    i3_elec_Cement=in_elec_b3/1000/1500*b3_Cement,
+    i4_elec_Cement=in_elec_b4/1000/7000*b4_Cement,
+    i5_elec_Cement=in_elec_b5/1000/6000*b5_Cement,
+    i6_elec_Cement=in_elec_b6/1000/5500*b6_Cement,
+    i7_elec_Cement=in_elec_b7/1000/6500*b7_Cement,
+    
+    i1_elec_Gravel=in_elec_b1/1000/2500*b1_Gravel,
+    i2_elec_Gravel=in_elec_b2/1000/4500*b2_Gravel,
+    i3_elec_Gravel=in_elec_b3/1000/1500*b3_Gravel,
+    i4_elec_Gravel=in_elec_b4/1000/7000*b4_Gravel,
+    i5_elec_Gravel=in_elec_b5/1000/6000*b5_Gravel,
+    i6_elec_Gravel=in_elec_b6/1000/5500*b6_Gravel,
+    i7_elec_Gravel=in_elec_b7/1000/6500*b7_Gravel,
+    
+    i1_elec_Sand=in_elec_b1/1000/2500*b1_Sand,
+    i2_elec_Sand=in_elec_b2/1000/4500*b2_Sand,
+    i3_elec_Sand=in_elec_b3/1000/1500*b3_Sand,
+    i4_elec_Sand=in_elec_b4/1000/7000*b4_Sand,
+    i5_elec_Sand=in_elec_b5/1000/6000*b5_Sand,
+    i6_elec_Sand=in_elec_b6/1000/5500*b6_Sand,
+    i7_elec_Sand=in_elec_b7/1000/6500*b7_Sand,
+    
+    i_elec_Steel=in_elec_line*20,
+    i_elec_Aluminum=in_elec_line*9,
+    i_elec_Cement=in_elec_line*4.5,
+    i_elec_Gravel=in_elec_line*14,
+    i_elec_Sand=in_elec_line*6) %>% 
+  dplyr::select(-c(2:21)) %>% 
+  write_csv("./inflow_ALL_mat.csv")
+
+
+

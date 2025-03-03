@@ -1,6 +1,6 @@
 
 
-##5. Building azimuth or orientation, 
+##5. Building azimuth or orientation
 
 library(tidyverse)
 library(sf)

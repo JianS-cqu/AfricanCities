@@ -1,0 +1,251 @@
+
+
+##7. wind direction, best direction, and energy saving
+
+library(tidyverse)
+library(terra)
+
+as.character(fs::dir_ls("AFCC/wind/")) %>% 
+  as_tibble() %>% 
+  set_names(c("acode")) %>% 
+  separate(acode, into = c("aa", "bb"), sep = "=") %>% 
+  dplyr::select(-aa) %>% 
+  mutate(bb = str_remove_all(bb, ".tif")) %>% 
+  set_names(c("acode")) %>% 
+  mutate(acode=as.numeric(acode)) %>% 
+  unique() %>% 
+  arrange(acode) %>% 
+  mutate(xx=row_number()) -> rdss
+
+afc_ws <- function(ccc) {
+  rdss %>% 
+    dplyr::filter(acode==ccc) %>% 
+    dplyr::select(xx) %>% pull() -> nms
+  rast(paste0("AFCC/wind/u10_valid_time=",ccc,".tif")) -> a1
+  rast(paste0("AFCC/wind/v10_valid_time=",ccc,".tif")) -> a2
+  
+  sqrt(a1*a1 + a2*a2) -> ws
+  (270 - atan2(a1, a2) * 180 / pi) %% 360 -> wd
+  origin(ws) <- c(0,0)
+  origin(wd) <- c(0,0)
+  
+  ws %>% writeRaster(paste0("AFCC/wind2/ws_",nms,".tif"))
+  wd %>% writeRaster(paste0("AFCC/wind2/wd_",nms,".tif"))
+}
+
+
+rdss %>% 
+  dplyr::select(1) %>% 
+  set_names("ccc") %>% 
+  mutate(js=map(ccc, afc_ws))
+
+
+
+
+library(tidyverse)
+library(terra)
+
+
+afc_ww <- function(nms) {
+  
+  rast(paste0("AFCC/wind2/wd_",nms,".tif")) -> df
+  
+  df[df <= 22.5] <- 1
+  df[df > 1 & df <= 45] <- 2
+  df[df > 2 & df <= 67.5] <- 3
+  df[df > 3 & df <= 90] <- 4
+  
+  df[df > 4 & df <= 112.5] <- 5
+  df[df > 5 & df <= 135] <- 6
+  df[df > 6 & df <= 157.5] <- 7
+  df[df > 7 & df <= 180] <- 8
+  
+  df[df > 8 & df <= 202.5] <- 9
+  df[df > 9 & df <= 225] <- 10
+  df[df > 10 & df <= 247.5] <- 11
+  df[df > 11 & df <= 270] <- 12
+  
+  df[df > 12 & df <= 292.5] <- 13
+  df[df > 13 & df <= 315] <- 14
+  df[df > 14 & df <= 337.5] <- 15
+  df[df > 15 & df <= 360] <- 16
+  
+  df %>% 
+    writeRaster(paste0("AFCC/wind2/reWd_",nms,".tif"))
+  
+}
+
+seq(1,12) %>% 
+  as_tibble() %>% 
+  set_names("nms") %>% 
+  mutate(js=map(nms, afc_ww))
+
+
+
+
+
+library(tidyverse)
+library(terra)
+library(sf)
+
+read_sf("AFCC/shp/AFC3.shp") %>% 
+  dplyr::filter(city!=7375&city!=3147&city!=1345&city!=6010)-> city
+
+mode_fun <- function(x) {
+  x <- na.omit(x)
+  if (length(x) == 0) return(NA)
+  tab <- table(x)
+  as.numeric(names(tab)[which.max(tab)])
+}
+
+afc_wc <- function(path, acode) {
+  rast(path) -> btv
+  city %>% 
+    dplyr::filter(city==acode) %>% 
+    st_transform(4326) -> ctt
+  btv %>% 
+    crop(ctt) %>% 
+    mask(ctt) %>% 
+    `[` %>% 
+    na.omit() %>% 
+    mode_fun()
+}
+
+crossing(
+  as.character(fs::dir_ls("AFCC/wind/wind3/")),
+  city$city
+) %>% 
+  set_names("path", "acode") -> rdss
+
+#####################################################################
+#####################################################################
+
+usethis::edit_r_profile()
+
+library(parallel)
+makeCluster(6) -> cl
+
+
+parLapply(cl, seq(1, nrow(rdss), by = 6197), function(x){
+  rdss %>% 
+    slice(x:(x+6196)) %>% 
+    mutate(jss=map2(path, acode, afc_wc)) %>% 
+    write_rds(paste0("AFCC/ztemp/z_", x, ".rds"))
+}
+)
+
+
+lapply(fs::dir_ls("AFCC/ztemp"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() %>% 
+  unnest(jss) -> df
+
+df %>% 
+  mutate(path = str_remove_all(path, "AFCC/wind/wind3/"), 
+         path = str_remove_all(path, ".tif")) %>% 
+  spread(path, jss) %>% 
+  write_csv("AFCC/wind/wd_ALLmonth.csv")
+
+
+library(tidyverse)
+
+
+read_csv("./wind_all.csv") %>% 
+  na.omit() -> df0
+
+df0 %>% 
+  mutate(direction2=direction*22.5) -> df1
+
+
+df0 %>% 
+  split(.$acode) %>% 
+  map(function(x) 
+    x %>% 
+      group_by(direction) %>% 
+      summarise(a1=n()) %>% 
+      arrange(-a1) %>% 
+      slice(1) %>% 
+      dplyr::select(1)
+  ) -> df2
+
+df2 %>% 
+  bind_rows() -> df3
+
+df0 %>% 
+  split(.$acode) %>% 
+  map(function(x) 
+    x %>% dplyr::select(acode) %>% unique()
+  ) %>% 
+  bind_rows()-> nms
+
+
+data.frame(nms, df3) %>% 
+  as_tibble() %>% 
+  rename(best_dr=direction) -> bb
+
+df1 %>% 
+  left_join(bb) %>% 
+  na.omit() %>% 
+  mutate(best2=best_dr*22.5) %>% 
+  mutate(best3=(best2-direction2)*pi/180) %>% 
+  mutate(flow=abs(speed*cos(best3))) %>% 
+  mutate(flow=if_else(flow>2, 2, flow)) %>% 
+  mutate(eng=flow*35/100) %>% 
+  write_csv("AFCC/wind/wind_bestDr2.csv")
+
+
+
+read_csv("AFCC/csv/afc_NMS.csv") %>% 
+  dplyr::select(city, ISO3) %>% 
+  set_names("acode","code") -> nms
+read_csv("AFCC/sunrise/fwy_citaISO.csv") -> fwj
+read_csv("AFCC/sunrise/cCity_SolarByCita.csv") %>% 
+  dplyr::select(1) %>% unique() %>% set_names("acode") -> a1
+read_csv("AFCC/wind/wind_bestDr2.csv") -> ww
+a1 %>% 
+  left_join(ww) -> ww1
+a1 %>% 
+  left_join(nms) -> a11
+a11 %>% 
+  left_join(fwj) %>% 
+  na.omit() %>% 
+  left_join(ww1) %>% 
+  na.omit() %>% 
+  mutate(real1=(direction2-cita)*pi/180) %>% 
+  mutate(flow_real=abs(speed*cos(real1))) %>% 
+  mutate(flow_real=if_else(flow_real>2, 2, flow_real)) %>% 
+  dplyr::select(acode, month, flow, flow_real) -> zzz
+zzz %>% 
+  mutate(zz=(flow-flow_real)/flow_real) %>% 
+  mutate(flow_real=if_else(zz<0, flow, flow_real)) %>% 
+  dplyr::select(-zz) %>% 
+  split(.$acode) %>% 
+  map(function(x)
+    x %>% dplyr::select(-acode) %>% colSums) %>% 
+  bind_rows() -> df1
+zzz %>% 
+  mutate(zz=(flow-flow_real)/flow_real) %>% 
+  mutate(flow_real=if_else(zz<0, flow, flow_real)) %>% 
+  dplyr::select(-zz) %>% 
+  split(.$acode) %>% 
+  map(function(x)
+    x %>% dplyr::select(acode) %>% unique) %>% 
+  bind_rows() -> nnn
+data.frame(nnn, df1) %>% 
+  as_tibble() %>% 
+  mutate(zzz=(flow-flow_real)/flow_real) -> df2
+ww1 %>% 
+  dplyr::select(acode, eng) %>% 
+  na.omit() %>% 
+  split(.$acode) %>% 
+  map(colMeans) %>% 
+  bind_rows() -> yyy
+df2 %>% 
+  left_join(yyy) %>% 
+  mutate(rrr=zzz*eng*0.66) -> df3
+
+df3 %>% 
+  writexl::write_xlsx("AFCC/wind/wind_ratio.xlsx")
+
+

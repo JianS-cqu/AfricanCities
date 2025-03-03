@@ -1,0 +1,134 @@
+
+
+##4. sunrise, sunset, duration, and zenith in Year 2023
+
+
+library(suncalc)
+library(tidyverse)
+library(lutz)
+library(solarPos)
+
+
+read_csv("./afc_DemJwd.csv") %>% na.omit() -> df ##city location and elevation
+seq.Date(from = as.Date("2023-01-01"), to = as.Date("2023-12-31"), by = "day") %>% 
+  as_tibble() %>% 
+  set_names("dttt") %>% 
+  mutate(nnn=row_number()) -> d_all1
+
+afc_rise <- function(datt) {
+  
+  d_all1 %>% 
+    dplyr::filter(dttt==datt) %>% 
+    dplyr::select(nnn) %>% pull() -> nms
+  d_all1 %>% 
+    dplyr::filter(dttt==datt) %>% 
+    dplyr::select(dttt) %>% pull() -> ttt
+  
+  df %>% 
+    mutate(datt = ttt) %>%
+    rowwise() %>% 
+    mutate(
+      aa = list(
+        getSunlightTimes(
+          date = datt,
+          lat = latt,
+          lon = lngg,
+          keep = c("sunrise", "sunset"),
+          tz = tz_lookup_coords(lat = latt, lon = lngg, warn = FALSE)
+        ) %>%
+          as_tibble() %>%
+          dplyr::select(sunrise, sunset) %>%
+          mutate(
+            sunrise = as.character(sunrise),
+            sunset = as.character(sunset)
+          )
+      )
+    ) %>%
+    unnest_wider(aa) %>%
+    dplyr::select(-dem, -lngg, -latt) %>% 
+    mutate(start=sunrise,
+           end=sunset) %>% 
+    separate(start, into = c("r1", "rise"), sep = " ") %>% 
+    separate(end, into = c("s1", "down"), sep = " ") %>% 
+    dplyr::select(-r1, -s1) %>% 
+    separate(rise, into = c("a1", "a2","a3"), sep = ":") %>% 
+    separate(down, into = c("b1", "b2","b3"), sep = ":") %>% 
+    dplyr::select(-a2,-a3,-b2,-b3) %>% 
+    mutate(a1=as.numeric(a1),
+           b1=as.numeric(b1)) %>% 
+    rename(rise=a1,down=b1) %>% 
+    mutate(nn2=nms)
+  
+}
+
+d_all1 %>% 
+  select(dttt) %>% 
+  set_names("datt") -> rdss
+
+
+
+
+
+#####################################################################
+#####################################################################
+#####################################################################
+
+usethis::edit_r_profile()
+
+
+library(parallel)
+
+makeCluster(8) -> cl
+
+parLapply(cl, seq(1, nrow(rdss), by = 5), function(x){
+  rdss %>% 
+    slice(x:(x+4)) %>% 
+    mutate(jss=map(datt, afc_rise)) %>% 
+    write_rds(paste0("AFCC/ztemp/z_", x, ".rds"))
+}
+)
+
+
+
+
+lapply(fs::dir_ls("AFCC/ztemp"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df1
+
+df1 %>% 
+  dplyr::select(-datt) %>% 
+  unnest(jss) -> df
+
+df %>% 
+  write_csv("./sunrise.csv")
+
+
+
+read_csv("./afc_DemJwd.csv") -> dem
+read_csv("./sunrise.csv") %>% 
+  dplyr::select(-sunrise, -sunset) %>% 
+  separate(datt, into = c("yy", "mm","dd"), sep = "-") %>% 
+  left_join(dem) %>% 
+  mutate(yy=as.numeric(yy),
+         mm=as.numeric(mm),
+         dd=as.numeric(dd)) %>% 
+  rowwise() %>%
+  mutate(
+    time_hrs = list(seq(rise + 1, down, by = 1)),  # 生成时间序列
+    aa = list(
+      julianDay(
+        yy, mm, dd,
+        seq(rise + 1, down, by = 1), 0, 0,
+        tz = as.numeric(format(with_tz(now(tzone = "UTC"), tzone = tz_lookup_coords(lat = latt, lon = lngg, warn = F)), "%z")) / 100
+      ) %>%
+        solarPosition(lngg, latt) %>%
+        as_tibble() %>%
+        dplyr::select(1)
+    )
+  ) %>%
+  unnest(c(time_hrs, aa)) %>% 
+  mutate(zenith=if_else(zenith>=90, 89.99999999,zenith)) %>% 
+  write_csv("./sun_all.csv")
+
+

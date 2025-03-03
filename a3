@@ -1,0 +1,4624 @@
+
+
+
+##3. from material to carbon emissions
+library(tidyverse)
+
+read_csv("./inflow_ALL_mat.csv") -> df
+
+
+readxl::read_xlsx("./carbonIntensity2.xlsx") %>% 
+  dplyr::filter(Sectors=="building") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link",Product, Materials) %>% 
+  spread(Process, Carbon) -> mfd
+
+
+##b1  
+mfd %>% 
+  dplyr::filter(link=="b1_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Aluminum_End
+
+mfd %>% 
+  dplyr::filter(link=="b1_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Steel_End
+
+mfd %>% 
+  dplyr::filter(link=="b1_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Copper_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Cement_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Gravel_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Sand_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Glass") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Glass_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Glass") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Glass_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Glass") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Glass_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Glass") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Glass_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Glass") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Glass_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Wood") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Wood_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Wood") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Wood_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Wood") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Wood_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Wood") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Wood_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Wood") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Wood_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Brick") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Brick_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Brick") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Brick_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Brick") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Brick_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Brick") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Brick_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Brick") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Brick_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Asphalt_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Plastic") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Plastic_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Plastic") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Plastic_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Plastic") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Plastic_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Plastic") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Plastic_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Plastic") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Plastic_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b1_Rubber") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b1_Rubber_Extraction
+mfd %>% 
+  dplyr::filter(link=="b1_Rubber") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b1_Rubber_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b1_Rubber") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b1_Rubber_Operational
+mfd %>% 
+  dplyr::filter(link=="b1_Rubber") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b1_Rubber_Transportation
+mfd %>% 
+  dplyr::filter(link=="b1_Rubber") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b1_Rubber_End
+
+
+
+##b2  
+mfd %>% 
+  dplyr::filter(link=="b2_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Aluminum_End
+
+mfd %>% 
+  dplyr::filter(link=="b2_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Steel_End
+
+mfd %>% 
+  dplyr::filter(link=="b2_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Copper_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Cement_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Gravel_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Sand_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Glass") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Glass_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Glass") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Glass_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Glass") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Glass_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Glass") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Glass_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Glass") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Glass_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Wood") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Wood_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Wood") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Wood_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Wood") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Wood_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Wood") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Wood_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Wood") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Wood_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Brick") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Brick_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Brick") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Brick_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Brick") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Brick_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Brick") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Brick_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Brick") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Brick_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Asphalt_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Plastic") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Plastic_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Plastic") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Plastic_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Plastic") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Plastic_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Plastic") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Plastic_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Plastic") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Plastic_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b2_Rubber") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b2_Rubber_Extraction
+mfd %>% 
+  dplyr::filter(link=="b2_Rubber") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b2_Rubber_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b2_Rubber") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b2_Rubber_Operational
+mfd %>% 
+  dplyr::filter(link=="b2_Rubber") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b2_Rubber_Transportation
+mfd %>% 
+  dplyr::filter(link=="b2_Rubber") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b2_Rubber_End
+
+
+##b3  
+mfd %>% 
+  dplyr::filter(link=="b3_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Aluminum_End
+
+mfd %>% 
+  dplyr::filter(link=="b3_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Steel_End
+
+mfd %>% 
+  dplyr::filter(link=="b3_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Copper_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Cement_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Gravel_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Sand_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Glass") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Glass_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Glass") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Glass_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Glass") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Glass_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Glass") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Glass_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Glass") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Glass_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Wood") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Wood_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Wood") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Wood_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Wood") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Wood_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Wood") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Wood_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Wood") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Wood_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Brick") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Brick_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Brick") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Brick_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Brick") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Brick_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Brick") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Brick_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Brick") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Brick_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Asphalt_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Plastic") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Plastic_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Plastic") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Plastic_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Plastic") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Plastic_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Plastic") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Plastic_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Plastic") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Plastic_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b3_Rubber") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b3_Rubber_Extraction
+mfd %>% 
+  dplyr::filter(link=="b3_Rubber") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b3_Rubber_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b3_Rubber") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b3_Rubber_Operational
+mfd %>% 
+  dplyr::filter(link=="b3_Rubber") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b3_Rubber_Transportation
+mfd %>% 
+  dplyr::filter(link=="b3_Rubber") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b3_Rubber_End
+
+
+##b4  
+mfd %>% 
+  dplyr::filter(link=="b4_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Aluminum_End
+
+mfd %>% 
+  dplyr::filter(link=="b4_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Steel_End
+
+mfd %>% 
+  dplyr::filter(link=="b4_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Copper_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Cement_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Gravel_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Sand_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Glass") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Glass_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Glass") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Glass_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Glass") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Glass_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Glass") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Glass_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Glass") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Glass_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Wood") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Wood_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Wood") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Wood_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Wood") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Wood_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Wood") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Wood_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Wood") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Wood_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Brick") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Brick_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Brick") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Brick_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Brick") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Brick_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Brick") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Brick_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Brick") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Brick_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Asphalt_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Plastic") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Plastic_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Plastic") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Plastic_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Plastic") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Plastic_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Plastic") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Plastic_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Plastic") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Plastic_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b4_Rubber") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b4_Rubber_Extraction
+mfd %>% 
+  dplyr::filter(link=="b4_Rubber") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b4_Rubber_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b4_Rubber") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b4_Rubber_Operational
+mfd %>% 
+  dplyr::filter(link=="b4_Rubber") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b4_Rubber_Transportation
+mfd %>% 
+  dplyr::filter(link=="b4_Rubber") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b4_Rubber_End
+
+
+##b5  
+mfd %>% 
+  dplyr::filter(link=="b5_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Aluminum_End
+
+mfd %>% 
+  dplyr::filter(link=="b5_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Steel_End
+
+mfd %>% 
+  dplyr::filter(link=="b5_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Copper_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Cement_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Gravel_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Sand_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Glass") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Glass_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Glass") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Glass_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Glass") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Glass_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Glass") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Glass_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Glass") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Glass_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Wood") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Wood_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Wood") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Wood_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Wood") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Wood_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Wood") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Wood_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Wood") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Wood_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Brick") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Brick_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Brick") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Brick_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Brick") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Brick_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Brick") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Brick_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Brick") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Brick_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Asphalt_End
+
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Plastic") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Plastic_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Plastic") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Plastic_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Plastic") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Plastic_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Plastic") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Plastic_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Plastic") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Plastic_End
+
+
+mfd %>% 
+  dplyr::filter(link=="b5_Rubber") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> b5_Rubber_Extraction
+mfd %>% 
+  dplyr::filter(link=="b5_Rubber") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> b5_Rubber_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="b5_Rubber") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> b5_Rubber_Operational
+mfd %>% 
+  dplyr::filter(link=="b5_Rubber") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> b5_Rubber_Transportation
+mfd %>% 
+  dplyr::filter(link=="b5_Rubber") %>% 
+  dplyr::select(End) %>% 
+  pull() -> b5_Rubber_End
+
+
+
+df %>% 
+  mutate(
+    c1_bud_Aluminum_Extraction=i1_bud_Aluminum*b1_Aluminum_Extraction/1000,
+    c1_bud_Aluminum_Manufacturing=i1_bud_Aluminum*b1_Aluminum_Manufacturing/1000,
+    c1_bud_Aluminum_Operational=i1_bud_Aluminum*b1_Aluminum_Operational/1000,
+    c1_bud_Aluminum_Transportation=i1_bud_Aluminum*b1_Aluminum_Transportation/1000,
+    c1_bud_Aluminum_End=i1_bud_Aluminum*b1_Aluminum_End/1000,
+    
+    c1_bud_Steel_Extraction=i1_bud_Steel*b1_Steel_Extraction/1000,
+    c1_bud_Steel_Manufacturing=i1_bud_Steel*b1_Steel_Manufacturing/1000,
+    c1_bud_Steel_Operational=i1_bud_Steel*b1_Steel_Operational/1000,
+    c1_bud_Steel_Transportation=i1_bud_Steel*b1_Steel_Transportation/1000,
+    c1_bud_Steel_End=i1_bud_Steel*b1_Steel_End/1000,
+    
+    c1_bud_Copper_Extraction=i1_bud_Copper*b1_Copper_Extraction/1000,
+    c1_bud_Copper_Manufacturing=i1_bud_Copper*b1_Copper_Manufacturing/1000,
+    c1_bud_Copper_Operational=i1_bud_Copper*b1_Copper_Operational/1000,
+    c1_bud_Copper_Transportation=i1_bud_Copper*b1_Copper_Transportation/1000,
+    c1_bud_Copper_End=i1_bud_Copper*b1_Copper_End/1000,
+    
+    c1_bud_Cement_Extraction=i1_bud_Cement*b1_Cement_Extraction/1000,
+    c1_bud_Cement_Manufacturing=i1_bud_Cement*b1_Cement_Manufacturing/1000,
+    c1_bud_Cement_Operational=i1_bud_Cement*b1_Cement_Operational/1000,
+    c1_bud_Cement_Transportation=i1_bud_Cement*b1_Cement_Transportation/1000,
+    c1_bud_Cement_End=i1_bud_Cement*b1_Cement_End/1000,
+    
+    c1_bud_Gravel_Extraction=i1_bud_Gravel*b1_Gravel_Extraction/1000,
+    c1_bud_Gravel_Manufacturing=i1_bud_Gravel*b1_Gravel_Manufacturing/1000,
+    c1_bud_Gravel_Operational=i1_bud_Gravel*b1_Gravel_Operational/1000,
+    c1_bud_Gravel_Transportation=i1_bud_Gravel*b1_Gravel_Transportation/1000,
+    c1_bud_Gravel_End=i1_bud_Gravel*b1_Gravel_End/1000,
+    
+    c1_bud_Sand_Extraction=i1_bud_Sand*b1_Sand_Extraction/1000,
+    c1_bud_Sand_Manufacturing=i1_bud_Sand*b1_Sand_Manufacturing/1000,
+    c1_bud_Sand_Operational=i1_bud_Sand*b1_Sand_Operational/1000,
+    c1_bud_Sand_Transportation=i1_bud_Sand*b1_Sand_Transportation/1000,
+    c1_bud_Sand_End=i1_bud_Sand*b1_Sand_End/1000,
+    
+    c1_bud_Glass_Extraction=i1_bud_Glass*b1_Glass_Extraction/1000,
+    c1_bud_Glass_Manufacturing=i1_bud_Glass*b1_Glass_Manufacturing/1000,
+    c1_bud_Glass_Operational=i1_bud_Glass*b1_Glass_Operational/1000,
+    c1_bud_Glass_Transportation=i1_bud_Glass*b1_Glass_Transportation/1000,
+    c1_bud_Glass_End=i1_bud_Glass*b1_Glass_End/1000,
+    
+    c1_bud_Wood_Extraction=i1_bud_Wood*b1_Wood_Extraction/1000,
+    c1_bud_Wood_Manufacturing=i1_bud_Wood*b1_Wood_Manufacturing/1000,
+    c1_bud_Wood_Operational=i1_bud_Wood*b1_Wood_Operational/1000,
+    c1_bud_Wood_Transportation=i1_bud_Wood*b1_Wood_Transportation/1000,
+    c1_bud_Wood_End=i1_bud_Wood*b1_Wood_End/1000,
+    
+    c1_bud_Brick_Extraction=i1_bud_Brick*b1_Brick_Extraction/1000,
+    c1_bud_Brick_Manufacturing=i1_bud_Brick*b1_Brick_Manufacturing/1000,
+    c1_bud_Brick_Operational=i1_bud_Brick*b1_Brick_Operational/1000,
+    c1_bud_Brick_Transportation=i1_bud_Brick*b1_Brick_Transportation/1000,
+    c1_bud_Brick_End=i1_bud_Brick*b1_Brick_End/1000,
+    
+    c1_bud_Asphalt_Extraction=i1_bud_Asphalt*b1_Asphalt_Extraction/1000,
+    c1_bud_Asphalt_Manufacturing=i1_bud_Asphalt*b1_Asphalt_Manufacturing/1000,
+    c1_bud_Asphalt_Operational=i1_bud_Asphalt*b1_Asphalt_Operational/1000,
+    c1_bud_Asphalt_Transportation=i1_bud_Asphalt*b1_Asphalt_Transportation/1000,
+    c1_bud_Asphalt_End=i1_bud_Asphalt*b1_Asphalt_End/1000,
+    
+    c1_bud_Plastic_Extraction=i1_bud_Plastic*b1_Plastic_Extraction/1000,
+    c1_bud_Plastic_Manufacturing=i1_bud_Plastic*b1_Plastic_Manufacturing/1000,
+    c1_bud_Plastic_Operational=i1_bud_Plastic*b1_Plastic_Operational/1000,
+    c1_bud_Plastic_Transportation=i1_bud_Plastic*b1_Plastic_Transportation/1000,
+    c1_bud_Plastic_End=i1_bud_Plastic*b1_Plastic_End/1000,
+    
+    c1_bud_Rubber_Extraction=i1_bud_Rubber*b1_Rubber_Extraction/1000,
+    c1_bud_Rubber_Manufacturing=i1_bud_Rubber*b1_Rubber_Manufacturing/1000,
+    c1_bud_Rubber_Operational=i1_bud_Rubber*b1_Rubber_Operational/1000,
+    c1_bud_Rubber_Transportation=i1_bud_Rubber*b1_Rubber_Transportation/1000,
+    c1_bud_Rubber_End=i1_bud_Rubber*b1_Rubber_End/1000,
+    
+    c2_bud_Aluminum_Extraction=i2_bud_Aluminum*b2_Aluminum_Extraction/1000,
+    c2_bud_Aluminum_Manufacturing=i2_bud_Aluminum*b2_Aluminum_Manufacturing/1000,
+    c2_bud_Aluminum_Operational=i2_bud_Aluminum*b2_Aluminum_Operational/1000,
+    c2_bud_Aluminum_Transportation=i2_bud_Aluminum*b2_Aluminum_Transportation/1000,
+    c2_bud_Aluminum_End=i2_bud_Aluminum*b2_Aluminum_End/1000,
+    
+    c2_bud_Steel_Extraction=i2_bud_Steel*b2_Steel_Extraction/1000,
+    c2_bud_Steel_Manufacturing=i2_bud_Steel*b2_Steel_Manufacturing/1000,
+    c2_bud_Steel_Operational=i2_bud_Steel*b2_Steel_Operational/1000,
+    c2_bud_Steel_Transportation=i2_bud_Steel*b2_Steel_Transportation/1000,
+    c2_bud_Steel_End=i2_bud_Steel*b2_Steel_End/1000,
+    
+    c2_bud_Copper_Extraction=i2_bud_Copper*b2_Copper_Extraction/1000,
+    c2_bud_Copper_Manufacturing=i2_bud_Copper*b2_Copper_Manufacturing/1000,
+    c2_bud_Copper_Operational=i2_bud_Copper*b2_Copper_Operational/1000,
+    c2_bud_Copper_Transportation=i2_bud_Copper*b2_Copper_Transportation/1000,
+    c2_bud_Copper_End=i2_bud_Copper*b2_Copper_End/1000,
+    
+    c2_bud_Cement_Extraction=i2_bud_Cement*b2_Cement_Extraction/1000,
+    c2_bud_Cement_Manufacturing=i2_bud_Cement*b2_Cement_Manufacturing/1000,
+    c2_bud_Cement_Operational=i2_bud_Cement*b2_Cement_Operational/1000,
+    c2_bud_Cement_Transportation=i2_bud_Cement*b2_Cement_Transportation/1000,
+    c2_bud_Cement_End=i2_bud_Cement*b2_Cement_End/1000,
+    
+    c2_bud_Gravel_Extraction=i2_bud_Gravel*b2_Gravel_Extraction/1000,
+    c2_bud_Gravel_Manufacturing=i2_bud_Gravel*b2_Gravel_Manufacturing/1000,
+    c2_bud_Gravel_Operational=i2_bud_Gravel*b2_Gravel_Operational/1000,
+    c2_bud_Gravel_Transportation=i2_bud_Gravel*b2_Gravel_Transportation/1000,
+    c2_bud_Gravel_End=i2_bud_Gravel*b2_Gravel_End/1000,
+    
+    c2_bud_Sand_Extraction=i2_bud_Sand*b2_Sand_Extraction/1000,
+    c2_bud_Sand_Manufacturing=i2_bud_Sand*b2_Sand_Manufacturing/1000,
+    c2_bud_Sand_Operational=i2_bud_Sand*b2_Sand_Operational/1000,
+    c2_bud_Sand_Transportation=i2_bud_Sand*b2_Sand_Transportation/1000,
+    c2_bud_Sand_End=i2_bud_Sand*b2_Sand_End/1000,
+    
+    c2_bud_Glass_Extraction=i2_bud_Glass*b2_Glass_Extraction/1000,
+    c2_bud_Glass_Manufacturing=i2_bud_Glass*b2_Glass_Manufacturing/1000,
+    c2_bud_Glass_Operational=i2_bud_Glass*b2_Glass_Operational/1000,
+    c2_bud_Glass_Transportation=i2_bud_Glass*b2_Glass_Transportation/1000,
+    c2_bud_Glass_End=i2_bud_Glass*b2_Glass_End/1000,
+    
+    c2_bud_Wood_Extraction=i2_bud_Wood*b2_Wood_Extraction/1000,
+    c2_bud_Wood_Manufacturing=i2_bud_Wood*b2_Wood_Manufacturing/1000,
+    c2_bud_Wood_Operational=i2_bud_Wood*b2_Wood_Operational/1000,
+    c2_bud_Wood_Transportation=i2_bud_Wood*b2_Wood_Transportation/1000,
+    c2_bud_Wood_End=i2_bud_Wood*b2_Wood_End/1000,
+    
+    c2_bud_Brick_Extraction=i2_bud_Brick*b2_Brick_Extraction/1000,
+    c2_bud_Brick_Manufacturing=i2_bud_Brick*b2_Brick_Manufacturing/1000,
+    c2_bud_Brick_Operational=i2_bud_Brick*b2_Brick_Operational/1000,
+    c2_bud_Brick_Transportation=i2_bud_Brick*b2_Brick_Transportation/1000,
+    c2_bud_Brick_End=i2_bud_Brick*b2_Brick_End/1000,
+    
+    c2_bud_Asphalt_Extraction=i2_bud_Asphalt*b2_Asphalt_Extraction/1000,
+    c2_bud_Asphalt_Manufacturing=i2_bud_Asphalt*b2_Asphalt_Manufacturing/1000,
+    c2_bud_Asphalt_Operational=i2_bud_Asphalt*b2_Asphalt_Operational/1000,
+    c2_bud_Asphalt_Transportation=i2_bud_Asphalt*b2_Asphalt_Transportation/1000,
+    c2_bud_Asphalt_End=i2_bud_Asphalt*b2_Asphalt_End/1000,
+    
+    c2_bud_Plastic_Extraction=i2_bud_Plastic*b2_Plastic_Extraction/1000,
+    c2_bud_Plastic_Manufacturing=i2_bud_Plastic*b2_Plastic_Manufacturing/1000,
+    c2_bud_Plastic_Operational=i2_bud_Plastic*b2_Plastic_Operational/1000,
+    c2_bud_Plastic_Transportation=i2_bud_Plastic*b2_Plastic_Transportation/1000,
+    c2_bud_Plastic_End=i2_bud_Plastic*b2_Plastic_End/1000,
+    
+    c2_bud_Rubber_Extraction=i2_bud_Rubber*b2_Rubber_Extraction/1000,
+    c2_bud_Rubber_Manufacturing=i2_bud_Rubber*b2_Rubber_Manufacturing/1000,
+    c2_bud_Rubber_Operational=i2_bud_Rubber*b2_Rubber_Operational/1000,
+    c2_bud_Rubber_Transportation=i2_bud_Rubber*b2_Rubber_Transportation/1000,
+    c2_bud_Rubber_End=i2_bud_Rubber*b2_Rubber_End/1000,
+    
+    c3_bud_Aluminum_Extraction=i3_bud_Aluminum*b3_Aluminum_Extraction/1000,
+    c3_bud_Aluminum_Manufacturing=i3_bud_Aluminum*b3_Aluminum_Manufacturing/1000,
+    c3_bud_Aluminum_Operational=i3_bud_Aluminum*b3_Aluminum_Operational/1000,
+    c3_bud_Aluminum_Transportation=i3_bud_Aluminum*b3_Aluminum_Transportation/1000,
+    c3_bud_Aluminum_End=i3_bud_Aluminum*b3_Aluminum_End/1000,
+    
+    c3_bud_Steel_Extraction=i3_bud_Steel*b3_Steel_Extraction/1000,
+    c3_bud_Steel_Manufacturing=i3_bud_Steel*b3_Steel_Manufacturing/1000,
+    c3_bud_Steel_Operational=i3_bud_Steel*b3_Steel_Operational/1000,
+    c3_bud_Steel_Transportation=i3_bud_Steel*b3_Steel_Transportation/1000,
+    c3_bud_Steel_End=i3_bud_Steel*b3_Steel_End/1000,
+    
+    c3_bud_Copper_Extraction=i3_bud_Copper*b3_Copper_Extraction/1000,
+    c3_bud_Copper_Manufacturing=i3_bud_Copper*b3_Copper_Manufacturing/1000,
+    c3_bud_Copper_Operational=i3_bud_Copper*b3_Copper_Operational/1000,
+    c3_bud_Copper_Transportation=i3_bud_Copper*b3_Copper_Transportation/1000,
+    c3_bud_Copper_End=i3_bud_Copper*b3_Copper_End/1000,
+    
+    c3_bud_Cement_Extraction=i3_bud_Cement*b3_Cement_Extraction/1000,
+    c3_bud_Cement_Manufacturing=i3_bud_Cement*b3_Cement_Manufacturing/1000,
+    c3_bud_Cement_Operational=i3_bud_Cement*b3_Cement_Operational/1000,
+    c3_bud_Cement_Transportation=i3_bud_Cement*b3_Cement_Transportation/1000,
+    c3_bud_Cement_End=i3_bud_Cement*b3_Cement_End/1000,
+    
+    c3_bud_Gravel_Extraction=i3_bud_Gravel*b3_Gravel_Extraction/1000,
+    c3_bud_Gravel_Manufacturing=i3_bud_Gravel*b3_Gravel_Manufacturing/1000,
+    c3_bud_Gravel_Operational=i3_bud_Gravel*b3_Gravel_Operational/1000,
+    c3_bud_Gravel_Transportation=i3_bud_Gravel*b3_Gravel_Transportation/1000,
+    c3_bud_Gravel_End=i3_bud_Gravel*b3_Gravel_End/1000,
+    
+    c3_bud_Sand_Extraction=i3_bud_Sand*b3_Sand_Extraction/1000,
+    c3_bud_Sand_Manufacturing=i3_bud_Sand*b3_Sand_Manufacturing/1000,
+    c3_bud_Sand_Operational=i3_bud_Sand*b3_Sand_Operational/1000,
+    c3_bud_Sand_Transportation=i3_bud_Sand*b3_Sand_Transportation/1000,
+    c3_bud_Sand_End=i3_bud_Sand*b3_Sand_End/1000,
+    
+    c3_bud_Glass_Extraction=i3_bud_Glass*b3_Glass_Extraction/1000,
+    c3_bud_Glass_Manufacturing=i3_bud_Glass*b3_Glass_Manufacturing/1000,
+    c3_bud_Glass_Operational=i3_bud_Glass*b3_Glass_Operational/1000,
+    c3_bud_Glass_Transportation=i3_bud_Glass*b3_Glass_Transportation/1000,
+    c3_bud_Glass_End=i3_bud_Glass*b3_Glass_End/1000,
+    
+    c3_bud_Wood_Extraction=i3_bud_Wood*b3_Wood_Extraction/1000,
+    c3_bud_Wood_Manufacturing=i3_bud_Wood*b3_Wood_Manufacturing/1000,
+    c3_bud_Wood_Operational=i3_bud_Wood*b3_Wood_Operational/1000,
+    c3_bud_Wood_Transportation=i3_bud_Wood*b3_Wood_Transportation/1000,
+    c3_bud_Wood_End=i3_bud_Wood*b3_Wood_End/1000,
+    
+    c3_bud_Brick_Extraction=i3_bud_Brick*b3_Brick_Extraction/1000,
+    c3_bud_Brick_Manufacturing=i3_bud_Brick*b3_Brick_Manufacturing/1000,
+    c3_bud_Brick_Operational=i3_bud_Brick*b3_Brick_Operational/1000,
+    c3_bud_Brick_Transportation=i3_bud_Brick*b3_Brick_Transportation/1000,
+    c3_bud_Brick_End=i3_bud_Brick*b3_Brick_End/1000,
+    
+    c3_bud_Asphalt_Extraction=i3_bud_Asphalt*b3_Asphalt_Extraction/1000,
+    c3_bud_Asphalt_Manufacturing=i3_bud_Asphalt*b3_Asphalt_Manufacturing/1000,
+    c3_bud_Asphalt_Operational=i3_bud_Asphalt*b3_Asphalt_Operational/1000,
+    c3_bud_Asphalt_Transportation=i3_bud_Asphalt*b3_Asphalt_Transportation/1000,
+    c3_bud_Asphalt_End=i3_bud_Asphalt*b3_Asphalt_End/1000,
+    
+    c3_bud_Plastic_Extraction=i3_bud_Plastic*b3_Plastic_Extraction/1000,
+    c3_bud_Plastic_Manufacturing=i3_bud_Plastic*b3_Plastic_Manufacturing/1000,
+    c3_bud_Plastic_Operational=i3_bud_Plastic*b3_Plastic_Operational/1000,
+    c3_bud_Plastic_Transportation=i3_bud_Plastic*b3_Plastic_Transportation/1000,
+    c3_bud_Plastic_End=i3_bud_Plastic*b3_Plastic_End/1000,
+    
+    c3_bud_Rubber_Extraction=i3_bud_Rubber*b3_Rubber_Extraction/1000,
+    c3_bud_Rubber_Manufacturing=i3_bud_Rubber*b3_Rubber_Manufacturing/1000,
+    c3_bud_Rubber_Operational=i3_bud_Rubber*b3_Rubber_Operational/1000,
+    c3_bud_Rubber_Transportation=i3_bud_Rubber*b3_Rubber_Transportation/1000,
+    c3_bud_Rubber_End=i3_bud_Rubber*b3_Rubber_End/1000,
+    
+    c4_bud_Aluminum_Extraction=i4_bud_Aluminum*b4_Aluminum_Extraction/1000,
+    c4_bud_Aluminum_Manufacturing=i4_bud_Aluminum*b4_Aluminum_Manufacturing/1000,
+    c4_bud_Aluminum_Operational=i4_bud_Aluminum*b4_Aluminum_Operational/1000,
+    c4_bud_Aluminum_Transportation=i4_bud_Aluminum*b4_Aluminum_Transportation/1000,
+    c4_bud_Aluminum_End=i4_bud_Aluminum*b4_Aluminum_End/1000,
+    
+    c4_bud_Steel_Extraction=i4_bud_Steel*b4_Steel_Extraction/1000,
+    c4_bud_Steel_Manufacturing=i4_bud_Steel*b4_Steel_Manufacturing/1000,
+    c4_bud_Steel_Operational=i4_bud_Steel*b4_Steel_Operational/1000,
+    c4_bud_Steel_Transportation=i4_bud_Steel*b4_Steel_Transportation/1000,
+    c4_bud_Steel_End=i4_bud_Steel*b4_Steel_End/1000,
+    
+    c4_bud_Copper_Extraction=i4_bud_Copper*b4_Copper_Extraction/1000,
+    c4_bud_Copper_Manufacturing=i4_bud_Copper*b4_Copper_Manufacturing/1000,
+    c4_bud_Copper_Operational=i4_bud_Copper*b4_Copper_Operational/1000,
+    c4_bud_Copper_Transportation=i4_bud_Copper*b4_Copper_Transportation/1000,
+    c4_bud_Copper_End=i4_bud_Copper*b4_Copper_End/1000,
+    
+    c4_bud_Cement_Extraction=i4_bud_Cement*b4_Cement_Extraction/1000,
+    c4_bud_Cement_Manufacturing=i4_bud_Cement*b4_Cement_Manufacturing/1000,
+    c4_bud_Cement_Operational=i4_bud_Cement*b4_Cement_Operational/1000,
+    c4_bud_Cement_Transportation=i4_bud_Cement*b4_Cement_Transportation/1000,
+    c4_bud_Cement_End=i4_bud_Cement*b4_Cement_End/1000,
+    
+    c4_bud_Gravel_Extraction=i4_bud_Gravel*b4_Gravel_Extraction/1000,
+    c4_bud_Gravel_Manufacturing=i4_bud_Gravel*b4_Gravel_Manufacturing/1000,
+    c4_bud_Gravel_Operational=i4_bud_Gravel*b4_Gravel_Operational/1000,
+    c4_bud_Gravel_Transportation=i4_bud_Gravel*b4_Gravel_Transportation/1000,
+    c4_bud_Gravel_End=i4_bud_Gravel*b4_Gravel_End/1000,
+    
+    c4_bud_Sand_Extraction=i4_bud_Sand*b4_Sand_Extraction/1000,
+    c4_bud_Sand_Manufacturing=i4_bud_Sand*b4_Sand_Manufacturing/1000,
+    c4_bud_Sand_Operational=i4_bud_Sand*b4_Sand_Operational/1000,
+    c4_bud_Sand_Transportation=i4_bud_Sand*b4_Sand_Transportation/1000,
+    c4_bud_Sand_End=i4_bud_Sand*b4_Sand_End/1000,
+    
+    c4_bud_Glass_Extraction=i4_bud_Glass*b4_Glass_Extraction/1000,
+    c4_bud_Glass_Manufacturing=i4_bud_Glass*b4_Glass_Manufacturing/1000,
+    c4_bud_Glass_Operational=i4_bud_Glass*b4_Glass_Operational/1000,
+    c4_bud_Glass_Transportation=i4_bud_Glass*b4_Glass_Transportation/1000,
+    c4_bud_Glass_End=i4_bud_Glass*b4_Glass_End/1000,
+    
+    c4_bud_Wood_Extraction=i4_bud_Wood*b4_Wood_Extraction/1000,
+    c4_bud_Wood_Manufacturing=i4_bud_Wood*b4_Wood_Manufacturing/1000,
+    c4_bud_Wood_Operational=i4_bud_Wood*b4_Wood_Operational/1000,
+    c4_bud_Wood_Transportation=i4_bud_Wood*b4_Wood_Transportation/1000,
+    c4_bud_Wood_End=i4_bud_Wood*b4_Wood_End/1000,
+    
+    c4_bud_Brick_Extraction=i4_bud_Brick*b4_Brick_Extraction/1000,
+    c4_bud_Brick_Manufacturing=i4_bud_Brick*b4_Brick_Manufacturing/1000,
+    c4_bud_Brick_Operational=i4_bud_Brick*b4_Brick_Operational/1000,
+    c4_bud_Brick_Transportation=i4_bud_Brick*b4_Brick_Transportation/1000,
+    c4_bud_Brick_End=i4_bud_Brick*b4_Brick_End/1000,
+    
+    c4_bud_Asphalt_Extraction=i4_bud_Asphalt*b4_Asphalt_Extraction/1000,
+    c4_bud_Asphalt_Manufacturing=i4_bud_Asphalt*b4_Asphalt_Manufacturing/1000,
+    c4_bud_Asphalt_Operational=i4_bud_Asphalt*b4_Asphalt_Operational/1000,
+    c4_bud_Asphalt_Transportation=i4_bud_Asphalt*b4_Asphalt_Transportation/1000,
+    c4_bud_Asphalt_End=i4_bud_Asphalt*b4_Asphalt_End/1000,
+    
+    c4_bud_Plastic_Extraction=i4_bud_Plastic*b4_Plastic_Extraction/1000,
+    c4_bud_Plastic_Manufacturing=i4_bud_Plastic*b4_Plastic_Manufacturing/1000,
+    c4_bud_Plastic_Operational=i4_bud_Plastic*b4_Plastic_Operational/1000,
+    c4_bud_Plastic_Transportation=i4_bud_Plastic*b4_Plastic_Transportation/1000,
+    c4_bud_Plastic_End=i4_bud_Plastic*b4_Plastic_End/1000,
+    
+    c4_bud_Rubber_Extraction=i4_bud_Rubber*b4_Rubber_Extraction/1000,
+    c4_bud_Rubber_Manufacturing=i4_bud_Rubber*b4_Rubber_Manufacturing/1000,
+    c4_bud_Rubber_Operational=i4_bud_Rubber*b4_Rubber_Operational/1000,
+    c4_bud_Rubber_Transportation=i4_bud_Rubber*b4_Rubber_Transportation/1000,
+    c4_bud_Rubber_End=i4_bud_Rubber*b4_Rubber_End/1000,
+    
+    c5_bud_Aluminum_Extraction=i5_bud_Aluminum*b5_Aluminum_Extraction/1000,
+    c5_bud_Aluminum_Manufacturing=i5_bud_Aluminum*b5_Aluminum_Manufacturing/1000,
+    c5_bud_Aluminum_Operational=i5_bud_Aluminum*b5_Aluminum_Operational/1000,
+    c5_bud_Aluminum_Transportation=i5_bud_Aluminum*b5_Aluminum_Transportation/1000,
+    c5_bud_Aluminum_End=i5_bud_Aluminum*b5_Aluminum_End/1000,
+    
+    c5_bud_Steel_Extraction=i5_bud_Steel*b5_Steel_Extraction/1000,
+    c5_bud_Steel_Manufacturing=i5_bud_Steel*b5_Steel_Manufacturing/1000,
+    c5_bud_Steel_Operational=i5_bud_Steel*b5_Steel_Operational/1000,
+    c5_bud_Steel_Transportation=i5_bud_Steel*b5_Steel_Transportation/1000,
+    c5_bud_Steel_End=i5_bud_Steel*b5_Steel_End/1000,
+    
+    c5_bud_Copper_Extraction=i5_bud_Copper*b5_Copper_Extraction/1000,
+    c5_bud_Copper_Manufacturing=i5_bud_Copper*b5_Copper_Manufacturing/1000,
+    c5_bud_Copper_Operational=i5_bud_Copper*b5_Copper_Operational/1000,
+    c5_bud_Copper_Transportation=i5_bud_Copper*b5_Copper_Transportation/1000,
+    c5_bud_Copper_End=i5_bud_Copper*b5_Copper_End/1000,
+    
+    c5_bud_Cement_Extraction=i5_bud_Cement*b5_Cement_Extraction/1000,
+    c5_bud_Cement_Manufacturing=i5_bud_Cement*b5_Cement_Manufacturing/1000,
+    c5_bud_Cement_Operational=i5_bud_Cement*b5_Cement_Operational/1000,
+    c5_bud_Cement_Transportation=i5_bud_Cement*b5_Cement_Transportation/1000,
+    c5_bud_Cement_End=i5_bud_Cement*b5_Cement_End/1000,
+    
+    c5_bud_Gravel_Extraction=i5_bud_Gravel*b5_Gravel_Extraction/1000,
+    c5_bud_Gravel_Manufacturing=i5_bud_Gravel*b5_Gravel_Manufacturing/1000,
+    c5_bud_Gravel_Operational=i5_bud_Gravel*b5_Gravel_Operational/1000,
+    c5_bud_Gravel_Transportation=i5_bud_Gravel*b5_Gravel_Transportation/1000,
+    c5_bud_Gravel_End=i5_bud_Gravel*b5_Gravel_End/1000,
+    
+    c5_bud_Sand_Extraction=i5_bud_Sand*b5_Sand_Extraction/1000,
+    c5_bud_Sand_Manufacturing=i5_bud_Sand*b5_Sand_Manufacturing/1000,
+    c5_bud_Sand_Operational=i5_bud_Sand*b5_Sand_Operational/1000,
+    c5_bud_Sand_Transportation=i5_bud_Sand*b5_Sand_Transportation/1000,
+    c5_bud_Sand_End=i5_bud_Sand*b5_Sand_End/1000,
+    
+    c5_bud_Glass_Extraction=i5_bud_Glass*b5_Glass_Extraction/1000,
+    c5_bud_Glass_Manufacturing=i5_bud_Glass*b5_Glass_Manufacturing/1000,
+    c5_bud_Glass_Operational=i5_bud_Glass*b5_Glass_Operational/1000,
+    c5_bud_Glass_Transportation=i5_bud_Glass*b5_Glass_Transportation/1000,
+    c5_bud_Glass_End=i5_bud_Glass*b5_Glass_End/1000,
+    
+    c5_bud_Wood_Extraction=i5_bud_Wood*b5_Wood_Extraction/1000,
+    c5_bud_Wood_Manufacturing=i5_bud_Wood*b5_Wood_Manufacturing/1000,
+    c5_bud_Wood_Operational=i5_bud_Wood*b5_Wood_Operational/1000,
+    c5_bud_Wood_Transportation=i5_bud_Wood*b5_Wood_Transportation/1000,
+    c5_bud_Wood_End=i5_bud_Wood*b5_Wood_End/1000,
+    
+    c5_bud_Brick_Extraction=i5_bud_Brick*b5_Brick_Extraction/1000,
+    c5_bud_Brick_Manufacturing=i5_bud_Brick*b5_Brick_Manufacturing/1000,
+    c5_bud_Brick_Operational=i5_bud_Brick*b5_Brick_Operational/1000,
+    c5_bud_Brick_Transportation=i5_bud_Brick*b5_Brick_Transportation/1000,
+    c5_bud_Brick_End=i5_bud_Brick*b5_Brick_End/1000,
+    
+    c5_bud_Asphalt_Extraction=i5_bud_Asphalt*b5_Asphalt_Extraction/1000,
+    c5_bud_Asphalt_Manufacturing=i5_bud_Asphalt*b5_Asphalt_Manufacturing/1000,
+    c5_bud_Asphalt_Operational=i5_bud_Asphalt*b5_Asphalt_Operational/1000,
+    c5_bud_Asphalt_Transportation=i5_bud_Asphalt*b5_Asphalt_Transportation/1000,
+    c5_bud_Asphalt_End=i5_bud_Asphalt*b5_Asphalt_End/1000,
+    
+    c5_bud_Plastic_Extraction=i5_bud_Plastic*b5_Plastic_Extraction/1000,
+    c5_bud_Plastic_Manufacturing=i5_bud_Plastic*b5_Plastic_Manufacturing/1000,
+    c5_bud_Plastic_Operational=i5_bud_Plastic*b5_Plastic_Operational/1000,
+    c5_bud_Plastic_Transportation=i5_bud_Plastic*b5_Plastic_Transportation/1000,
+    c5_bud_Plastic_End=i5_bud_Plastic*b5_Plastic_End/1000,
+    
+    c5_bud_Rubber_Extraction=i5_bud_Rubber*b5_Rubber_Extraction/1000,
+    c5_bud_Rubber_Manufacturing=i5_bud_Rubber*b5_Rubber_Manufacturing/1000,
+    c5_bud_Rubber_Operational=i5_bud_Rubber*b5_Rubber_Operational/1000,
+    c5_bud_Rubber_Transportation=i5_bud_Rubber*b5_Rubber_Transportation/1000,
+    c5_bud_Rubber_End=i5_bud_Rubber*b5_Rubber_End/1000) -> df1
+
+readxl::read_xlsx("AFCC/excel/carbonIntensity2.xlsx") %>% 
+  dplyr::filter(Sectors=="roads") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link",Product, Materials) %>% 
+  spread(Process, Carbon) -> mfd
+
+
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="r1_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r1_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="r1_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r1_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r1_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r1_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="r1_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r1_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="r1_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r1_Aluminum_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="r1_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r1_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="r1_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r1_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r1_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r1_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="r1_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r1_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="r1_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r1_Asphalt_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="r1_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r1_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="r1_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r1_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r1_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r1_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="r1_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r1_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="r1_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r1_Cement_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="r1_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r1_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="r1_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r1_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r1_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r1_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="r1_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r1_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="r1_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r1_Copper_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="r1_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r1_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r1_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r1_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r1_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r1_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="r1_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r1_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r1_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r1_Gravel_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="r1_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r1_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="r1_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r1_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r1_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r1_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="r1_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r1_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="r1_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r1_Sand_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="r1_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r1_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r1_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r1_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r1_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r1_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="r1_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r1_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r1_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r1_Steel_End
+
+
+
+
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="r2_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r2_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="r2_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r2_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r2_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r2_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="r2_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r2_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="r2_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r2_Aluminum_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="r2_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r2_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="r2_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r2_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r2_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r2_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="r2_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r2_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="r2_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r2_Asphalt_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="r2_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r2_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="r2_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r2_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r2_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r2_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="r2_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r2_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="r2_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r2_Cement_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="r2_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r2_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="r2_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r2_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r2_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r2_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="r2_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r2_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="r2_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r2_Copper_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="r2_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r2_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r2_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r2_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r2_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r2_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="r2_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r2_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r2_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r2_Gravel_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="r2_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r2_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="r2_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r2_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r2_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r2_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="r2_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r2_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="r2_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r2_Sand_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="r2_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r2_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r2_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r2_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r2_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r2_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="r2_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r2_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r2_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r2_Steel_End
+
+
+
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="r3_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r3_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="r3_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r3_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r3_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r3_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="r3_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r3_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="r3_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r3_Aluminum_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="r3_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r3_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="r3_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r3_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r3_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r3_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="r3_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r3_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="r3_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r3_Asphalt_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="r3_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r3_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="r3_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r3_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r3_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r3_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="r3_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r3_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="r3_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r3_Cement_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="r3_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r3_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="r3_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r3_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r3_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r3_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="r3_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r3_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="r3_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r3_Copper_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="r3_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r3_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r3_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r3_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r3_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r3_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="r3_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r3_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r3_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r3_Gravel_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="r3_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r3_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="r3_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r3_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r3_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r3_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="r3_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r3_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="r3_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r3_Sand_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="r3_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r3_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r3_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r3_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r3_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r3_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="r3_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r3_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r3_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r3_Steel_End
+
+
+
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="r4_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r4_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="r4_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r4_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r4_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r4_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="r4_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r4_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="r4_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r4_Aluminum_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="r4_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r4_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="r4_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r4_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r4_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r4_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="r4_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r4_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="r4_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r4_Asphalt_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="r4_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r4_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="r4_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r4_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r4_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r4_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="r4_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r4_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="r4_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r4_Cement_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="r4_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r4_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="r4_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r4_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r4_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r4_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="r4_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r4_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="r4_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r4_Copper_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="r4_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r4_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r4_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r4_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r4_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r4_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="r4_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r4_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r4_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r4_Gravel_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="r4_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r4_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="r4_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r4_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r4_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r4_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="r4_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r4_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="r4_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r4_Sand_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="r4_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r4_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r4_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r4_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r4_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r4_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="r4_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r4_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r4_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r4_Steel_End
+
+
+
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="r5_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r5_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="r5_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r5_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r5_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r5_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="r5_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r5_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="r5_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r5_Aluminum_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="r5_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r5_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="r5_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r5_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r5_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r5_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="r5_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r5_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="r5_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r5_Asphalt_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="r5_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r5_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="r5_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r5_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r5_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r5_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="r5_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r5_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="r5_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r5_Cement_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="r5_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r5_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="r5_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r5_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r5_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r5_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="r5_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r5_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="r5_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r5_Copper_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="r5_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r5_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r5_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r5_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r5_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r5_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="r5_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r5_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r5_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r5_Gravel_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="r5_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r5_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="r5_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r5_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r5_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r5_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="r5_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r5_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="r5_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r5_Sand_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="r5_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r5_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r5_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r5_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r5_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r5_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="r5_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r5_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r5_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r5_Steel_End
+
+
+
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="r6_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r6_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="r6_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r6_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r6_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r6_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="r6_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r6_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="r6_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r6_Aluminum_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="r6_Asphalt") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r6_Asphalt_Extraction
+mfd %>% 
+  dplyr::filter(link=="r6_Asphalt") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r6_Asphalt_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r6_Asphalt") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r6_Asphalt_Operational
+mfd %>% 
+  dplyr::filter(link=="r6_Asphalt") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r6_Asphalt_Transportation
+mfd %>% 
+  dplyr::filter(link=="r6_Asphalt") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r6_Asphalt_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="r6_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r6_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="r6_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r6_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r6_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r6_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="r6_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r6_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="r6_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r6_Cement_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="r6_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r6_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="r6_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r6_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r6_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r6_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="r6_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r6_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="r6_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r6_Copper_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="r6_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r6_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r6_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r6_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r6_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r6_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="r6_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r6_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r6_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r6_Gravel_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="r6_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r6_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="r6_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r6_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r6_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r6_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="r6_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r6_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="r6_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r6_Sand_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="r6_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> r6_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="r6_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> r6_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="r6_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> r6_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="r6_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> r6_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="r6_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> r6_Steel_End
+
+
+
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="Railroads_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> Railroads_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="Railroads_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> Railroads_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="Railroads_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> Railroads_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="Railroads_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> Railroads_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="Railroads_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> Railroads_Aluminum_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="Railroads_Wood") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> Railroads_Wood_Extraction
+mfd %>% 
+  dplyr::filter(link=="Railroads_Wood") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> Railroads_Wood_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="Railroads_Wood") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> Railroads_Wood_Operational
+mfd %>% 
+  dplyr::filter(link=="Railroads_Wood") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> Railroads_Wood_Transportation
+mfd %>% 
+  dplyr::filter(link=="Railroads_Wood") %>% 
+  dplyr::select(End) %>% 
+  pull() -> Railroads_Wood_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="Railroads_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> Railroads_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="Railroads_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> Railroads_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="Railroads_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> Railroads_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="Railroads_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> Railroads_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="Railroads_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> Railroads_Cement_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="Railroads_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> Railroads_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="Railroads_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> Railroads_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="Railroads_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> Railroads_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="Railroads_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> Railroads_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="Railroads_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> Railroads_Copper_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="Railroads_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> Railroads_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="Railroads_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> Railroads_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="Railroads_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> Railroads_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="Railroads_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> Railroads_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="Railroads_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> Railroads_Gravel_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="Railroads_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> Railroads_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="Railroads_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> Railroads_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="Railroads_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> Railroads_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="Railroads_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> Railroads_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="Railroads_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> Railroads_Sand_End
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="Railroads_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> Railroads_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="Railroads_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> Railroads_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="Railroads_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> Railroads_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="Railroads_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> Railroads_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="Railroads_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> Railroads_Steel_End
+
+
+
+df1 %>% 
+  mutate(
+    c1_road_Aluminum_Extraction=i1_road_Aluminum*r1_Aluminum_Extraction/1000,
+    c1_road_Aluminum_Manufacturing=i1_road_Aluminum*r1_Aluminum_Manufacturing/1000,
+    c1_road_Aluminum_Operational=i1_road_Aluminum*r1_Aluminum_Operational/1000,
+    c1_road_Aluminum_Transportation=i1_road_Aluminum*r1_Aluminum_Transportation/1000,
+    c1_road_Aluminum_End=i1_road_Aluminum*r1_Aluminum_End/1000,
+    
+    c1_road_Steel_Extraction=i1_road_Steel*r1_Steel_Extraction/1000,
+    c1_road_Steel_Manufacturing=i1_road_Steel*r1_Steel_Manufacturing/1000,
+    c1_road_Steel_Operational=i1_road_Steel*r1_Steel_Operational/1000,
+    c1_road_Steel_Transportation=i1_road_Steel*r1_Steel_Transportation/1000,
+    c1_road_Steel_End=i1_road_Steel*r1_Steel_End/1000,
+    
+    c1_road_Copper_Extraction=i1_road_Copper*r1_Copper_Extraction/1000,
+    c1_road_Copper_Manufacturing=i1_road_Copper*r1_Copper_Manufacturing/1000,
+    c1_road_Copper_Operational=i1_road_Copper*r1_Copper_Operational/1000,
+    c1_road_Copper_Transportation=i1_road_Copper*r1_Copper_Transportation/1000,
+    c1_road_Copper_End=i1_road_Copper*r1_Copper_End/1000,
+    
+    c1_road_Cement_Extraction=i1_road_Cement*r1_Cement_Extraction/1000,
+    c1_road_Cement_Manufacturing=i1_road_Cement*r1_Cement_Manufacturing/1000,
+    c1_road_Cement_Operational=i1_road_Cement*r1_Cement_Operational/1000,
+    c1_road_Cement_Transportation=i1_road_Cement*r1_Cement_Transportation/1000,
+    c1_road_Cement_End=i1_road_Cement*r1_Cement_End/1000,
+    
+    c1_road_Gravel_Extraction=i1_road_Gravel*r1_Gravel_Extraction/1000,
+    c1_road_Gravel_Manufacturing=i1_road_Gravel*r1_Gravel_Manufacturing/1000,
+    c1_road_Gravel_Operational=i1_road_Gravel*r1_Gravel_Operational/1000,
+    c1_road_Gravel_Transportation=i1_road_Gravel*r1_Gravel_Transportation/1000,
+    c1_road_Gravel_End=i1_road_Gravel*r1_Gravel_End/1000,
+    
+    c1_road_Sand_Extraction=i1_road_Sand*r1_Sand_Extraction/1000,
+    c1_road_Sand_Manufacturing=i1_road_Sand*r1_Sand_Manufacturing/1000,
+    c1_road_Sand_Operational=i1_road_Sand*r1_Sand_Operational/1000,
+    c1_road_Sand_Transportation=i1_road_Sand*r1_Sand_Transportation/1000,
+    c1_road_Sand_End=i1_road_Sand*r1_Sand_End/1000,
+    
+    c1_road_Asphalt_Extraction=i1_road_Asphalt*r1_Asphalt_Extraction/1000,
+    c1_road_Asphalt_Manufacturing=i1_road_Asphalt*r1_Asphalt_Manufacturing/1000,
+    c1_road_Asphalt_Operational=i1_road_Asphalt*r1_Asphalt_Operational/1000,
+    c1_road_Asphalt_Transportation=i1_road_Asphalt*r1_Asphalt_Transportation/1000,
+    c1_road_Asphalt_End=i1_road_Asphalt*r1_Asphalt_End/1000,
+    
+    c2_road_Aluminum_Extraction=i2_road_Aluminum*r2_Aluminum_Extraction/1000,
+    c2_road_Aluminum_Manufacturing=i2_road_Aluminum*r2_Aluminum_Manufacturing/1000,
+    c2_road_Aluminum_Operational=i2_road_Aluminum*r2_Aluminum_Operational/1000,
+    c2_road_Aluminum_Transportation=i2_road_Aluminum*r2_Aluminum_Transportation/1000,
+    c2_road_Aluminum_End=i2_road_Aluminum*r2_Aluminum_End/1000,
+    
+    c2_road_Steel_Extraction=i2_road_Steel*r2_Steel_Extraction/1000,
+    c2_road_Steel_Manufacturing=i2_road_Steel*r2_Steel_Manufacturing/1000,
+    c2_road_Steel_Operational=i2_road_Steel*r2_Steel_Operational/1000,
+    c2_road_Steel_Transportation=i2_road_Steel*r2_Steel_Transportation/1000,
+    c2_road_Steel_End=i2_road_Steel*r2_Steel_End/1000,
+    
+    c2_road_Copper_Extraction=i2_road_Copper*r2_Copper_Extraction/1000,
+    c2_road_Copper_Manufacturing=i2_road_Copper*r2_Copper_Manufacturing/1000,
+    c2_road_Copper_Operational=i2_road_Copper*r2_Copper_Operational/1000,
+    c2_road_Copper_Transportation=i2_road_Copper*r2_Copper_Transportation/1000,
+    c2_road_Copper_End=i2_road_Copper*r2_Copper_End/1000,
+    
+    c2_road_Cement_Extraction=i2_road_Cement*r2_Cement_Extraction/1000,
+    c2_road_Cement_Manufacturing=i2_road_Cement*r2_Cement_Manufacturing/1000,
+    c2_road_Cement_Operational=i2_road_Cement*r2_Cement_Operational/1000,
+    c2_road_Cement_Transportation=i2_road_Cement*r2_Cement_Transportation/1000,
+    c2_road_Cement_End=i2_road_Cement*r2_Cement_End/1000,
+    
+    c2_road_Gravel_Extraction=i2_road_Gravel*r2_Gravel_Extraction/1000,
+    c2_road_Gravel_Manufacturing=i2_road_Gravel*r2_Gravel_Manufacturing/1000,
+    c2_road_Gravel_Operational=i2_road_Gravel*r2_Gravel_Operational/1000,
+    c2_road_Gravel_Transportation=i2_road_Gravel*r2_Gravel_Transportation/1000,
+    c2_road_Gravel_End=i2_road_Gravel*r2_Gravel_End/1000,
+    
+    c2_road_Sand_Extraction=i2_road_Sand*r2_Sand_Extraction/1000,
+    c2_road_Sand_Manufacturing=i2_road_Sand*r2_Sand_Manufacturing/1000,
+    c2_road_Sand_Operational=i2_road_Sand*r2_Sand_Operational/1000,
+    c2_road_Sand_Transportation=i2_road_Sand*r2_Sand_Transportation/1000,
+    c2_road_Sand_End=i2_road_Sand*r2_Sand_End/1000,
+    
+    c2_road_Asphalt_Extraction=i2_road_Asphalt*r2_Asphalt_Extraction/1000,
+    c2_road_Asphalt_Manufacturing=i2_road_Asphalt*r2_Asphalt_Manufacturing/1000,
+    c2_road_Asphalt_Operational=i2_road_Asphalt*r2_Asphalt_Operational/1000,
+    c2_road_Asphalt_Transportation=i2_road_Asphalt*r2_Asphalt_Transportation/1000,
+    c2_road_Asphalt_End=i2_road_Asphalt*r2_Asphalt_End/1000,
+    
+    c3_road_Aluminum_Extraction=i3_road_Aluminum*r3_Aluminum_Extraction/1000,
+    c3_road_Aluminum_Manufacturing=i3_road_Aluminum*r3_Aluminum_Manufacturing/1000,
+    c3_road_Aluminum_Operational=i3_road_Aluminum*r3_Aluminum_Operational/1000,
+    c3_road_Aluminum_Transportation=i3_road_Aluminum*r3_Aluminum_Transportation/1000,
+    c3_road_Aluminum_End=i3_road_Aluminum*r3_Aluminum_End/1000,
+    
+    c3_road_Steel_Extraction=i3_road_Steel*r3_Steel_Extraction/1000,
+    c3_road_Steel_Manufacturing=i3_road_Steel*r3_Steel_Manufacturing/1000,
+    c3_road_Steel_Operational=i3_road_Steel*r3_Steel_Operational/1000,
+    c3_road_Steel_Transportation=i3_road_Steel*r3_Steel_Transportation/1000,
+    c3_road_Steel_End=i3_road_Steel*r3_Steel_End/1000,
+    
+    c3_road_Copper_Extraction=i3_road_Copper*r3_Copper_Extraction/1000,
+    c3_road_Copper_Manufacturing=i3_road_Copper*r3_Copper_Manufacturing/1000,
+    c3_road_Copper_Operational=i3_road_Copper*r3_Copper_Operational/1000,
+    c3_road_Copper_Transportation=i3_road_Copper*r3_Copper_Transportation/1000,
+    c3_road_Copper_End=i3_road_Copper*r3_Copper_End/1000,
+    
+    c3_road_Cement_Extraction=i3_road_Cement*r3_Cement_Extraction/1000,
+    c3_road_Cement_Manufacturing=i3_road_Cement*r3_Cement_Manufacturing/1000,
+    c3_road_Cement_Operational=i3_road_Cement*r3_Cement_Operational/1000,
+    c3_road_Cement_Transportation=i3_road_Cement*r3_Cement_Transportation/1000,
+    c3_road_Cement_End=i3_road_Cement*r3_Cement_End/1000,
+    
+    c3_road_Gravel_Extraction=i3_road_Gravel*r3_Gravel_Extraction/1000,
+    c3_road_Gravel_Manufacturing=i3_road_Gravel*r3_Gravel_Manufacturing/1000,
+    c3_road_Gravel_Operational=i3_road_Gravel*r3_Gravel_Operational/1000,
+    c3_road_Gravel_Transportation=i3_road_Gravel*r3_Gravel_Transportation/1000,
+    c3_road_Gravel_End=i3_road_Gravel*r3_Gravel_End/1000,
+    
+    c3_road_Sand_Extraction=i3_road_Sand*r3_Sand_Extraction/1000,
+    c3_road_Sand_Manufacturing=i3_road_Sand*r3_Sand_Manufacturing/1000,
+    c3_road_Sand_Operational=i3_road_Sand*r3_Sand_Operational/1000,
+    c3_road_Sand_Transportation=i3_road_Sand*r3_Sand_Transportation/1000,
+    c3_road_Sand_End=i3_road_Sand*r3_Sand_End/1000,
+    
+    c3_road_Asphalt_Extraction=i3_road_Asphalt*r3_Asphalt_Extraction/1000,
+    c3_road_Asphalt_Manufacturing=i3_road_Asphalt*r3_Asphalt_Manufacturing/1000,
+    c3_road_Asphalt_Operational=i3_road_Asphalt*r3_Asphalt_Operational/1000,
+    c3_road_Asphalt_Transportation=i3_road_Asphalt*r3_Asphalt_Transportation/1000,
+    c3_road_Asphalt_End=i3_road_Asphalt*r3_Asphalt_End/1000,
+    
+    c4_road_Aluminum_Extraction=i4_road_Aluminum*r4_Aluminum_Extraction/1000,
+    c4_road_Aluminum_Manufacturing=i4_road_Aluminum*r4_Aluminum_Manufacturing/1000,
+    c4_road_Aluminum_Operational=i4_road_Aluminum*r4_Aluminum_Operational/1000,
+    c4_road_Aluminum_Transportation=i4_road_Aluminum*r4_Aluminum_Transportation/1000,
+    c4_road_Aluminum_End=i4_road_Aluminum*r4_Aluminum_End/1000,
+    
+    c4_road_Steel_Extraction=i4_road_Steel*r4_Steel_Extraction/1000,
+    c4_road_Steel_Manufacturing=i4_road_Steel*r4_Steel_Manufacturing/1000,
+    c4_road_Steel_Operational=i4_road_Steel*r4_Steel_Operational/1000,
+    c4_road_Steel_Transportation=i4_road_Steel*r4_Steel_Transportation/1000,
+    c4_road_Steel_End=i4_road_Steel*r4_Steel_End/1000,
+    
+    c4_road_Copper_Extraction=i4_road_Copper*r4_Copper_Extraction/1000,
+    c4_road_Copper_Manufacturing=i4_road_Copper*r4_Copper_Manufacturing/1000,
+    c4_road_Copper_Operational=i4_road_Copper*r4_Copper_Operational/1000,
+    c4_road_Copper_Transportation=i4_road_Copper*r4_Copper_Transportation/1000,
+    c4_road_Copper_End=i4_road_Copper*r4_Copper_End/1000,
+    
+    c4_road_Cement_Extraction=i4_road_Cement*r4_Cement_Extraction/1000,
+    c4_road_Cement_Manufacturing=i4_road_Cement*r4_Cement_Manufacturing/1000,
+    c4_road_Cement_Operational=i4_road_Cement*r4_Cement_Operational/1000,
+    c4_road_Cement_Transportation=i4_road_Cement*r4_Cement_Transportation/1000,
+    c4_road_Cement_End=i4_road_Cement*r4_Cement_End/1000,
+    
+    c4_road_Gravel_Extraction=i4_road_Gravel*r4_Gravel_Extraction/1000,
+    c4_road_Gravel_Manufacturing=i4_road_Gravel*r4_Gravel_Manufacturing/1000,
+    c4_road_Gravel_Operational=i4_road_Gravel*r4_Gravel_Operational/1000,
+    c4_road_Gravel_Transportation=i4_road_Gravel*r4_Gravel_Transportation/1000,
+    c4_road_Gravel_End=i4_road_Gravel*r4_Gravel_End/1000,
+    
+    c4_road_Sand_Extraction=i4_road_Sand*r4_Sand_Extraction/1000,
+    c4_road_Sand_Manufacturing=i4_road_Sand*r4_Sand_Manufacturing/1000,
+    c4_road_Sand_Operational=i4_road_Sand*r4_Sand_Operational/1000,
+    c4_road_Sand_Transportation=i4_road_Sand*r4_Sand_Transportation/1000,
+    c4_road_Sand_End=i4_road_Sand*r4_Sand_End/1000,
+    
+    c4_road_Asphalt_Extraction=i4_road_Asphalt*r4_Asphalt_Extraction/1000,
+    c4_road_Asphalt_Manufacturing=i4_road_Asphalt*r4_Asphalt_Manufacturing/1000,
+    c4_road_Asphalt_Operational=i4_road_Asphalt*r4_Asphalt_Operational/1000,
+    c4_road_Asphalt_Transportation=i4_road_Asphalt*r4_Asphalt_Transportation/1000,
+    c4_road_Asphalt_End=i4_road_Asphalt*r4_Asphalt_End/1000,
+    
+    c5_road_Aluminum_Extraction=i5_road_Aluminum*r5_Aluminum_Extraction/1000,
+    c5_road_Aluminum_Manufacturing=i5_road_Aluminum*r5_Aluminum_Manufacturing/1000,
+    c5_road_Aluminum_Operational=i5_road_Aluminum*r5_Aluminum_Operational/1000,
+    c5_road_Aluminum_Transportation=i5_road_Aluminum*r5_Aluminum_Transportation/1000,
+    c5_road_Aluminum_End=i5_road_Aluminum*r5_Aluminum_End/1000,
+    
+    c5_road_Steel_Extraction=i5_road_Steel*r5_Steel_Extraction/1000,
+    c5_road_Steel_Manufacturing=i5_road_Steel*r5_Steel_Manufacturing/1000,
+    c5_road_Steel_Operational=i5_road_Steel*r5_Steel_Operational/1000,
+    c5_road_Steel_Transportation=i5_road_Steel*r5_Steel_Transportation/1000,
+    c5_road_Steel_End=i5_road_Steel*r5_Steel_End/1000,
+    
+    c5_road_Copper_Extraction=i5_road_Copper*r5_Copper_Extraction/1000,
+    c5_road_Copper_Manufacturing=i5_road_Copper*r5_Copper_Manufacturing/1000,
+    c5_road_Copper_Operational=i5_road_Copper*r5_Copper_Operational/1000,
+    c5_road_Copper_Transportation=i5_road_Copper*r5_Copper_Transportation/1000,
+    c5_road_Copper_End=i5_road_Copper*r5_Copper_End/1000,
+    
+    c5_road_Cement_Extraction=i5_road_Cement*r5_Cement_Extraction/1000,
+    c5_road_Cement_Manufacturing=i5_road_Cement*r5_Cement_Manufacturing/1000,
+    c5_road_Cement_Operational=i5_road_Cement*r5_Cement_Operational/1000,
+    c5_road_Cement_Transportation=i5_road_Cement*r5_Cement_Transportation/1000,
+    c5_road_Cement_End=i5_road_Cement*r5_Cement_End/1000,
+    
+    c5_road_Gravel_Extraction=i5_road_Gravel*r5_Gravel_Extraction/1000,
+    c5_road_Gravel_Manufacturing=i5_road_Gravel*r5_Gravel_Manufacturing/1000,
+    c5_road_Gravel_Operational=i5_road_Gravel*r5_Gravel_Operational/1000,
+    c5_road_Gravel_Transportation=i5_road_Gravel*r5_Gravel_Transportation/1000,
+    c5_road_Gravel_End=i5_road_Gravel*r5_Gravel_End/1000,
+    
+    c5_road_Sand_Extraction=i5_road_Sand*r5_Sand_Extraction/1000,
+    c5_road_Sand_Manufacturing=i5_road_Sand*r5_Sand_Manufacturing/1000,
+    c5_road_Sand_Operational=i5_road_Sand*r5_Sand_Operational/1000,
+    c5_road_Sand_Transportation=i5_road_Sand*r5_Sand_Transportation/1000,
+    c5_road_Sand_End=i5_road_Sand*r5_Sand_End/1000,
+    
+    c5_road_Asphalt_Extraction=i5_road_Asphalt*r5_Asphalt_Extraction/1000,
+    c5_road_Asphalt_Manufacturing=i5_road_Asphalt*r5_Asphalt_Manufacturing/1000,
+    c5_road_Asphalt_Operational=i5_road_Asphalt*r5_Asphalt_Operational/1000,
+    c5_road_Asphalt_Transportation=i5_road_Asphalt*r5_Asphalt_Transportation/1000,
+    c5_road_Asphalt_End=i5_road_Asphalt*r5_Asphalt_End/1000,
+    
+    c6_road_Aluminum_Extraction=i6_road_Aluminum*r6_Aluminum_Extraction/1000,
+    c6_road_Aluminum_Manufacturing=i6_road_Aluminum*r6_Aluminum_Manufacturing/1000,
+    c6_road_Aluminum_Operational=i6_road_Aluminum*r6_Aluminum_Operational/1000,
+    c6_road_Aluminum_Transportation=i6_road_Aluminum*r6_Aluminum_Transportation/1000,
+    c6_road_Aluminum_End=i6_road_Aluminum*r6_Aluminum_End/1000,
+    
+    c6_road_Steel_Extraction=i6_road_Steel*r6_Steel_Extraction/1000,
+    c6_road_Steel_Manufacturing=i6_road_Steel*r6_Steel_Manufacturing/1000,
+    c6_road_Steel_Operational=i6_road_Steel*r6_Steel_Operational/1000,
+    c6_road_Steel_Transportation=i6_road_Steel*r6_Steel_Transportation/1000,
+    c6_road_Steel_End=i6_road_Steel*r6_Steel_End/1000,
+    
+    c6_road_Copper_Extraction=i6_road_Copper*r6_Copper_Extraction/1000,
+    c6_road_Copper_Manufacturing=i6_road_Copper*r6_Copper_Manufacturing/1000,
+    c6_road_Copper_Operational=i6_road_Copper*r6_Copper_Operational/1000,
+    c6_road_Copper_Transportation=i6_road_Copper*r6_Copper_Transportation/1000,
+    c6_road_Copper_End=i6_road_Copper*r6_Copper_End/1000,
+    
+    c6_road_Cement_Extraction=i6_road_Cement*r6_Cement_Extraction/1000,
+    c6_road_Cement_Manufacturing=i6_road_Cement*r6_Cement_Manufacturing/1000,
+    c6_road_Cement_Operational=i6_road_Cement*r6_Cement_Operational/1000,
+    c6_road_Cement_Transportation=i6_road_Cement*r6_Cement_Transportation/1000,
+    c6_road_Cement_End=i6_road_Cement*r6_Cement_End/1000,
+    
+    c6_road_Gravel_Extraction=i6_road_Gravel*r6_Gravel_Extraction/1000,
+    c6_road_Gravel_Manufacturing=i6_road_Gravel*r6_Gravel_Manufacturing/1000,
+    c6_road_Gravel_Operational=i6_road_Gravel*r6_Gravel_Operational/1000,
+    c6_road_Gravel_Transportation=i6_road_Gravel*r6_Gravel_Transportation/1000,
+    c6_road_Gravel_End=i6_road_Gravel*r6_Gravel_End/1000,
+    
+    c6_road_Sand_Extraction=i6_road_Sand*r6_Sand_Extraction/1000,
+    c6_road_Sand_Manufacturing=i6_road_Sand*r6_Sand_Manufacturing/1000,
+    c6_road_Sand_Operational=i6_road_Sand*r6_Sand_Operational/1000,
+    c6_road_Sand_Transportation=i6_road_Sand*r6_Sand_Transportation/1000,
+    c6_road_Sand_End=i6_road_Sand*r6_Sand_End/1000,
+    
+    c6_road_Asphalt_Extraction=i6_road_Asphalt*r6_Asphalt_Extraction/1000,
+    c6_road_Asphalt_Manufacturing=i6_road_Asphalt*r6_Asphalt_Manufacturing/1000,
+    c6_road_Asphalt_Operational=i6_road_Asphalt*r6_Asphalt_Operational/1000,
+    c6_road_Asphalt_Transportation=i6_road_Asphalt*r6_Asphalt_Transportation/1000,
+    c6_road_Asphalt_End=i6_road_Asphalt*r6_Asphalt_End/1000,
+    
+    
+    rail_Aluminum_Extraction=i_rail_Aluminum*Railroads_Aluminum_Extraction/1000,
+    rail_Aluminum_Manufacturing=i_rail_Aluminum*Railroads_Aluminum_Manufacturing/1000,
+    rail_Aluminum_Operational=i_rail_Aluminum*Railroads_Aluminum_Operational/1000,
+    rail_Aluminum_Transportation=i_rail_Aluminum*Railroads_Aluminum_Transportation/1000,
+    rail_Aluminum_End=i_rail_Aluminum*Railroads_Aluminum_End/1000,
+    
+    rail_Steel_Extraction=i_rail_Steel*Railroads_Steel_Extraction/1000,
+    rail_Steel_Manufacturing=i_rail_Steel*Railroads_Steel_Manufacturing/1000,
+    rail_Steel_Operational=i_rail_Steel*Railroads_Steel_Operational/1000,
+    rail_Steel_Transportation=i_rail_Steel*Railroads_Steel_Transportation/1000,
+    rail_Steel_End=i_rail_Steel*Railroads_Steel_End/1000,
+    
+    rail_Copper_Extraction=i_rail_Copper*Railroads_Copper_Extraction/1000,
+    rail_Copper_Manufacturing=i_rail_Copper*Railroads_Copper_Manufacturing/1000,
+    rail_Copper_Operational=i_rail_Copper*Railroads_Copper_Operational/1000,
+    rail_Copper_Transportation=i_rail_Copper*Railroads_Copper_Transportation/1000,
+    rail_Copper_End=i_rail_Copper*Railroads_Copper_End/1000,
+    
+    rail_Cement_Extraction=i_rail_Cement*Railroads_Cement_Extraction/1000,
+    rail_Cement_Manufacturing=i_rail_Cement*Railroads_Cement_Manufacturing/1000,
+    rail_Cement_Operational=i_rail_Cement*Railroads_Cement_Operational/1000,
+    rail_Cement_Transportation=i_rail_Cement*Railroads_Cement_Transportation/1000,
+    rail_Cement_End=i_rail_Cement*Railroads_Cement_End/1000,
+    
+    rail_Gravel_Extraction=i_rail_Gravel*Railroads_Gravel_Extraction/1000,
+    rail_Gravel_Manufacturing=i_rail_Gravel*Railroads_Gravel_Manufacturing/1000,
+    rail_Gravel_Operational=i_rail_Gravel*Railroads_Gravel_Operational/1000,
+    rail_Gravel_Transportation=i_rail_Gravel*Railroads_Gravel_Transportation/1000,
+    rail_Gravel_End=i_rail_Gravel*Railroads_Gravel_End/1000,
+    
+    rail_Sand_Extraction=i_rail_Sand*Railroads_Sand_Extraction/1000,
+    rail_Sand_Manufacturing=i_rail_Sand*Railroads_Sand_Manufacturing/1000,
+    rail_Sand_Operational=i_rail_Sand*Railroads_Sand_Operational/1000,
+    rail_Sand_Transportation=i_rail_Sand*Railroads_Sand_Transportation/1000,
+    rail_Sand_End=i_rail_Sand*Railroads_Sand_End/1000,
+    
+    rail_Wood_Extraction=i_rail_Wood*Railroads_Wood_Extraction/1000,
+    rail_Wood_Manufacturing=i_rail_Wood*Railroads_Wood_Manufacturing/1000,
+    rail_Wood_Operational=i_rail_Wood*Railroads_Wood_Operational/1000,
+    rail_Wood_Transportation=i_rail_Wood*Railroads_Wood_Transportation/1000,
+    rail_Wood_End=i_rail_Wood*Railroads_Wood_End/1000
+  ) -> df2
+
+
+
+
+readxl::read_xlsx("AFCC/excel/carbonIntensity2.xlsx") %>% 
+  dplyr::filter(Sectors=="energy") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link",Product, Materials) %>% 
+  spread(Process, Carbon) -> mfd
+
+
+
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e1_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e1_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e1_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e1_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e1_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e1_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e1_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e1_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e1_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e1_Aluminum_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e1_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e1_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e1_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e1_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e1_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e1_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e1_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e1_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e1_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e1_Cement_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e1_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e1_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="e1_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e1_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e1_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e1_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="e1_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e1_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="e1_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e1_Copper_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e1_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e1_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e1_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e1_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e1_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e1_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e1_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e1_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e1_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e1_Gravel_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e1_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e1_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e1_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e1_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e1_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e1_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e1_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e1_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e1_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e1_Sand_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e1_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e1_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e1_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e1_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e1_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e1_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e1_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e1_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e1_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e1_Steel_End
+
+
+
+
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="e2_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e2_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e2_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e2_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e2_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e2_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e2_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e2_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e2_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e2_Aluminum_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="e2_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e2_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e2_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e2_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e2_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e2_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e2_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e2_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e2_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e2_Cement_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="e2_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e2_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="e2_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e2_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e2_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e2_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="e2_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e2_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="e2_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e2_Copper_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="e2_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e2_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e2_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e2_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e2_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e2_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e2_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e2_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e2_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e2_Gravel_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="e2_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e2_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e2_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e2_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e2_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e2_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e2_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e2_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e2_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e2_Sand_End
+
+
+##r2  
+mfd %>% 
+  dplyr::filter(link=="e2_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e2_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e2_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e2_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e2_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e2_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e2_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e2_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e2_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e2_Steel_End
+
+
+
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="e3_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e3_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e3_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e3_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e3_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e3_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e3_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e3_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e3_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e3_Aluminum_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="e3_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e3_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e3_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e3_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e3_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e3_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e3_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e3_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e3_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e3_Cement_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="e3_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e3_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="e3_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e3_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e3_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e3_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="e3_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e3_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="e3_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e3_Copper_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="e3_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e3_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e3_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e3_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e3_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e3_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e3_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e3_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e3_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e3_Gravel_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="e3_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e3_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e3_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e3_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e3_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e3_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e3_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e3_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e3_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e3_Sand_End
+
+
+##r3  
+mfd %>% 
+  dplyr::filter(link=="e3_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e3_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e3_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e3_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e3_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e3_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e3_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e3_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e3_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e3_Steel_End
+
+
+
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="e4_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e4_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e4_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e4_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e4_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e4_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e4_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e4_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e4_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e4_Aluminum_End
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="e4_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e4_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e4_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e4_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e4_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e4_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e4_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e4_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e4_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e4_Cement_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="e4_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e4_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="e4_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e4_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e4_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e4_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="e4_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e4_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="e4_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e4_Copper_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="e4_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e4_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e4_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e4_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e4_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e4_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e4_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e4_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e4_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e4_Gravel_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="e4_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e4_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e4_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e4_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e4_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e4_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e4_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e4_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e4_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e4_Sand_End
+
+
+##r4  
+mfd %>% 
+  dplyr::filter(link=="e4_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e4_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e4_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e4_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e4_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e4_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e4_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e4_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e4_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e4_Steel_End
+
+
+
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="e5_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e5_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e5_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e5_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e5_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e5_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e5_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e5_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e5_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e5_Aluminum_End
+
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="e5_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e5_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e5_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e5_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e5_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e5_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e5_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e5_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e5_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e5_Cement_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="e5_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e5_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="e5_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e5_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e5_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e5_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="e5_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e5_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="e5_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e5_Copper_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="e5_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e5_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e5_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e5_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e5_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e5_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e5_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e5_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e5_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e5_Gravel_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="e5_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e5_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e5_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e5_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e5_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e5_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e5_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e5_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e5_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e5_Sand_End
+
+
+##r5  
+mfd %>% 
+  dplyr::filter(link=="e5_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e5_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e5_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e5_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e5_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e5_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e5_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e5_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e5_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e5_Steel_End
+
+
+
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="e6_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e6_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e6_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e6_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e6_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e6_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e6_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e6_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e6_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e6_Aluminum_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="e6_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e6_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e6_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e6_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e6_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e6_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e6_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e6_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e6_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e6_Cement_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="e6_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e6_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="e6_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e6_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e6_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e6_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="e6_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e6_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="e6_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e6_Copper_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="e6_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e6_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e6_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e6_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e6_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e6_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e6_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e6_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e6_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e6_Gravel_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="e6_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e6_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e6_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e6_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e6_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e6_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e6_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e6_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e6_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e6_Sand_End
+
+
+##r6  
+mfd %>% 
+  dplyr::filter(link=="e6_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e6_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e6_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e6_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e6_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e6_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e6_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e6_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e6_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e6_Steel_End
+
+
+
+##r7  
+mfd %>% 
+  dplyr::filter(link=="e7_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e7_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e7_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e7_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e7_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e7_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e7_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e7_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e7_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e7_Aluminum_End
+
+
+##r7  
+mfd %>% 
+  dplyr::filter(link=="e7_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e7_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e7_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e7_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e7_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e7_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e7_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e7_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e7_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e7_Cement_End
+
+
+##r7  
+mfd %>% 
+  dplyr::filter(link=="e7_Copper") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e7_Copper_Extraction
+mfd %>% 
+  dplyr::filter(link=="e7_Copper") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e7_Copper_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e7_Copper") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e7_Copper_Operational
+mfd %>% 
+  dplyr::filter(link=="e7_Copper") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e7_Copper_Transportation
+mfd %>% 
+  dplyr::filter(link=="e7_Copper") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e7_Copper_End
+
+
+##r7  
+mfd %>% 
+  dplyr::filter(link=="e7_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e7_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e7_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e7_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e7_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e7_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e7_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e7_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e7_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e7_Gravel_End
+
+
+##r7  
+mfd %>% 
+  dplyr::filter(link=="e7_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e7_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e7_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e7_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e7_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e7_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e7_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e7_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e7_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e7_Sand_End
+
+
+##r7  
+mfd %>% 
+  dplyr::filter(link=="e7_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> e7_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e7_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> e7_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e7_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> e7_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e7_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> e7_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e7_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> e7_Steel_End
+
+
+
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e-lines_Aluminum") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> els_Aluminum_Extraction
+mfd %>% 
+  dplyr::filter(link=="e-lines_Aluminum") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> els_Aluminum_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e-lines_Aluminum") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> els_Aluminum_Operational
+mfd %>% 
+  dplyr::filter(link=="e-lines_Aluminum") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> els_Aluminum_Transportation
+mfd %>% 
+  dplyr::filter(link=="e-lines_Aluminum") %>% 
+  dplyr::select(End) %>% 
+  pull() -> els_Aluminum_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e-lines_Cement") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> els_Cement_Extraction
+mfd %>% 
+  dplyr::filter(link=="e-lines_Cement") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> els_Cement_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e-lines_Cement") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> els_Cement_Operational
+mfd %>% 
+  dplyr::filter(link=="e-lines_Cement") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> els_Cement_Transportation
+mfd %>% 
+  dplyr::filter(link=="e-lines_Cement") %>% 
+  dplyr::select(End) %>% 
+  pull() -> els_Cement_End
+
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e-lines_Gravel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> els_Gravel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e-lines_Gravel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> els_Gravel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e-lines_Gravel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> els_Gravel_Operational
+mfd %>% 
+  dplyr::filter(link=="e-lines_Gravel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> els_Gravel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e-lines_Gravel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> els_Gravel_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e-lines_Sand") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> els_Sand_Extraction
+mfd %>% 
+  dplyr::filter(link=="e-lines_Sand") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> els_Sand_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e-lines_Sand") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> els_Sand_Operational
+mfd %>% 
+  dplyr::filter(link=="e-lines_Sand") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> els_Sand_Transportation
+mfd %>% 
+  dplyr::filter(link=="e-lines_Sand") %>% 
+  dplyr::select(End) %>% 
+  pull() -> els_Sand_End
+
+
+##r1  
+mfd %>% 
+  dplyr::filter(link=="e-lines_Steel") %>% 
+  dplyr::select(Extraction) %>% 
+  pull() -> els_Steel_Extraction
+mfd %>% 
+  dplyr::filter(link=="e-lines_Steel") %>% 
+  dplyr::select(Manufacturing) %>% 
+  pull() -> els_Steel_Manufacturing
+mfd %>% 
+  dplyr::filter(link=="e-lines_Steel") %>% 
+  dplyr::select(Operational) %>% 
+  pull() -> els_Steel_Operational
+mfd %>% 
+  dplyr::filter(link=="e-lines_Steel") %>% 
+  dplyr::select(Transportation) %>% 
+  pull() -> els_Steel_Transportation
+mfd %>% 
+  dplyr::filter(link=="e-lines_Steel") %>% 
+  dplyr::select(End) %>% 
+  pull() -> els_Steel_End
+
+
+names(df2)
+
+df2 %>% 
+  mutate(
+    c1_elec_Aluminum_Extraction=i1_elec_Aluminum*e1_Aluminum_Extraction/1000,
+    c1_elec_Aluminum_Manufacturing=i1_elec_Aluminum*e1_Aluminum_Manufacturing/1000,
+    c1_elec_Aluminum_Operational=i1_elec_Aluminum*e1_Aluminum_Operational/1000,
+    c1_elec_Aluminum_Transportation=i1_elec_Aluminum*e1_Aluminum_Transportation/1000,
+    c1_elec_Aluminum_End=i1_elec_Aluminum*e1_Aluminum_End/1000,
+    
+    c1_elec_Steel_Extraction=i1_elec_Steel*e1_Steel_Extraction/1000,
+    c1_elec_Steel_Manufacturing=i1_elec_Steel*e1_Steel_Manufacturing/1000,
+    c1_elec_Steel_Operational=i1_elec_Steel*e1_Steel_Operational/1000,
+    c1_elec_Steel_Transportation=i1_elec_Steel*e1_Steel_Transportation/1000,
+    c1_elec_Steel_End=i1_elec_Steel*e1_Steel_End/1000,
+    
+    c1_elec_Copper_Extraction=i1_elec_Copper*e1_Copper_Extraction/1000,
+    c1_elec_Copper_Manufacturing=i1_elec_Copper*e1_Copper_Manufacturing/1000,
+    c1_elec_Copper_Operational=i1_elec_Copper*e1_Copper_Operational/1000,
+    c1_elec_Copper_Transportation=i1_elec_Copper*e1_Copper_Transportation/1000,
+    c1_elec_Copper_End=i1_elec_Copper*e1_Copper_End/1000,
+    
+    c1_elec_Cement_Extraction=i1_elec_Cement*e1_Cement_Extraction/1000,
+    c1_elec_Cement_Manufacturing=i1_elec_Cement*e1_Cement_Manufacturing/1000,
+    c1_elec_Cement_Operational=i1_elec_Cement*e1_Cement_Operational/1000,
+    c1_elec_Cement_Transportation=i1_elec_Cement*e1_Cement_Transportation/1000,
+    c1_elec_Cement_End=i1_elec_Cement*e1_Cement_End/1000,
+    
+    c1_elec_Gravel_Extraction=i1_elec_Gravel*e1_Gravel_Extraction/1000,
+    c1_elec_Gravel_Manufacturing=i1_elec_Gravel*e1_Gravel_Manufacturing/1000,
+    c1_elec_Gravel_Operational=i1_elec_Gravel*e1_Gravel_Operational/1000,
+    c1_elec_Gravel_Transportation=i1_elec_Gravel*e1_Gravel_Transportation/1000,
+    c1_elec_Gravel_End=i1_elec_Gravel*e1_Gravel_End/1000,
+    
+    c1_elec_Sand_Extraction=i1_elec_Sand*e1_Sand_Extraction/1000,
+    c1_elec_Sand_Manufacturing=i1_elec_Sand*e1_Sand_Manufacturing/1000,
+    c1_elec_Sand_Operational=i1_elec_Sand*e1_Sand_Operational/1000,
+    c1_elec_Sand_Transportation=i1_elec_Sand*e1_Sand_Transportation/1000,
+    c1_elec_Sand_End=i1_elec_Sand*e1_Sand_End/1000,
+    
+    c2_elec_Aluminum_Extraction=i2_elec_Aluminum*e2_Aluminum_Extraction/1000,
+    c2_elec_Aluminum_Manufacturing=i2_elec_Aluminum*e2_Aluminum_Manufacturing/1000,
+    c2_elec_Aluminum_Operational=i2_elec_Aluminum*e2_Aluminum_Operational/1000,
+    c2_elec_Aluminum_Transportation=i2_elec_Aluminum*e2_Aluminum_Transportation/1000,
+    c2_elec_Aluminum_End=i2_elec_Aluminum*e2_Aluminum_End/1000,
+    
+    c2_elec_Steel_Extraction=i2_elec_Steel*e2_Steel_Extraction/1000,
+    c2_elec_Steel_Manufacturing=i2_elec_Steel*e2_Steel_Manufacturing/1000,
+    c2_elec_Steel_Operational=i2_elec_Steel*e2_Steel_Operational/1000,
+    c2_elec_Steel_Transportation=i2_elec_Steel*e2_Steel_Transportation/1000,
+    c2_elec_Steel_End=i2_elec_Steel*e2_Steel_End/1000,
+    
+    c2_elec_Copper_Extraction=i2_elec_Copper*e2_Copper_Extraction/1000,
+    c2_elec_Copper_Manufacturing=i2_elec_Copper*e2_Copper_Manufacturing/1000,
+    c2_elec_Copper_Operational=i2_elec_Copper*e2_Copper_Operational/1000,
+    c2_elec_Copper_Transportation=i2_elec_Copper*e2_Copper_Transportation/1000,
+    c2_elec_Copper_End=i2_elec_Copper*e2_Copper_End/1000,
+    
+    c2_elec_Cement_Extraction=i2_elec_Cement*e2_Cement_Extraction/1000,
+    c2_elec_Cement_Manufacturing=i2_elec_Cement*e2_Cement_Manufacturing/1000,
+    c2_elec_Cement_Operational=i2_elec_Cement*e2_Cement_Operational/1000,
+    c2_elec_Cement_Transportation=i2_elec_Cement*e2_Cement_Transportation/1000,
+    c2_elec_Cement_End=i2_elec_Cement*e2_Cement_End/1000,
+    
+    c2_elec_Gravel_Extraction=i2_elec_Gravel*e2_Gravel_Extraction/1000,
+    c2_elec_Gravel_Manufacturing=i2_elec_Gravel*e2_Gravel_Manufacturing/1000,
+    c2_elec_Gravel_Operational=i2_elec_Gravel*e2_Gravel_Operational/1000,
+    c2_elec_Gravel_Transportation=i2_elec_Gravel*e2_Gravel_Transportation/1000,
+    c2_elec_Gravel_End=i2_elec_Gravel*e2_Gravel_End/1000,
+    
+    c2_elec_Sand_Extraction=i2_elec_Sand*e2_Sand_Extraction/1000,
+    c2_elec_Sand_Manufacturing=i2_elec_Sand*e2_Sand_Manufacturing/1000,
+    c2_elec_Sand_Operational=i2_elec_Sand*e2_Sand_Operational/1000,
+    c2_elec_Sand_Transportation=i2_elec_Sand*e2_Sand_Transportation/1000,
+    c2_elec_Sand_End=i2_elec_Sand*e2_Sand_End/1000,
+    
+    c3_elec_Aluminum_Extraction=i3_elec_Aluminum*e3_Aluminum_Extraction/1000,
+    c3_elec_Aluminum_Manufacturing=i3_elec_Aluminum*e3_Aluminum_Manufacturing/1000,
+    c3_elec_Aluminum_Operational=i3_elec_Aluminum*e3_Aluminum_Operational/1000,
+    c3_elec_Aluminum_Transportation=i3_elec_Aluminum*e3_Aluminum_Transportation/1000,
+    c3_elec_Aluminum_End=i3_elec_Aluminum*e3_Aluminum_End/1000,
+    
+    c3_elec_Steel_Extraction=i3_elec_Steel*e3_Steel_Extraction/1000,
+    c3_elec_Steel_Manufacturing=i3_elec_Steel*e3_Steel_Manufacturing/1000,
+    c3_elec_Steel_Operational=i3_elec_Steel*e3_Steel_Operational/1000,
+    c3_elec_Steel_Transportation=i3_elec_Steel*e3_Steel_Transportation/1000,
+    c3_elec_Steel_End=i3_elec_Steel*e3_Steel_End/1000,
+    
+    c3_elec_Copper_Extraction=i3_elec_Copper*e3_Copper_Extraction/1000,
+    c3_elec_Copper_Manufacturing=i3_elec_Copper*e3_Copper_Manufacturing/1000,
+    c3_elec_Copper_Operational=i3_elec_Copper*e3_Copper_Operational/1000,
+    c3_elec_Copper_Transportation=i3_elec_Copper*e3_Copper_Transportation/1000,
+    c3_elec_Copper_End=i3_elec_Copper*e3_Copper_End/1000,
+    
+    c3_elec_Cement_Extraction=i3_elec_Cement*e3_Cement_Extraction/1000,
+    c3_elec_Cement_Manufacturing=i3_elec_Cement*e3_Cement_Manufacturing/1000,
+    c3_elec_Cement_Operational=i3_elec_Cement*e3_Cement_Operational/1000,
+    c3_elec_Cement_Transportation=i3_elec_Cement*e3_Cement_Transportation/1000,
+    c3_elec_Cement_End=i3_elec_Cement*e3_Cement_End/1000,
+    
+    c3_elec_Gravel_Extraction=i3_elec_Gravel*e3_Gravel_Extraction/1000,
+    c3_elec_Gravel_Manufacturing=i3_elec_Gravel*e3_Gravel_Manufacturing/1000,
+    c3_elec_Gravel_Operational=i3_elec_Gravel*e3_Gravel_Operational/1000,
+    c3_elec_Gravel_Transportation=i3_elec_Gravel*e3_Gravel_Transportation/1000,
+    c3_elec_Gravel_End=i3_elec_Gravel*e3_Gravel_End/1000,
+    
+    c3_elec_Sand_Extraction=i3_elec_Sand*e3_Sand_Extraction/1000,
+    c3_elec_Sand_Manufacturing=i3_elec_Sand*e3_Sand_Manufacturing/1000,
+    c3_elec_Sand_Operational=i3_elec_Sand*e3_Sand_Operational/1000,
+    c3_elec_Sand_Transportation=i3_elec_Sand*e3_Sand_Transportation/1000,
+    c3_elec_Sand_End=i3_elec_Sand*e3_Sand_End/1000,
+    
+    c4_elec_Aluminum_Extraction=i4_elec_Aluminum*e4_Aluminum_Extraction/1000,
+    c4_elec_Aluminum_Manufacturing=i4_elec_Aluminum*e4_Aluminum_Manufacturing/1000,
+    c4_elec_Aluminum_Operational=i4_elec_Aluminum*e4_Aluminum_Operational/1000,
+    c4_elec_Aluminum_Transportation=i4_elec_Aluminum*e4_Aluminum_Transportation/1000,
+    c4_elec_Aluminum_End=i4_elec_Aluminum*e4_Aluminum_End/1000,
+    
+    c4_elec_Steel_Extraction=i4_elec_Steel*e4_Steel_Extraction/1000,
+    c4_elec_Steel_Manufacturing=i4_elec_Steel*e4_Steel_Manufacturing/1000,
+    c4_elec_Steel_Operational=i4_elec_Steel*e4_Steel_Operational/1000,
+    c4_elec_Steel_Transportation=i4_elec_Steel*e4_Steel_Transportation/1000,
+    c4_elec_Steel_End=i4_elec_Steel*e4_Steel_End/1000,
+    
+    c4_elec_Copper_Extraction=i4_elec_Copper*e4_Copper_Extraction/1000,
+    c4_elec_Copper_Manufacturing=i4_elec_Copper*e4_Copper_Manufacturing/1000,
+    c4_elec_Copper_Operational=i4_elec_Copper*e4_Copper_Operational/1000,
+    c4_elec_Copper_Transportation=i4_elec_Copper*e4_Copper_Transportation/1000,
+    c4_elec_Copper_End=i4_elec_Copper*e4_Copper_End/1000,
+    
+    c4_elec_Cement_Extraction=i4_elec_Cement*e4_Cement_Extraction/1000,
+    c4_elec_Cement_Manufacturing=i4_elec_Cement*e4_Cement_Manufacturing/1000,
+    c4_elec_Cement_Operational=i4_elec_Cement*e4_Cement_Operational/1000,
+    c4_elec_Cement_Transportation=i4_elec_Cement*e4_Cement_Transportation/1000,
+    c4_elec_Cement_End=i4_elec_Cement*e4_Cement_End/1000,
+    
+    c4_elec_Gravel_Extraction=i4_elec_Gravel*e4_Gravel_Extraction/1000,
+    c4_elec_Gravel_Manufacturing=i4_elec_Gravel*e4_Gravel_Manufacturing/1000,
+    c4_elec_Gravel_Operational=i4_elec_Gravel*e4_Gravel_Operational/1000,
+    c4_elec_Gravel_Transportation=i4_elec_Gravel*e4_Gravel_Transportation/1000,
+    c4_elec_Gravel_End=i4_elec_Gravel*e4_Gravel_End/1000,
+    
+    c4_elec_Sand_Extraction=i4_elec_Sand*e4_Sand_Extraction/1000,
+    c4_elec_Sand_Manufacturing=i4_elec_Sand*e4_Sand_Manufacturing/1000,
+    c4_elec_Sand_Operational=i4_elec_Sand*e4_Sand_Operational/1000,
+    c4_elec_Sand_Transportation=i4_elec_Sand*e4_Sand_Transportation/1000,
+    c4_elec_Sand_End=i4_elec_Sand*e4_Sand_End/1000,
+    
+    c5_elec_Aluminum_Extraction=i5_elec_Aluminum*e5_Aluminum_Extraction/1000,
+    c5_elec_Aluminum_Manufacturing=i5_elec_Aluminum*e5_Aluminum_Manufacturing/1000,
+    c5_elec_Aluminum_Operational=i5_elec_Aluminum*e5_Aluminum_Operational/1000,
+    c5_elec_Aluminum_Transportation=i5_elec_Aluminum*e5_Aluminum_Transportation/1000,
+    c5_elec_Aluminum_End=i5_elec_Aluminum*e5_Aluminum_End/1000,
+    
+    c5_elec_Steel_Extraction=i5_elec_Steel*e5_Steel_Extraction/1000,
+    c5_elec_Steel_Manufacturing=i5_elec_Steel*e5_Steel_Manufacturing/1000,
+    c5_elec_Steel_Operational=i5_elec_Steel*e5_Steel_Operational/1000,
+    c5_elec_Steel_Transportation=i5_elec_Steel*e5_Steel_Transportation/1000,
+    c5_elec_Steel_End=i5_elec_Steel*e5_Steel_End/1000,
+    
+    c5_elec_Copper_Extraction=i5_elec_Copper*e5_Copper_Extraction/1000,
+    c5_elec_Copper_Manufacturing=i5_elec_Copper*e5_Copper_Manufacturing/1000,
+    c5_elec_Copper_Operational=i5_elec_Copper*e5_Copper_Operational/1000,
+    c5_elec_Copper_Transportation=i5_elec_Copper*e5_Copper_Transportation/1000,
+    c5_elec_Copper_End=i5_elec_Copper*e5_Copper_End/1000,
+    
+    c5_elec_Cement_Extraction=i5_elec_Cement*e5_Cement_Extraction/1000,
+    c5_elec_Cement_Manufacturing=i5_elec_Cement*e5_Cement_Manufacturing/1000,
+    c5_elec_Cement_Operational=i5_elec_Cement*e5_Cement_Operational/1000,
+    c5_elec_Cement_Transportation=i5_elec_Cement*e5_Cement_Transportation/1000,
+    c5_elec_Cement_End=i5_elec_Cement*e5_Cement_End/1000,
+    
+    c5_elec_Gravel_Extraction=i5_elec_Gravel*e5_Gravel_Extraction/1000,
+    c5_elec_Gravel_Manufacturing=i5_elec_Gravel*e5_Gravel_Manufacturing/1000,
+    c5_elec_Gravel_Operational=i5_elec_Gravel*e5_Gravel_Operational/1000,
+    c5_elec_Gravel_Transportation=i5_elec_Gravel*e5_Gravel_Transportation/1000,
+    c5_elec_Gravel_End=i5_elec_Gravel*e5_Gravel_End/1000,
+    
+    c5_elec_Sand_Extraction=i5_elec_Sand*e5_Sand_Extraction/1000,
+    c5_elec_Sand_Manufacturing=i5_elec_Sand*e5_Sand_Manufacturing/1000,
+    c5_elec_Sand_Operational=i5_elec_Sand*e5_Sand_Operational/1000,
+    c5_elec_Sand_Transportation=i5_elec_Sand*e5_Sand_Transportation/1000,
+    c5_elec_Sand_End=i5_elec_Sand*e5_Sand_End/1000,
+    
+    c6_elec_Aluminum_Extraction=i6_elec_Aluminum*e6_Aluminum_Extraction/1000,
+    c6_elec_Aluminum_Manufacturing=i6_elec_Aluminum*e6_Aluminum_Manufacturing/1000,
+    c6_elec_Aluminum_Operational=i6_elec_Aluminum*e6_Aluminum_Operational/1000,
+    c6_elec_Aluminum_Transportation=i6_elec_Aluminum*e6_Aluminum_Transportation/1000,
+    c6_elec_Aluminum_End=i6_elec_Aluminum*e6_Aluminum_End/1000,
+    
+    c6_elec_Steel_Extraction=i6_elec_Steel*e6_Steel_Extraction/1000,
+    c6_elec_Steel_Manufacturing=i6_elec_Steel*e6_Steel_Manufacturing/1000,
+    c6_elec_Steel_Operational=i6_elec_Steel*e6_Steel_Operational/1000,
+    c6_elec_Steel_Transportation=i6_elec_Steel*e6_Steel_Transportation/1000,
+    c6_elec_Steel_End=i6_elec_Steel*e6_Steel_End/1000,
+    
+    c6_elec_Copper_Extraction=i6_elec_Copper*e6_Copper_Extraction/1000,
+    c6_elec_Copper_Manufacturing=i6_elec_Copper*e6_Copper_Manufacturing/1000,
+    c6_elec_Copper_Operational=i6_elec_Copper*e6_Copper_Operational/1000,
+    c6_elec_Copper_Transportation=i6_elec_Copper*e6_Copper_Transportation/1000,
+    c6_elec_Copper_End=i6_elec_Copper*e6_Copper_End/1000,
+    
+    c6_elec_Cement_Extraction=i6_elec_Cement*e6_Cement_Extraction/1000,
+    c6_elec_Cement_Manufacturing=i6_elec_Cement*e6_Cement_Manufacturing/1000,
+    c6_elec_Cement_Operational=i6_elec_Cement*e6_Cement_Operational/1000,
+    c6_elec_Cement_Transportation=i6_elec_Cement*e6_Cement_Transportation/1000,
+    c6_elec_Cement_End=i6_elec_Cement*e6_Cement_End/1000,
+    
+    c6_elec_Gravel_Extraction=i6_elec_Gravel*e6_Gravel_Extraction/1000,
+    c6_elec_Gravel_Manufacturing=i6_elec_Gravel*e6_Gravel_Manufacturing/1000,
+    c6_elec_Gravel_Operational=i6_elec_Gravel*e6_Gravel_Operational/1000,
+    c6_elec_Gravel_Transportation=i6_elec_Gravel*e6_Gravel_Transportation/1000,
+    c6_elec_Gravel_End=i6_elec_Gravel*e6_Gravel_End/1000,
+    
+    c6_elec_Sand_Extraction=i6_elec_Sand*e6_Sand_Extraction/1000,
+    c6_elec_Sand_Manufacturing=i6_elec_Sand*e6_Sand_Manufacturing/1000,
+    c6_elec_Sand_Operational=i6_elec_Sand*e6_Sand_Operational/1000,
+    c6_elec_Sand_Transportation=i6_elec_Sand*e6_Sand_Transportation/1000,
+    c6_elec_Sand_End=i6_elec_Sand*e6_Sand_End/1000,
+    
+    c7_elec_Aluminum_Extraction=i7_elec_Aluminum*e7_Aluminum_Extraction/1000,
+    c7_elec_Aluminum_Manufacturing=i7_elec_Aluminum*e7_Aluminum_Manufacturing/1000,
+    c7_elec_Aluminum_Operational=i7_elec_Aluminum*e7_Aluminum_Operational/1000,
+    c7_elec_Aluminum_Transportation=i7_elec_Aluminum*e7_Aluminum_Transportation/1000,
+    c7_elec_Aluminum_End=i7_elec_Aluminum*e7_Aluminum_End/1000,
+    
+    c7_elec_Steel_Extraction=i7_elec_Steel*e7_Steel_Extraction/1000,
+    c7_elec_Steel_Manufacturing=i7_elec_Steel*e7_Steel_Manufacturing/1000,
+    c7_elec_Steel_Operational=i7_elec_Steel*e7_Steel_Operational/1000,
+    c7_elec_Steel_Transportation=i7_elec_Steel*e7_Steel_Transportation/1000,
+    c7_elec_Steel_End=i7_elec_Steel*e7_Steel_End/1000,
+    
+    c7_elec_Copper_Extraction=i7_elec_Copper*e7_Copper_Extraction/1000,
+    c7_elec_Copper_Manufacturing=i7_elec_Copper*e7_Copper_Manufacturing/1000,
+    c7_elec_Copper_Operational=i7_elec_Copper*e7_Copper_Operational/1000,
+    c7_elec_Copper_Transportation=i7_elec_Copper*e7_Copper_Transportation/1000,
+    c7_elec_Copper_End=i7_elec_Copper*e7_Copper_End/1000,
+    
+    c7_elec_Cement_Extraction=i7_elec_Cement*e7_Cement_Extraction/1000,
+    c7_elec_Cement_Manufacturing=i7_elec_Cement*e7_Cement_Manufacturing/1000,
+    c7_elec_Cement_Operational=i7_elec_Cement*e7_Cement_Operational/1000,
+    c7_elec_Cement_Transportation=i7_elec_Cement*e7_Cement_Transportation/1000,
+    c7_elec_Cement_End=i7_elec_Cement*e7_Cement_End/1000,
+    
+    c7_elec_Gravel_Extraction=i7_elec_Gravel*e7_Gravel_Extraction/1000,
+    c7_elec_Gravel_Manufacturing=i7_elec_Gravel*e7_Gravel_Manufacturing/1000,
+    c7_elec_Gravel_Operational=i7_elec_Gravel*e7_Gravel_Operational/1000,
+    c7_elec_Gravel_Transportation=i7_elec_Gravel*e7_Gravel_Transportation/1000,
+    c7_elec_Gravel_End=i7_elec_Gravel*e7_Gravel_End/1000,
+    
+    c7_elec_Sand_Extraction=i7_elec_Sand*e7_Sand_Extraction/1000,
+    c7_elec_Sand_Manufacturing=i7_elec_Sand*e7_Sand_Manufacturing/1000,
+    c7_elec_Sand_Operational=i7_elec_Sand*e7_Sand_Operational/1000,
+    c7_elec_Sand_Transportation=i7_elec_Sand*e7_Sand_Transportation/1000,
+    c7_elec_Sand_End=i7_elec_Sand*e7_Sand_End/1000,
+    
+    
+    c_line_Aluminum_Extraction=i_elec_Aluminum*els_Aluminum_Extraction/1000,
+    c_line_Aluminum_Manufacturing=i_elec_Aluminum*els_Aluminum_Manufacturing/1000,
+    c_line_Aluminum_Operational=i_elec_Aluminum*els_Aluminum_Operational/1000,
+    c_line_Aluminum_Transportation=i_elec_Aluminum*els_Aluminum_Transportation/1000,
+    c_line_Aluminum_End=i_elec_Aluminum*els_Aluminum_End/1000,
+    
+    c_line_Steel_Extraction=i_elec_Steel*els_Steel_Extraction/1000,
+    c_line_Steel_Manufacturing=i_elec_Steel*els_Steel_Manufacturing/1000,
+    c_line_Steel_Operational=i_elec_Steel*els_Steel_Operational/1000,
+    c_line_Steel_Transportation=i_elec_Steel*els_Steel_Transportation/1000,
+    c_line_Steel_End=i_elec_Steel*els_Steel_End/1000,
+    
+    c_line_Cement_Extraction=i_elec_Cement*els_Cement_Extraction/1000,
+    c_line_Cement_Manufacturing=i_elec_Cement*els_Cement_Manufacturing/1000,
+    c_line_Cement_Operational=i_elec_Cement*els_Cement_Operational/1000,
+    c_line_Cement_Transportation=i_elec_Cement*els_Cement_Transportation/1000,
+    c_line_Cement_End=i_elec_Cement*els_Cement_End/1000,
+    
+    c_line_Gravel_Extraction=i_elec_Gravel*els_Gravel_Extraction/1000,
+    c_line_Gravel_Manufacturing=i_elec_Gravel*els_Gravel_Manufacturing/1000,
+    c_line_Gravel_Operational=i_elec_Gravel*els_Gravel_Operational/1000,
+    c_line_Gravel_Transportation=i_elec_Gravel*els_Gravel_Transportation/1000,
+    c_line_Gravel_End=i_elec_Gravel*els_Gravel_End/1000,
+    
+    c_line_Sand_Extraction=i_elec_Sand*els_Sand_Extraction/1000,
+    c_line_Sand_Manufacturing=i_elec_Sand*els_Sand_Manufacturing/1000,
+    c_line_Sand_Operational=i_elec_Sand*els_Sand_Operational/1000,
+    c_line_Sand_Transportation=i_elec_Sand*els_Sand_Transportation/1000,
+    c_line_Sand_End=i_elec_Sand*els_Sand_End/1000
+  ) %>% 
+  dplyr::select(-c(2:157)) %>% 
+  mutate(
+    bud_Extraction=c1_bud_Aluminum_Extraction+c1_bud_Steel_Extraction+c1_bud_Copper_Extraction+c1_bud_Cement_Extraction+c1_bud_Gravel_Extraction+c1_bud_Sand_Extraction+c1_bud_Glass_Extraction+c1_bud_Wood_Extraction+c1_bud_Brick_Extraction+c1_bud_Asphalt_Extraction+c1_bud_Plastic_Extraction+c1_bud_Rubber_Extraction+c2_bud_Aluminum_Extraction+c2_bud_Steel_Extraction+c2_bud_Copper_Extraction+c2_bud_Cement_Extraction+c2_bud_Gravel_Extraction+c2_bud_Sand_Extraction+c2_bud_Glass_Extraction+c2_bud_Wood_Extraction+c2_bud_Brick_Extraction+c2_bud_Asphalt_Extraction+c2_bud_Plastic_Extraction+c2_bud_Rubber_Extraction+c3_bud_Aluminum_Extraction+c3_bud_Steel_Extraction+c3_bud_Copper_Extraction+c3_bud_Cement_Extraction+c3_bud_Gravel_Extraction+c3_bud_Sand_Extraction+c3_bud_Glass_Extraction+c3_bud_Wood_Extraction+c3_bud_Brick_Extraction+c3_bud_Asphalt_Extraction+c3_bud_Plastic_Extraction+c3_bud_Rubber_Extraction+c4_bud_Aluminum_Extraction+c4_bud_Steel_Extraction+c4_bud_Copper_Extraction+c4_bud_Cement_Extraction+c4_bud_Gravel_Extraction+c4_bud_Sand_Extraction+c4_bud_Glass_Extraction+c4_bud_Wood_Extraction+c4_bud_Brick_Extraction+c4_bud_Asphalt_Extraction+c4_bud_Plastic_Extraction+c4_bud_Rubber_Extraction+c5_bud_Aluminum_Extraction+c5_bud_Steel_Extraction+c5_bud_Copper_Extraction+c5_bud_Cement_Extraction+c5_bud_Gravel_Extraction+c5_bud_Sand_Extraction+c5_bud_Glass_Extraction+c5_bud_Wood_Extraction+c5_bud_Brick_Extraction+c5_bud_Asphalt_Extraction+c5_bud_Plastic_Extraction+c5_bud_Rubber_Extraction,
+    bud_Manufacturing=c1_bud_Aluminum_Manufacturing+c1_bud_Steel_Manufacturing+c1_bud_Copper_Manufacturing+c1_bud_Cement_Manufacturing+c1_bud_Gravel_Manufacturing+c1_bud_Sand_Manufacturing+c1_bud_Glass_Manufacturing+c1_bud_Wood_Manufacturing+c1_bud_Brick_Manufacturing+c1_bud_Asphalt_Manufacturing+c1_bud_Plastic_Manufacturing+c1_bud_Rubber_Manufacturing+c2_bud_Aluminum_Manufacturing+c2_bud_Steel_Manufacturing+c2_bud_Copper_Manufacturing+c2_bud_Cement_Manufacturing+c2_bud_Gravel_Manufacturing+c2_bud_Sand_Manufacturing+c2_bud_Glass_Manufacturing+c2_bud_Wood_Manufacturing+c2_bud_Brick_Manufacturing+c2_bud_Asphalt_Manufacturing+c2_bud_Plastic_Manufacturing+c2_bud_Rubber_Manufacturing+c3_bud_Aluminum_Manufacturing+c3_bud_Steel_Manufacturing+c3_bud_Copper_Manufacturing+c3_bud_Cement_Manufacturing+c3_bud_Gravel_Manufacturing+c3_bud_Sand_Manufacturing+c3_bud_Glass_Manufacturing+c3_bud_Wood_Manufacturing+c3_bud_Brick_Manufacturing+c3_bud_Asphalt_Manufacturing+c3_bud_Plastic_Manufacturing+c3_bud_Rubber_Manufacturing+c4_bud_Aluminum_Manufacturing+c4_bud_Steel_Manufacturing+c4_bud_Copper_Manufacturing+c4_bud_Cement_Manufacturing+c4_bud_Gravel_Manufacturing+c4_bud_Sand_Manufacturing+c4_bud_Glass_Manufacturing+c4_bud_Wood_Manufacturing+c4_bud_Brick_Manufacturing+c4_bud_Asphalt_Manufacturing+c4_bud_Plastic_Manufacturing+c4_bud_Rubber_Manufacturing+c5_bud_Aluminum_Manufacturing+c5_bud_Steel_Manufacturing+c5_bud_Copper_Manufacturing+c5_bud_Cement_Manufacturing+c5_bud_Gravel_Manufacturing+c5_bud_Sand_Manufacturing+c5_bud_Glass_Manufacturing+c5_bud_Wood_Manufacturing+c5_bud_Brick_Manufacturing+c5_bud_Asphalt_Manufacturing+c5_bud_Plastic_Manufacturing+c5_bud_Rubber_Manufacturing,
+    bud_Operational=c1_bud_Aluminum_Operational+c1_bud_Steel_Operational+c1_bud_Copper_Operational+c1_bud_Cement_Operational+c1_bud_Gravel_Operational+c1_bud_Sand_Operational+c1_bud_Glass_Operational+c1_bud_Wood_Operational+c1_bud_Brick_Operational+c1_bud_Asphalt_Operational+c1_bud_Plastic_Operational+c1_bud_Rubber_Operational+c2_bud_Aluminum_Operational+c2_bud_Steel_Operational+c2_bud_Copper_Operational+c2_bud_Cement_Operational+c2_bud_Gravel_Operational+c2_bud_Sand_Operational+c2_bud_Glass_Operational+c2_bud_Wood_Operational+c2_bud_Brick_Operational+c2_bud_Asphalt_Operational+c2_bud_Plastic_Operational+c2_bud_Rubber_Operational+c3_bud_Aluminum_Operational+c3_bud_Steel_Operational+c3_bud_Copper_Operational+c3_bud_Cement_Operational+c3_bud_Gravel_Operational+c3_bud_Sand_Operational+c3_bud_Glass_Operational+c3_bud_Wood_Operational+c3_bud_Brick_Operational+c3_bud_Asphalt_Operational+c3_bud_Plastic_Operational+c3_bud_Rubber_Operational+c4_bud_Aluminum_Operational+c4_bud_Steel_Operational+c4_bud_Copper_Operational+c4_bud_Cement_Operational+c4_bud_Gravel_Operational+c4_bud_Sand_Operational+c4_bud_Glass_Operational+c4_bud_Wood_Operational+c4_bud_Brick_Operational+c4_bud_Asphalt_Operational+c4_bud_Plastic_Operational+c4_bud_Rubber_Operational+c5_bud_Aluminum_Operational+c5_bud_Steel_Operational+c5_bud_Copper_Operational+c5_bud_Cement_Operational+c5_bud_Gravel_Operational+c5_bud_Sand_Operational+c5_bud_Glass_Operational+c5_bud_Wood_Operational+c5_bud_Brick_Operational+c5_bud_Asphalt_Operational+c5_bud_Plastic_Operational+c5_bud_Rubber_Operational,
+    bud_Transportation=c1_bud_Aluminum_Transportation+c1_bud_Steel_Transportation+c1_bud_Copper_Transportation+c1_bud_Cement_Transportation+c1_bud_Gravel_Transportation+c1_bud_Sand_Transportation+c1_bud_Glass_Transportation+c1_bud_Wood_Transportation+c1_bud_Brick_Transportation+c1_bud_Asphalt_Transportation+c1_bud_Plastic_Transportation+c1_bud_Rubber_Transportation+c2_bud_Aluminum_Transportation+c2_bud_Steel_Transportation+c2_bud_Copper_Transportation+c2_bud_Cement_Transportation+c2_bud_Gravel_Transportation+c2_bud_Sand_Transportation+c2_bud_Glass_Transportation+c2_bud_Wood_Transportation+c2_bud_Brick_Transportation+c2_bud_Asphalt_Transportation+c2_bud_Plastic_Transportation+c2_bud_Rubber_Transportation+c3_bud_Aluminum_Transportation+c3_bud_Steel_Transportation+c3_bud_Copper_Transportation+c3_bud_Cement_Transportation+c3_bud_Gravel_Transportation+c3_bud_Sand_Transportation+c3_bud_Glass_Transportation+c3_bud_Wood_Transportation+c3_bud_Brick_Transportation+c3_bud_Asphalt_Transportation+c3_bud_Plastic_Transportation+c3_bud_Rubber_Transportation+c4_bud_Aluminum_Transportation+c4_bud_Steel_Transportation+c4_bud_Copper_Transportation+c4_bud_Cement_Transportation+c4_bud_Gravel_Transportation+c4_bud_Sand_Transportation+c4_bud_Glass_Transportation+c4_bud_Wood_Transportation+c4_bud_Brick_Transportation+c4_bud_Asphalt_Transportation+c4_bud_Plastic_Transportation+c4_bud_Rubber_Transportation+c5_bud_Aluminum_Transportation+c5_bud_Steel_Transportation+c5_bud_Copper_Transportation+c5_bud_Cement_Transportation+c5_bud_Gravel_Transportation+c5_bud_Sand_Transportation+c5_bud_Glass_Transportation+c5_bud_Wood_Transportation+c5_bud_Brick_Transportation+c5_bud_Asphalt_Transportation+c5_bud_Plastic_Transportation+c5_bud_Rubber_Transportation,
+    bud_End=c1_bud_Aluminum_End+c1_bud_Steel_End+c1_bud_Copper_End+c1_bud_Cement_End+c1_bud_Gravel_End+c1_bud_Sand_End+c1_bud_Glass_End+c1_bud_Wood_End+c1_bud_Brick_End+c1_bud_Asphalt_End+c1_bud_Plastic_End+c1_bud_Rubber_End+c2_bud_Aluminum_End+c2_bud_Steel_End+c2_bud_Copper_End+c2_bud_Cement_End+c2_bud_Gravel_End+c2_bud_Sand_End+c2_bud_Glass_End+c2_bud_Wood_End+c2_bud_Brick_End+c2_bud_Asphalt_End+c2_bud_Plastic_End+c2_bud_Rubber_End+c3_bud_Aluminum_End+c3_bud_Steel_End+c3_bud_Copper_End+c3_bud_Cement_End+c3_bud_Gravel_End+c3_bud_Sand_End+c3_bud_Glass_End+c3_bud_Wood_End+c3_bud_Brick_End+c3_bud_Asphalt_End+c3_bud_Plastic_End+c3_bud_Rubber_End+c4_bud_Aluminum_End+c4_bud_Steel_End+c4_bud_Copper_End+c4_bud_Cement_End+c4_bud_Gravel_End+c4_bud_Sand_End+c4_bud_Glass_End+c4_bud_Wood_End+c4_bud_Brick_End+c4_bud_Asphalt_End+c4_bud_Plastic_End+c4_bud_Rubber_End+c5_bud_Aluminum_End+c5_bud_Steel_End+c5_bud_Copper_End+c5_bud_Cement_End+c5_bud_Gravel_End+c5_bud_Sand_End+c5_bud_Glass_End+c5_bud_Wood_End+c5_bud_Brick_End+c5_bud_Asphalt_End+c5_bud_Plastic_End+c5_bud_Rubber_End,
+    
+    ##transport
+    
+    tran_Extraction=c1_road_Aluminum_Extraction+c1_road_Steel_Extraction+c1_road_Copper_Extraction+c1_road_Cement_Extraction+c1_road_Gravel_Extraction+c1_road_Sand_Extraction+c1_road_Asphalt_Extraction+c2_road_Aluminum_Extraction+c2_road_Steel_Extraction+c2_road_Copper_Extraction+c2_road_Cement_Extraction+c2_road_Gravel_Extraction+c2_road_Sand_Extraction+c2_road_Asphalt_Extraction+c3_road_Aluminum_Extraction+c3_road_Steel_Extraction+c3_road_Copper_Extraction+c3_road_Cement_Extraction+c3_road_Gravel_Extraction+c3_road_Sand_Extraction+c3_road_Asphalt_Extraction+c4_road_Aluminum_Extraction+c4_road_Steel_Extraction+c4_road_Copper_Extraction+c4_road_Cement_Extraction+c4_road_Gravel_Extraction+c4_road_Sand_Extraction+c4_road_Asphalt_Extraction+c5_road_Aluminum_Extraction+c5_road_Steel_Extraction+c5_road_Copper_Extraction+c5_road_Cement_Extraction+c5_road_Gravel_Extraction+c5_road_Sand_Extraction+c5_road_Asphalt_Extraction+c6_road_Aluminum_Extraction+c6_road_Steel_Extraction+c6_road_Copper_Extraction+c6_road_Cement_Extraction+c6_road_Gravel_Extraction+c6_road_Sand_Extraction+c6_road_Asphalt_Extraction+rail_Aluminum_Extraction+rail_Steel_Extraction+rail_Copper_Extraction+rail_Cement_Extraction+rail_Gravel_Extraction+rail_Sand_Extraction+rail_Wood_Extraction,
+    
+    tran_Manufacturing=c1_road_Aluminum_Manufacturing+c1_road_Steel_Manufacturing+c1_road_Copper_Manufacturing+c1_road_Cement_Manufacturing+c1_road_Gravel_Manufacturing+c1_road_Sand_Manufacturing+c1_road_Asphalt_Manufacturing+c2_road_Aluminum_Manufacturing+c2_road_Steel_Manufacturing+c2_road_Copper_Manufacturing+c2_road_Cement_Manufacturing+c2_road_Gravel_Manufacturing+c2_road_Sand_Manufacturing+c2_road_Asphalt_Manufacturing+c3_road_Aluminum_Manufacturing+c3_road_Steel_Manufacturing+c3_road_Copper_Manufacturing+c3_road_Cement_Manufacturing+c3_road_Gravel_Manufacturing+c3_road_Sand_Manufacturing+c3_road_Asphalt_Manufacturing+c4_road_Aluminum_Manufacturing+c4_road_Steel_Manufacturing+c4_road_Copper_Manufacturing+c4_road_Cement_Manufacturing+c4_road_Gravel_Manufacturing+c4_road_Sand_Manufacturing+c4_road_Asphalt_Manufacturing+c5_road_Aluminum_Manufacturing+c5_road_Steel_Manufacturing+c5_road_Copper_Manufacturing+c5_road_Cement_Manufacturing+c5_road_Gravel_Manufacturing+c5_road_Sand_Manufacturing+c5_road_Asphalt_Manufacturing+c6_road_Aluminum_Manufacturing+c6_road_Steel_Manufacturing+c6_road_Copper_Manufacturing+c6_road_Cement_Manufacturing+c6_road_Gravel_Manufacturing+c6_road_Sand_Manufacturing+c6_road_Asphalt_Manufacturing+rail_Aluminum_Manufacturing+rail_Steel_Manufacturing+rail_Copper_Manufacturing+rail_Cement_Manufacturing+rail_Gravel_Manufacturing+rail_Sand_Manufacturing+rail_Wood_Manufacturing,
+    
+    tran_Operational=c1_road_Aluminum_Operational+c1_road_Steel_Operational+c1_road_Copper_Operational+c1_road_Cement_Operational+c1_road_Gravel_Operational+c1_road_Sand_Operational+c1_road_Asphalt_Operational+c2_road_Aluminum_Operational+c2_road_Steel_Operational+c2_road_Copper_Operational+c2_road_Cement_Operational+c2_road_Gravel_Operational+c2_road_Sand_Operational+c2_road_Asphalt_Operational+c3_road_Aluminum_Operational+c3_road_Steel_Operational+c3_road_Copper_Operational+c3_road_Cement_Operational+c3_road_Gravel_Operational+c3_road_Sand_Operational+c3_road_Asphalt_Operational+c4_road_Aluminum_Operational+c4_road_Steel_Operational+c4_road_Copper_Operational+c4_road_Cement_Operational+c4_road_Gravel_Operational+c4_road_Sand_Operational+c4_road_Asphalt_Operational+c5_road_Aluminum_Operational+c5_road_Steel_Operational+c5_road_Copper_Operational+c5_road_Cement_Operational+c5_road_Gravel_Operational+c5_road_Sand_Operational+c5_road_Asphalt_Operational+c6_road_Aluminum_Operational+c6_road_Steel_Operational+c6_road_Copper_Operational+c6_road_Cement_Operational+c6_road_Gravel_Operational+c6_road_Sand_Operational+c6_road_Asphalt_Operational+rail_Aluminum_Operational+rail_Steel_Operational+rail_Copper_Operational+rail_Cement_Operational+rail_Gravel_Operational+rail_Sand_Operational+rail_Wood_Operational,
+    
+    tran_Transportation=c1_road_Aluminum_Transportation+c1_road_Steel_Transportation+c1_road_Copper_Transportation+c1_road_Cement_Transportation+c1_road_Gravel_Transportation+c1_road_Sand_Transportation+c1_road_Asphalt_Transportation+c2_road_Aluminum_Transportation+c2_road_Steel_Transportation+c2_road_Copper_Transportation+c2_road_Cement_Transportation+c2_road_Gravel_Transportation+c2_road_Sand_Transportation+c2_road_Asphalt_Transportation+c3_road_Aluminum_Transportation+c3_road_Steel_Transportation+c3_road_Copper_Transportation+c3_road_Cement_Transportation+c3_road_Gravel_Transportation+c3_road_Sand_Transportation+c3_road_Asphalt_Transportation+c4_road_Aluminum_Transportation+c4_road_Steel_Transportation+c4_road_Copper_Transportation+c4_road_Cement_Transportation+c4_road_Gravel_Transportation+c4_road_Sand_Transportation+c4_road_Asphalt_Transportation+c5_road_Aluminum_Transportation+c5_road_Steel_Transportation+c5_road_Copper_Transportation+c5_road_Cement_Transportation+c5_road_Gravel_Transportation+c5_road_Sand_Transportation+c5_road_Asphalt_Transportation+c6_road_Aluminum_Transportation+c6_road_Steel_Transportation+c6_road_Copper_Transportation+c6_road_Cement_Transportation+c6_road_Gravel_Transportation+c6_road_Sand_Transportation+c6_road_Asphalt_Transportation+rail_Aluminum_Transportation+rail_Steel_Transportation+rail_Copper_Transportation+rail_Cement_Transportation+rail_Gravel_Transportation+rail_Sand_Transportation+rail_Wood_Transportation,
+    
+    tran_End=c1_road_Aluminum_End+c1_road_Steel_End+c1_road_Copper_End+c1_road_Cement_End+c1_road_Gravel_End+c1_road_Sand_End+c1_road_Asphalt_End+c2_road_Aluminum_End+c2_road_Steel_End+c2_road_Copper_End+c2_road_Cement_End+c2_road_Gravel_End+c2_road_Sand_End+c2_road_Asphalt_End+c3_road_Aluminum_End+c3_road_Steel_End+c3_road_Copper_End+c3_road_Cement_End+c3_road_Gravel_End+c3_road_Sand_End+c3_road_Asphalt_End+c4_road_Aluminum_End+c4_road_Steel_End+c4_road_Copper_End+c4_road_Cement_End+c4_road_Gravel_End+c4_road_Sand_End+c4_road_Asphalt_End+c5_road_Aluminum_End+c5_road_Steel_End+c5_road_Copper_End+c5_road_Cement_End+c5_road_Gravel_End+c5_road_Sand_End+c5_road_Asphalt_End+c6_road_Aluminum_End+c6_road_Steel_End+c6_road_Copper_End+c6_road_Cement_End+c6_road_Gravel_End+c6_road_Sand_End+c6_road_Asphalt_End+rail_Aluminum_End+rail_Steel_End+rail_Copper_End+rail_Cement_End+rail_Gravel_End+rail_Sand_End+rail_Wood_End,
+    
+    ##power
+    
+    power_Extraction=c1_elec_Aluminum_Extraction+c1_elec_Steel_Extraction+c1_elec_Copper_Extraction+c1_elec_Cement_Extraction+c1_elec_Gravel_Extraction+c1_elec_Sand_Extraction+c2_elec_Aluminum_Extraction+c2_elec_Steel_Extraction+c2_elec_Copper_Extraction+c2_elec_Cement_Extraction+c2_elec_Gravel_Extraction+c2_elec_Sand_Extraction+c3_elec_Aluminum_Extraction+c3_elec_Steel_Extraction+c3_elec_Copper_Extraction+c3_elec_Cement_Extraction+c3_elec_Gravel_Extraction+c3_elec_Sand_Extraction+c4_elec_Aluminum_Extraction+c4_elec_Steel_Extraction+c4_elec_Copper_Extraction+c4_elec_Cement_Extraction+c4_elec_Gravel_Extraction+c4_elec_Sand_Extraction+c5_elec_Aluminum_Extraction+c5_elec_Steel_Extraction+c5_elec_Copper_Extraction+c5_elec_Cement_Extraction+c5_elec_Gravel_Extraction+c5_elec_Sand_Extraction+c6_elec_Aluminum_Extraction+c6_elec_Steel_Extraction+c6_elec_Copper_Extraction+c6_elec_Cement_Extraction+c6_elec_Gravel_Extraction+c6_elec_Sand_Extraction+c7_elec_Aluminum_Extraction+c7_elec_Steel_Extraction+c7_elec_Copper_Extraction+c7_elec_Cement_Extraction+c7_elec_Gravel_Extraction+c7_elec_Sand_Extraction+c_line_Aluminum_Extraction+c_line_Steel_Extraction+c_line_Cement_Extraction+c_line_Gravel_Extraction+c_line_Sand_Extraction,
+    
+    power_Manufacturing=c1_elec_Aluminum_Manufacturing+c1_elec_Steel_Manufacturing+c1_elec_Copper_Manufacturing+c1_elec_Cement_Manufacturing+c1_elec_Gravel_Manufacturing+c1_elec_Sand_Manufacturing+c2_elec_Aluminum_Manufacturing+c2_elec_Steel_Manufacturing+c2_elec_Copper_Manufacturing+c2_elec_Cement_Manufacturing+c2_elec_Gravel_Manufacturing+c2_elec_Sand_Manufacturing+c3_elec_Aluminum_Manufacturing+c3_elec_Steel_Manufacturing+c3_elec_Copper_Manufacturing+c3_elec_Cement_Manufacturing+c3_elec_Gravel_Manufacturing+c3_elec_Sand_Manufacturing+c4_elec_Aluminum_Manufacturing+c4_elec_Steel_Manufacturing+c4_elec_Copper_Manufacturing+c4_elec_Cement_Manufacturing+c4_elec_Gravel_Manufacturing+c4_elec_Sand_Manufacturing+c5_elec_Aluminum_Manufacturing+c5_elec_Steel_Manufacturing+c5_elec_Copper_Manufacturing+c5_elec_Cement_Manufacturing+c5_elec_Gravel_Manufacturing+c5_elec_Sand_Manufacturing+c6_elec_Aluminum_Manufacturing+c6_elec_Steel_Manufacturing+c6_elec_Copper_Manufacturing+c6_elec_Cement_Manufacturing+c6_elec_Gravel_Manufacturing+c6_elec_Sand_Manufacturing+c7_elec_Aluminum_Manufacturing+c7_elec_Steel_Manufacturing+c7_elec_Copper_Manufacturing+c7_elec_Cement_Manufacturing+c7_elec_Gravel_Manufacturing+c7_elec_Sand_Manufacturing+c_line_Aluminum_Manufacturing+c_line_Steel_Manufacturing+c_line_Cement_Manufacturing+c_line_Gravel_Manufacturing+c_line_Sand_Manufacturing,
+    
+    power_Operational=c1_elec_Aluminum_Operational+c1_elec_Steel_Operational+c1_elec_Copper_Operational+c1_elec_Cement_Operational+c1_elec_Gravel_Operational+c1_elec_Sand_Operational+c2_elec_Aluminum_Operational+c2_elec_Steel_Operational+c2_elec_Copper_Operational+c2_elec_Cement_Operational+c2_elec_Gravel_Operational+c2_elec_Sand_Operational+c3_elec_Aluminum_Operational+c3_elec_Steel_Operational+c3_elec_Copper_Operational+c3_elec_Cement_Operational+c3_elec_Gravel_Operational+c3_elec_Sand_Operational+c4_elec_Aluminum_Operational+c4_elec_Steel_Operational+c4_elec_Copper_Operational+c4_elec_Cement_Operational+c4_elec_Gravel_Operational+c4_elec_Sand_Operational+c5_elec_Aluminum_Operational+c5_elec_Steel_Operational+c5_elec_Copper_Operational+c5_elec_Cement_Operational+c5_elec_Gravel_Operational+c5_elec_Sand_Operational+c6_elec_Aluminum_Operational+c6_elec_Steel_Operational+c6_elec_Copper_Operational+c6_elec_Cement_Operational+c6_elec_Gravel_Operational+c6_elec_Sand_Operational+c7_elec_Aluminum_Operational+c7_elec_Steel_Operational+c7_elec_Copper_Operational+c7_elec_Cement_Operational+c7_elec_Gravel_Operational+c7_elec_Sand_Operational+c_line_Aluminum_Operational+c_line_Steel_Operational+c_line_Cement_Operational+c_line_Gravel_Operational+c_line_Sand_Operational,
+    
+    power_Transportation=c1_elec_Aluminum_Transportation+c1_elec_Steel_Transportation+c1_elec_Copper_Transportation+c1_elec_Cement_Transportation+c1_elec_Gravel_Transportation+c1_elec_Sand_Transportation+c2_elec_Aluminum_Transportation+c2_elec_Steel_Transportation+c2_elec_Copper_Transportation+c2_elec_Cement_Transportation+c2_elec_Gravel_Transportation+c2_elec_Sand_Transportation+c3_elec_Aluminum_Transportation+c3_elec_Steel_Transportation+c3_elec_Copper_Transportation+c3_elec_Cement_Transportation+c3_elec_Gravel_Transportation+c3_elec_Sand_Transportation+c4_elec_Aluminum_Transportation+c4_elec_Steel_Transportation+c4_elec_Copper_Transportation+c4_elec_Cement_Transportation+c4_elec_Gravel_Transportation+c4_elec_Sand_Transportation+c5_elec_Aluminum_Transportation+c5_elec_Steel_Transportation+c5_elec_Copper_Transportation+c5_elec_Cement_Transportation+c5_elec_Gravel_Transportation+c5_elec_Sand_Transportation+c6_elec_Aluminum_Transportation+c6_elec_Steel_Transportation+c6_elec_Copper_Transportation+c6_elec_Cement_Transportation+c6_elec_Gravel_Transportation+c6_elec_Sand_Transportation+c7_elec_Aluminum_Transportation+c7_elec_Steel_Transportation+c7_elec_Copper_Transportation+c7_elec_Cement_Transportation+c7_elec_Gravel_Transportation+c7_elec_Sand_Transportation+c_line_Aluminum_Transportation+c_line_Steel_Transportation+c_line_Cement_Transportation+c_line_Gravel_Transportation+c_line_Sand_Transportation,
+    
+    power_End=c1_elec_Aluminum_End+c1_elec_Steel_End+c1_elec_Copper_End+c1_elec_Cement_End+c1_elec_Gravel_End+c1_elec_Sand_End+c2_elec_Aluminum_End+c2_elec_Steel_End+c2_elec_Copper_End+c2_elec_Cement_End+c2_elec_Gravel_End+c2_elec_Sand_End+c3_elec_Aluminum_End+c3_elec_Steel_End+c3_elec_Copper_End+c3_elec_Cement_End+c3_elec_Gravel_End+c3_elec_Sand_End+c4_elec_Aluminum_End+c4_elec_Steel_End+c4_elec_Copper_End+c4_elec_Cement_End+c4_elec_Gravel_End+c4_elec_Sand_End+c5_elec_Aluminum_End+c5_elec_Steel_End+c5_elec_Copper_End+c5_elec_Cement_End+c5_elec_Gravel_End+c5_elec_Sand_End+c6_elec_Aluminum_End+c6_elec_Steel_End+c6_elec_Copper_End+c6_elec_Cement_End+c6_elec_Gravel_End+c6_elec_Sand_End+c7_elec_Aluminum_End+c7_elec_Steel_End+c7_elec_Copper_End+c7_elec_Cement_End+c7_elec_Gravel_End+c7_elec_Sand_End+c_line_Aluminum_End+c_line_Steel_End+c_line_Cement_End+c_line_Gravel_End+c_line_Sand_End
+    
+  ) %>% 
+  dplyr::select(-c(2:781)) %>% 
+  write_csv("./inflow_ALL_CO2.csv")
+
+
+
+

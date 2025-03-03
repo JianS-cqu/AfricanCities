@@ -1,0 +1,93 @@
+
+
+##1. Future inflow
+
+library(tidyverse)
+read_csv("./ALL_Bud_2000_2100.csv") -> df
+
+
+df %>% 
+  dplyr::select(city, year, bs_bb_b1) %>%
+  mutate(bud="bs_bb_b1") %>% 
+  set_names("city", "year", "bs","bud") -> a1
+
+df %>% 
+  dplyr::select(city, year, bs_tm_b1) %>%
+  mutate(bud="bs_tm_b1") %>% 
+  set_names("city", "year", "bs","bud") -> b1
+
+df %>% 
+  dplyr::select(city, year, bs_xx_b1) %>%
+  mutate(bud="bs_xx_b1") %>% 
+  set_names("city", "year", "bs","bud") -> c1
+
+
+a1 %>% 
+  bind_rows(b1) %>% 
+  bind_rows(c1) -> df11
+
+
+afc_inflow <- function(sss, acode) {
+  
+  df11 %>% 
+    dplyr::filter(bud==sss) %>% 
+    dplyr::filter(city==acode) %>% 
+    arrange(year) %>% 
+    rename(ms=bs) -> ms
+  
+  
+  ms[1,"input"] <- ms[1,"ms"]/2
+  
+  for (j in 1:101) {
+    result <- numeric(j)
+    for (i in 1:j) {
+      result[i] <- as.numeric(ms[i, "input"]) * dnorm(j-i, mean = 10, sd = 3)  ##change
+    }
+    ms[j,"ou"] <- sum(result)
+    ms[j+1,"input"] <- ms[j+1,"ms"]-ms[j,"ms"]+ms[j,"ou"]
+    if(ms[j,"input"] < 0)
+    { 
+      ms[j-1,"ou"] <- ms[j-1,"ou"]-ms[j,"input"]
+      ms[j,"input"] <- 0 
+    }
+  }
+  
+  ms %>% 
+    na.omit() %>% 
+    mutate(inflow2=if_else(input == 0, ou, input))
+  
+}
+
+
+crossing(
+  unique(df11$bud),
+  unique(df11$city)
+) %>% 
+  as_tibble() %>% 
+  set_names("sss", "acode") -> rdss
+
+
+usethis::edit_r_profile()
+
+
+library(parallel)
+
+makeCluster(6) -> cl
+
+parLapply(cl, seq(1, nrow(rdss), by = 909), function(x){
+  rdss %>% 
+    slice(x:(x+908)) %>% 
+    mutate(js=map2(sss, acode, afc_inflow)) %>% 
+    write_rds(paste0("AFCC/ztemp/z_", x, ".rds"))
+}
+)
+
+
+
+lapply(fs::dir_ls("AFCC/ztemp"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() %>% 
+  unnest(js) %>% 
+  write_csv("./inflow1.csv")   
+

@@ -1,0 +1,107 @@
+
+
+##5. Building azimuth or orientation, 
+
+library(tidyverse)
+library(sf)
+
+afc_cc <- function(acode) {
+  read_csv(paste0("AFCC/Google/Google_OpenBuildings_csv_origin/",acode,"_buildings.csv")) -> df
+  df %>% 
+    sample_n(50000) %>% # Due to the huge amount of calculation, 50000 samples are selected here for testing
+    dplyr::select(latitude, longitude, geometry) %>% 
+    write_csv(paste0("AFCC/Google/sample/s_",acode,".csv"))
+  
+}
+
+
+as.character(fs::dir_ls("AFCC/Google/Google_OpenBuildings_csv_origin")) %>% 
+  as_tibble() %>% 
+  set_names(c("acode")) %>% 
+  mutate(acode = str_remove_all(acode, "AFCC/Google/Google_OpenBuildings_csv_origin/"), 
+         acode = str_remove_all(acode, "_buildings.csv")) %>% 
+  mutate(js=map(acode, afc_cc))
+
+
+read_sf("./CHN.shp") %>% st_crs() -> crss  ##Projected CRS: World_Mollweide
+
+
+afc_jd <- function(acode) {
+  
+  read_csv(paste0("AFCC/Google/sample1/s1_",acode,".csv")) %>% 
+    st_as_sf(wkt = "geometry", crs = 4326) %>% 
+    mutate(xx=row_number()) -> df1
+  df1 %>% 
+    st_drop_geometry() -> sss
+  df1 %>% 
+    st_cast("MULTIPOINT") %>% 
+    st_cast("POINT") %>% 
+    st_as_sf() %>% 
+    st_transform(crss) %>% 
+    split(.$xx) %>% 
+    map(function(x)
+      x %>% 
+        mutate(aa=row_number()) %>% 
+        mutate(cc = as.numeric(st_distance(geometry, lead(geometry), by_element = TRUE))) %>% 
+        arrange(-cc)
+    ) %>% 
+    map(function(x1)
+      bind_rows(
+        x1 %>% slice(1), x1 %>% dplyr::filter(aa==x1 %>% slice(1) %>% st_drop_geometry() %>% dplyr::select(aa) %>% pull()+1)
+      ) %>% dplyr::select(xx) %>% st_transform(4326)
+    ) %>% 
+    map(function(x)
+      data.frame(st_coordinates(x) %>% 
+                   as_tibble() %>% slice(1),st_coordinates(x) %>% 
+                   as_tibble() %>% slice(2)) %>% 
+        as_tibble() %>% 
+        set_names("x1","y1","x2","y2") %>% 
+        mutate(idd=unique(x$xx))
+    ) %>% 
+    bind_rows() %>% 
+    mutate(cita=asin((y2-y1)/sqrt((x2-x1)^2+(y2-y1)^2))*180/pi) %>% 
+    rename(xx=idd) %>% 
+    dplyr::select(xx, cita) %>% 
+    left_join(sss)
+  
+}
+
+as.character(fs::dir_ls("AFCC/Google/sample1")) %>% 
+  as_tibble() %>% 
+  set_names(c("acode")) %>% 
+  mutate(acode = str_remove_all(acode, "AFCC/Google/sample1/s1_"), 
+         acode = str_remove_all(acode, ".csv")) -> rdss
+
+
+
+
+#####################################################################
+#####################################################################
+#####################################################################
+
+usethis::edit_r_profile()
+
+
+library(parallel)
+
+makeCluster(8) -> cl
+
+parLapply(cl, seq(1, nrow(rdss), by = 4), function(x){
+  rdss %>% 
+    slice(x:(x+3)) %>% 
+    mutate(jss=map(acode, afc_jd)) %>% 
+    write_rds(paste0("AFCC/ztemp/z_", x, ".rds"))
+}
+)
+
+
+lapply(fs::dir_ls("AFCC/ztemp"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() %>% 
+  unnest(jss) -> df
+
+df %>% 
+  write_csv("./fwj_cita.csv")
+
+

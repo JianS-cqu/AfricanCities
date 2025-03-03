@@ -1,0 +1,131 @@
+
+##6. Solar radiation received by building wall
+
+library(tidyverse)
+
+read_csv("./sun_all.csv") %>% 
+  dplyr::select(-rise, -down,-yy,-mm) -> df
+
+readxl::read_xlsx("./capitalCity.xlsx") %>% 
+  dplyr::select(1) -> ctt
+
+afc_cc <- function(acode, cita) {
+  df %>% 
+    dplyr::filter(city==acode) %>% 
+    mutate(fwj1=cita) %>% 
+    mutate(dlwd=latt*(pi/180),
+           zenith=zenith*(pi/180),
+           dem=dem/1000) %>% 
+    mutate(Gon=1367*(1+0.033*cos((360*nn2)/365))) %>% 
+    mutate(tb=0.4237-0.00821*(6-dem)^2+(0.5055+0.00595*(6.5-dem)^2)*exp(-(0.2711+0.01858*(2.5-dem)^2)/cos(zenith))) %>% 
+    mutate(td=0.271-0.294*tb) %>% 
+    mutate(cwj=(23.45*sin(360*(284+nn2)/365))*(pi/180)) %>% 
+    mutate(
+      fwj = fwj1 * pi / 180,
+      beta = 90 * pi / 180,  
+      ws = acos(-tan(dlwd) * tan(cwj)),
+      A = sin(fwj) * cos(cwj),
+      B = sin(dlwd) * cos(fwj) * cos(cwj),
+      C = 0,
+      D = ws * sin(fwj) * sin(cwj) + sin(ws) * cos(fwj),
+      x = sin(dlwd) / tan(fwj),
+      y = tan(cwj) * cos(dlwd) / tan(fwj),
+      w1 = acos((x * y - sqrt(x^2 - y^2 + 1)) / (x^2 + 1)),
+      w2 = acos((x * y + sqrt(x^2 - y^2 + 1)) / (x^2 + 1)),
+      
+      a = sin(cwj)*sin(dlwd),
+      b = cos(cwj)*cos(dlwd),
+      c = 0,
+      d = abs(b),
+      k = 0.2711+0.01858*(2.5-dem)^2,
+      w_1 = acos(-a/k)+asin(c/k),
+      w_2 = abs(-acos(-a/d)+asin(c/d)),
+      w1 = ifelse(is.nan(w1), w_1, w1),
+      w2 = ifelse(is.nan(w2), w_2, w2),
+      wss1 = pmin(ws, w2),  
+      wsr1 = -pmin(ws, w1),
+      wss2=pmin(ws,w1),
+      wsr2=-pmin(ws,w2)) %>%
+    mutate(
+      Rb1 = (C * (wss1 - wsr1) + B * (sin(wss1) - sin(wsr1)) + A * (cos(wss1) - cos(wsr1))) / (2 * D),
+      Rb2 = (C * (wss2 - wsr2) + B * (sin(wss2) - sin(wsr2)) + A * (cos(wss2) - cos(wsr2))) / (2 * D),
+      Rb3=if_else(fwj1<=0, Rb1, Rb2)
+    ) %>% 
+    dplyr::select(dd, nn2,time_hrs, zenith,Gon, tb,td, fwj1, Rb3)
+  
+}
+
+
+crossing(ctt, 
+         seq(-90, 90, by = 1)) %>% 
+  set_names("acode", "cita") -> rdss
+
+
+#####################################################################
+#####################################################################
+#####################################################################
+
+usethis::edit_r_profile()
+
+
+library(parallel)
+makeCluster(9) -> cl
+
+
+parLapply(cl, seq(1, nrow(rdss), by = 181), function(x){
+  rdss %>% 
+    slice(x:(x+180)) %>% 
+    mutate(js=map2(acode, cita, afc_cc)) %>% 
+    write_rds(paste0("AFCC/ztemp/x_", x, ".rds"))
+}
+)
+
+
+lapply(fs::dir_ls("AFCC/ztemp"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() %>% 
+  unnest(js) -> df
+
+df %>% 
+  dplyr::filter(Rb3>-2) %>%
+  dplyr::filter(Rb3<2) %>%
+  filter(!(fwj1 < -50 & Rb3 > 0.5)) %>% 
+  filter(!(fwj1 > 50 & Rb3 > 0.5)) -> df1
+
+df1 %>% 
+  mutate(
+    Rb4=Rb3+abs(min(df1$Rb3)*1.00001),
+    Hb=Gon*tb*cos(zenith),
+    Hd=Gon*td*cos(zenith),
+    Hdg=0.2*0.5*(Hb+Hd),
+    Ht=Hb*Rb4+Hd*2/3+Hdg
+  ) -> df2
+
+df2 %>% write_csv("./capCity_solar.csv")
+
+df2 %>% 
+  unite("link", acode, cita) %>% 
+  dplyr::select(link, Ht) %>% 
+  split(.$link) %>% 
+  map(function(x)
+    tibble(dplyr::select(x, link) %>% unique(),
+           dplyr::select(x, Ht) %>% colSums()
+    )
+  ) %>% 
+  bind_rows() %>% 
+  set_names("link", "ht") %>% 
+  separate(link, into = c("city","cita"), sep = "_") %>% 
+  mutate(city=as.numeric(city)) %>% 
+  mutate(cita=as.numeric(cita)) -> df3
+
+df3 %>% 
+  mutate(city=as.character(city)) %>% 
+  ggplot(aes(x=cita, y=ht, group=city, color=city))+
+  geom_line()+
+  theme(legend.position = "")
+
+df3 %>% 
+  write_csv("./cCity_SolarByCita.csv")
+
+

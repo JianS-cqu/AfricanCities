@@ -1,0 +1,109 @@
+##8. NbS and Solar PV strategies
+
+library(tidyverse)
+
+
+read_csv("./afc_NMS.csv") %>%  ##city name
+  dplyr::select(city, ISO3) -> nms 
+
+read_csv("./inflow_ALL_CO2.csv") %>%  ## embodied emissions
+  dplyr::select(link,bud_Extraction, bud_Manufacturing, bud_Transportation,
+                tran_Extraction, tran_Manufacturing, tran_Transportation,
+                power_Extraction, power_Manufacturing, power_Transportation) -> a1
+
+read_csv("./inflow_ALL_CO2_byMS.csv") %>% ## Operational emissions
+  dplyr::select(link,bud_Operational, bud_End,
+                tran_Operational, tran_End,
+                power_Operational, power_End) -> a2
+a1 %>% 
+  left_join(a2) %>% 
+  filter(str_detect(link, "tm_")) %>% 
+  separate(link, into = c("aa", "city","year"), sep = "_") %>%   
+  mutate(year=as.numeric(year)) %>% 
+  mutate(city=as.numeric(city)) %>% 
+  dplyr::select(-aa) %>% 
+  left_join(nms) %>% 
+  dplyr::select(city, year, ISO3, everything()) -> df3
+names(df1)
+
+##NBS
+#1. solar radiation
+read_csv("./eng_saving.csv") %>% 
+  dplyr::select(ISO, df_min) %>% 
+  set_names("ISO3", "solar_rd")-> sun 
+
+df3 %>% 
+  left_join(sun) %>% 
+  dplyr::select(solar_rd, everything()) %>% 
+  mutate(bud_Operational=bud_Operational*(1-solar_rd)) %>% 
+  mutate(bud_sun=bud_Extraction+bud_Manufacturing+bud_Operational+bud_Transportation+bud_End,
+         tran_sun=tran_Extraction+tran_Manufacturing+tran_Operational+tran_Transportation+tran_End,
+         power_sun=power_Extraction+power_Manufacturing+power_Operational+power_Transportation+power_End
+  ) %>% 
+  dplyr::select(city, ISO3, year, bud_sun, tran_sun, power_sun) %>% 
+  write_csv("./rdc2_sun.csv")
+
+
+##2. wind
+
+readxl::read_xlsx("./wind_ratio.xlsx") %>% 
+  dplyr::select(acode, rrr) %>% 
+  set_names("city", "wind") %>% 
+  left_join(nms) %>% 
+  dplyr::select(-city) -> ww
+
+
+df3 %>% 
+  left_join(ww) %>% 
+  dplyr::select(wind, everything()) %>% 
+  mutate(bud_Operational=bud_Operational*(1-wind)) %>% 
+  mutate(bud_wind=bud_Extraction+bud_Manufacturing+bud_Operational+bud_Transportation+bud_End,
+         tran_wind=tran_Extraction+tran_Manufacturing+tran_Operational+tran_Transportation+tran_End,
+         power_wind=power_Extraction+power_Manufacturing+power_Operational+power_Transportation+power_End
+  ) %>% 
+  dplyr::select(city, ISO3, year, bud_wind, tran_wind, power_wind) %>% 
+  write_csv("./rdc2_wind.csv")
+
+
+
+read_csv("./bud_areas.csv") %>%  ##building area for solar PV
+  mutate(e_kwh=0.15*1500*area_m2) %>% 
+  mutate(car=e_kwh*0.708) %>%   
+  mutate(ccc=area_m2*155.91) %>% 
+  mutate(e_kwh=0.15*1500*area_m2*0.8) %>% 
+  mutate(car=e_kwh*0.708) %>% 
+  mutate(ccc=area_m2*155.91) %>%
+  mutate(ccc=ccc/81,
+         cc2=car-ccc,
+         cc2=cc2/1000
+  ) %>% 
+  dplyr::select(CTID, cc2) %>% 
+  set_names("city", "spv")-> pv
+
+df3 %>% 
+  mutate(bud=bud_Extraction+bud_Manufacturing+bud_Operational+bud_Transportation+bud_End,
+         tran=tran_Extraction+tran_Manufacturing+tran_Operational+tran_Transportation+tran_End,
+         power=power_Extraction+power_Manufacturing+power_Operational+power_Transportation+power_End
+  ) %>% 
+  dplyr::select(city, ISO3, year, bud, tran, power) %>% 
+  mutate(sss=bud+tran+power,
+         b1=bud/sss,
+         t1=tran/sss,
+         p1=power/sss
+  ) %>% 
+  left_join(pv) %>% 
+  mutate(b1=b1*spv,
+         t1=t1*spv,
+         p1=p1*spv,
+         bud_pv=bud-b1,
+         tran_pv=tran-t1,
+         power_pv=power-p1
+  ) %>% 
+  dplyr::select(-c(4:11)) %>% 
+  mutate(bud_pv=if_else(bud_pv <0,0,bud_pv)) %>%
+  mutate(tran_pv=if_else(tran_pv <0,0,tran_pv)) %>%
+  mutate(power_pv=if_else(power_pv <0,0,power_pv)) %>% 
+  write_csv("./rdc2_PV.csv")
+
+
+

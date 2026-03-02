@@ -1,0 +1,154 @@
+
+
+##### 16. Carbon budget calculation
+
+
+
+
+
+###Carbon budget calculation
+
+library(tidyverse)
+
+readxl::read_xlsx("./iamc_db.xlsx") %>% 
+  rename(ISO3=Region) %>% 
+  dplyr::filter(ISO3=="World") %>% 
+  rename(ssp=Scenario,nms=ISO3)-> wd1
+
+readxl::read_xlsx("./ssp_isoPOP.xlsx") %>% 
+  split(.$Scenario) %>% 
+  map(function(x)
+    tibble(
+      x %>% dplyr::select(Scenario) %>% unique() %>% set_names("ssp"),
+      x %>% dplyr::select(-ISO3, -Scenario) %>% colSums() %>% as_tibble_row()
+    )) %>% 
+  bind_rows() %>% 
+  mutate(nms="afc") %>% 
+  dplyr::select(nms, everything()) %>% 
+  bind_rows(wd1) %>% 
+  split(.$ssp) %>% 
+  map(function(x)
+    x %>% 
+      dplyr::select(-ssp) %>% 
+      pivot_longer(-c(1)) %>% 
+      rename(year=name) %>% 
+      mutate(year=as.numeric(year)) %>% 
+      dplyr::filter(year>2020) %>% 
+      # dplyr::filter(year <2080) %>% 
+      spread(nms, value) %>% 
+      dplyr::select(-year) %>% 
+      colSums() %>% 
+      as_tibble_row() %>% 
+      mutate(rr=afc/World)) %>% 
+  bind_rows() %>% 
+  mutate(ssp=paste0("ssp",row_number())) -> df
+
+##1.5度下是全球是225Gt, 1.7度是475Gt, 2.0度是775Gt
+df %>% 
+  mutate(afc15=rr*225*10^9,
+         afc17=rr*475*10^9,
+         afc20=rr*775*10^9) -> df1
+
+##其次，计算城市人口所能分配到比例
+readxl::read_xlsx("./AFCpopRatio_UnderSSP.xlsx") -> sp1
+readxl::read_xlsx("./WorldBank_PopData2020.xlsx") -> wb1
+sp1 %>% 
+  left_join(wb1) %>% 
+  dplyr::select(ISO3, Scenario, wb2020, everything()) %>% 
+  writexl::write_xlsx("./AFCpopCount_UnderSSP.xlsx")
+readxl::read_xlsx("./AFCpopCount_UnderSSP.xlsx") -> nt_pop
+
+nt_pop %>% 
+  dplyr::select(-ISO3) %>% 
+  pivot_longer(-c(1)) %>% 
+  split(.$Scenario) %>% 
+  map(function(x)
+    x %>% dplyr::select(value) %>% colSums()) %>% 
+  bind_rows() %>% 
+  mutate(ssp=paste0("ssp",row_number())) %>%  ##year seq(2020,2100, by=5) 
+  rename(nt_pop=value) -> nt_pop1
+read_csv("./FutData_2020_2100.csv") -> pp0
+
+pp0 %>% 
+  dplyr::filter(year %in% seq(2020,2100, by=5)) %>% 
+  dplyr::select(ssp, pop) %>% 
+  split(.$ssp) %>% 
+  map(function(x)
+    x %>% dplyr::select(pop) %>% colSums()) %>% 
+  bind_rows() %>% 
+  mutate(ssp=paste0("ssp",row_number())) %>% 
+  rename(ct_pop=pop) -> ct_pop1
+nt_pop1 %>% 
+  left_join(ct_pop1) %>% 
+  mutate(r_pop=ct_pop/nt_pop) -> pop_rr
+df1 %>% 
+  left_join(pop_rr) %>% 
+  mutate(ct15=afc15*r_pop,
+         ct17=afc17*r_pop,
+         ct20=afc20*r_pop) -> df2
+
+df2 %>% 
+  write_csv("./PermittedEmissions_TotalAFC.csv")
+
+df2 %>% 
+  dplyr::select(ssp, ct15, ct17, ct20) -> df3
+
+read_csv("./afc_nms333.csv") %>% 
+  dplyr::select(city, ISO3)-> nms
+
+pp0 %>% 
+  dplyr::filter(year %in% seq(2020,2100, by=5)) %>% 
+  dplyr::select(ssp, city, pop) %>% 
+  left_join(nms) %>% 
+  unite("link", ssp, ISO3) %>% 
+  dplyr::select(link, pop) %>% 
+  split(.$link) %>% 
+  map(function(x)
+    tibble(x %>% dplyr::select(link) %>% unique(),
+           x %>% dplyr::select(pop) %>% colSums())) %>% 
+  bind_rows() %>% 
+  set_names("link", "pop") %>% 
+  separate(link, into = c("ssp","iso"), sep = "_") %>% 
+  spread(ssp, pop) -> iso_pop
+
+iso_pop %>% 
+  mutate(s1=ssp1/sum(iso_pop$ssp1),
+         s2=ssp2/sum(iso_pop$ssp2),
+         s3=ssp3/sum(iso_pop$ssp3),
+         s4=ssp4/sum(iso_pop$ssp4),
+         s5=ssp5/sum(iso_pop$ssp5)) -> iso_pop1
+
+df2 %>% 
+  dplyr::select(ssp, ct15, ct17, ct20) -> df22
+
+iso_pop1 %>% 
+  dplyr::select(-c(2:6)) %>% 
+  set_names("iso","ssp1","ssp2","ssp3","ssp4","ssp5") %>% 
+  pivot_longer(-c(1)) %>% 
+  rename(ssp=name) %>% 
+  left_join(df22) %>% 
+  mutate(car15=value*ct15,
+         car17=value*ct17,
+         car20=value*ct20) %>% 
+  dplyr::select(-c(3:6)) -> is1
+
+is1 %>% 
+  dplyr::select(iso,ssp,car15) %>% 
+  spread(ssp, car15) %>% 
+  set_names("iso","ssp1_c15","ssp2_c15","ssp3_c15","ssp4_c15","ssp5_c15") -> ctt15
+is1 %>% 
+  dplyr::select(iso,ssp,car17) %>% 
+  spread(ssp, car17) %>% 
+  set_names("iso","ssp1_c17","ssp2_c17","ssp3_c17","ssp4_c17","ssp5_c17") -> ctt17
+is1 %>% 
+  dplyr::select(iso,ssp,car20) %>% 
+  spread(ssp, car20) %>% 
+  set_names("iso","ssp1_c20","ssp2_c20","ssp3_c20","ssp4_c20","ssp5_c20") -> ctt20
+
+
+iso_pop1 %>% 
+  left_join(ctt15) %>% 
+  left_join(ctt17) %>% 
+  left_join(ctt20) %>% 
+  write_csv("./PermittedEmissions_TotalISO.csv")
+

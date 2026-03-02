@@ -1,5 +1,2279 @@
 
-##8. from material to carbon emissions
+##9. LEN calculation
+
+library(tidyverse)
+read_csv("./HisFuc_bv_tm_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b1) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x1
+read_csv("./HisFuc_bv_xx_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b1) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x2
+read_csv("./HisFuc_bv_tm_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b1) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x3
+read_csv("./HisFuc_bv_xx_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b1) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x4
+
+x1 %>% 
+  bind_rows(x2) %>% 
+  bind_rows(x3) %>% 
+  bind_rows(x4) %>% 
+  mutate(prod="b1") -> df_b1
+
+read_csv("./HisFuc_bv_tm_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b2) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x1
+read_csv("./HisFuc_bv_xx_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b2) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x2
+read_csv("./HisFuc_bv_tm_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b2) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x3
+read_csv("./HisFuc_bv_xx_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b2) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x4
+
+x1 %>% 
+  bind_rows(x2) %>% 
+  bind_rows(x3) %>% 
+  bind_rows(x4) %>% 
+  mutate(prod="b2") -> df_b2
+
+read_csv("./HisFuc_bv_tm_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b3) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x1
+read_csv("./HisFuc_bv_xx_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b3) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x2
+read_csv("./HisFuc_bv_tm_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b3) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x3
+read_csv("./HisFuc_bv_xx_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b3) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x4
+
+x1 %>% 
+  bind_rows(x2) %>% 
+  bind_rows(x3) %>% 
+  bind_rows(x4) %>% 
+  mutate(prod="b3") -> df_b3
+
+read_csv("./HisFuc_bv_tm_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b4) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x1
+read_csv("./HisFuc_bv_xx_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b4) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x2
+read_csv("./HisFuc_bv_tm_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b4) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x3
+read_csv("./HisFuc_bv_xx_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b4) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x4
+
+x1 %>% 
+  bind_rows(x2) %>% 
+  bind_rows(x3) %>% 
+  bind_rows(x4) %>% 
+  mutate(prod="b4") -> df_b4
+
+read_csv("./HisFuc_bv_tm_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b5) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x1
+read_csv("./HisFuc_bv_xx_UtoE.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b5) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x2
+read_csv("./HisFuc_bv_tm_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b5) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x3
+read_csv("./HisFuc_bv_xx_EtoU.csv") %>% 
+  dplyr::select(city, year, sce, ord, ssp, b5) %>% 
+  unite("bud", sce, ord, ssp) %>% 
+  set_names("city", "year","bud","ms") -> x4
+
+x1 %>% 
+  bind_rows(x2) %>% 
+  bind_rows(x3) %>% 
+  bind_rows(x4) %>% 
+  mutate(prod="b5") -> df_b5
+
+df_b1 %>% 
+  bind_rows(df_b2) %>% 
+  bind_rows(df_b3) %>% 
+  bind_rows(df_b4) %>% 
+  bind_rows(df_b5) -> df
+
+readxl::read_xlsx("./Bud_life.xlsx") -> bll  
+read_csv("./HisFuc_TotalRoad2.csv") -> rd
+
+df %>% 
+  left_join(bll) -> df1
+
+df1 %>% 
+  rename(bud0=bud) %>% 
+  unite("bud",prod, bud0) -> df2
+
+df2 %>% 
+  write_csv("./HisFuc_TotalBuilding.csv")
+
+
+
+##1.3
+library(tidyverse)
+
+
+read_csv("./HisFuc_TotalBuilding.csv") %>% 
+  mutate(lifespan=lifespan*1.3) -> df ##1.3
+
+afc_inflow_rd <- function(sss, acode) {
+  
+  df %>% 
+    dplyr::filter(bud==sss)%>% 
+    dplyr::filter(city==acode) -> tmp
+  unique(tmp$lifespan) -> lff
+  tmp %>% 
+    arrange(year) %>% 
+    dplyr::select(city, year, bud, ms) -> ms
+  
+  ms[1,"input"] <- ms[1,"ms"]/2
+  for (j in 1:101) {
+    result <- numeric(j)
+    for (i in 1:j) {
+      result[i] <- as.numeric(ms[i, "input"]) * dnorm(j-i, mean = lff, sd = lff/2)  ##change
+    }
+    ms[j,"ou"] <- sum(result)
+    ms[j+1,"input"] <- ms[j+1,"ms"]-ms[j,"ms"]+ms[j,"ou"]
+    if(ms[j,"input"] < 0)
+    { 
+      ms[j-1,"ou"] <- ms[j-1,"ou"]-ms[j,"input"]
+      ms[j,"input"] <- 0 
+    }
+  }
+  ms %>% 
+    na.omit() %>% 
+    mutate(inflow2=if_else(input == 0, ou, input))
+  
+}
+
+
+crossing(
+  unique(df$bud),
+  unique(df$city)
+) %>% 
+  as_tibble() %>% 
+  set_names("sss", "acode") -> rdss
+
+
+#############################################################################
+usethis::edit_r_profile()
+
+
+library(parallel)
+makeCluster(8) -> cl ###
+
+parLapply(cl, seq(1, nrow(rdss), by = 1290), function(x){
+  rdss %>% 
+    slice(x:(x+1289)) %>% 
+    mutate(js=map2(sss, acode, afc_inflow_rd)) %>% 
+    write_rds(paste0("ztemp13/r13_", x, ".rds"))
+}
+)
+
+
+
+
+
+##建筑
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp13_building/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() %>% 
+  separate(sss, into = c("prod","sce", "ord","ssp"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df
+
+df %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./building/Life_extension/Bs_tm_UtoE_life30.csv")
+
+df %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./building/Life_extension/Bs_xx_UtoE_life30.csv")
+
+df %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./building/Life_extension/Bs_tm_EtoU_life30.csv")
+
+df %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./building/Life_extension/Bs_xx_EtoU_life30.csv")
+
+
+
+
+##建筑
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp16_building/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() %>% 
+  separate(sss, into = c("prod","sce", "ord","ssp"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df
+
+df %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./building/Life_extension/Bs_tm_UtoE_life60.csv")
+
+df %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./building/Life_extension/Bs_xx_UtoE_life60.csv")
+
+df %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./building/Life_extension/Bs_tm_EtoU_life60.csv")
+
+df %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./building/Life_extension/Bs_xx_EtoU_life60.csv")
+
+
+
+
+
+
+##道路
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp13_road/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("prod","sce", "ord","ssp"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rd_tm_UtoE_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rd_xx_UtoE_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rd_tm_EtoU_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rd_xx_EtoU_life30.csv")
+
+
+##铁路
+
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp13_rail/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rail_tm_UtoE_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rail_xx_UtoE_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rail_tm_EtoU_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rail_xx_EtoU_life30.csv")
+
+
+
+
+
+
+
+##道路
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp16_road/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("prod","sce", "ord","ssp"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rd_tm_UtoE_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rd_xx_UtoE_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rd_tm_EtoU_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rd_xx_EtoU_life60.csv")
+
+
+##铁路
+
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp16_rail/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rail_tm_UtoE_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./transportation/Life_extension/Rail_xx_UtoE_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rail_tm_EtoU_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./transportation/Life_extension/Rail_xx_EtoU_life60.csv")
+
+
+
+##能源
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp13_tm_power/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","prod","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  # dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/PW_tm_UtoE_life30.csv")
+
+df1 %>% 
+  # dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/PW_tm_EtoU_life30.csv")
+
+
+
+lapply(fs::dir_ls("./ztemp13_xx_power/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","prod","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  # dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/PW_xx_UtoE_life30.csv")
+
+df1 %>% 
+  # dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/PW_xx_EtoU_life30.csv")
+
+
+##e-lines
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp13_elines/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/els_tm_UtoE_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/els_xx_UtoE_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/els_tm_EtoU_life30.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/els_xx_EtoU_life30.csv")
+
+
+
+##能源
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp16_tm_power/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","prod","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  # dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/PW_tm_UtoE_life60.csv")
+
+df1 %>% 
+  # dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/PW_tm_EtoU_life60.csv")
+
+
+
+lapply(fs::dir_ls("./ztemp16_xx_power/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","prod","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  # dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/PW_xx_UtoE_life60.csv")
+
+df1 %>% 
+  # dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/PW_xx_EtoU_life60.csv")
+
+
+##e-lines
+library(tidyverse)
+
+lapply(fs::dir_ls("./ztemp16_elines/"), function(x){
+  read_rds(x)
+}) %>% 
+  bind_rows() -> df
+
+df %>% 
+  separate(sss, into = c("ssp","sce", "ord"), sep = "_") %>% 
+  unnest(js) %>% 
+  dplyr::select(-bud,-acode,-input) %>% 
+  mutate(inflow3=abs(inflow2),
+         outflow3=abs(ou)) -> df1
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/els_tm_UtoE_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  write_csv("./power/Life_extension/els_xx_UtoE_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/els_tm_EtoU_life60.csv")
+
+df1 %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  write_csv("./power/Life_extension/els_xx_EtoU_life60.csv")
+
+
+
+
+
+library(tidyverse)
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_tm_EtoU_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_tm_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_tm_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_tm_EtoU_life30.csv")
+
+
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_xx_EtoU_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_xx_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_xx_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_xx_EtoU_life30.csv")
+
+
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_tm_UtoE_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_tm_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_tm_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_tm_UtoE_life30.csv")
+
+
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_xx_UtoE_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_xx_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_xx_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_xx_UtoE_life30.csv")
+
+
+
+
+library(tidyverse)
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_tm_EtoU_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_tm_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_tm_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_tm_EtoU_life60.csv")
+
+
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_xx_EtoU_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_xx_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_xx_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_xx_EtoU_life60.csv")
+
+
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_tm_UtoE_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_tm_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_tm_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_tm_UtoE_life60.csv")
+
+
+
+readxl::read_xlsx("./MI_bud.xlsx") -> cof
+read_csv("./building/Life_extension/Bs_xx_UtoE_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel/1000,
+    ms_Aluminum=ms*Aluminum/1000,
+    ms_Copper=ms*Copper/1000,
+    ms_Cement=ms*Cement/1000,
+    ms_Sand=ms*Sand/1000,
+    ms_Gravel=ms*Gravel/1000,
+    ms_Glass=ms*Glass/1000,
+    ms_Brick=ms*Brick/1000,
+    ms_Wood=ms*Wood/1000,
+    ms_Asphalt=ms*Asphalt/1000,
+    ms_Plastic=ms*Plastic/1000,
+    ms_Rubber=ms*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ms_xx_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel/1000,
+    in_Aluminum=inflow3*Aluminum/1000,
+    in_Copper=inflow3*Copper/1000,
+    in_Cement=inflow3*Cement/1000,
+    in_Sand=inflow3*Sand/1000,
+    in_Gravel=inflow3*Gravel/1000,
+    in_Glass=inflow3*Glass/1000,
+    in_Brick=inflow3*Brick/1000,
+    in_Wood=inflow3*Wood/1000,
+    in_Asphalt=inflow3*Asphalt/1000,
+    in_Plastic=inflow3*Plastic/1000,
+    in_Rubber=inflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_in_xx_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel/1000,
+    ou_Aluminum=outflow3*Aluminum/1000,
+    ou_Copper=outflow3*Copper/1000,
+    ou_Cement=outflow3*Cement/1000,
+    ou_Sand=outflow3*Sand/1000,
+    ou_Gravel=outflow3*Gravel/1000,
+    ou_Glass=outflow3*Glass/1000,
+    ou_Brick=outflow3*Brick/1000,
+    ou_Wood=outflow3*Wood/1000,
+    ou_Asphalt=outflow3*Asphalt/1000,
+    ou_Plastic=outflow3*Plastic/1000,
+    ou_Rubber=outflow3*Rubber/1000
+  ) %>% 
+  dplyr::select(-c(7:21)) %>% 
+  write_csv("./building/Life_extension/Mat_ou_xx_UtoE_life60.csv")
+
+
+
+
+##道路
+library(tidyverse)
+
+readxl::read_xlsx("./MI_road.xlsx") -> cof
+
+
+read_csv("./transportation/Life_extension/Rd_tm_EtoU_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_tm_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_tm_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_tm_EtoU_life30.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rd_xx_EtoU_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_xx_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_xx_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_xx_EtoU_life30.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rd_tm_UtoE_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_tm_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_tm_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_tm_UtoE_life30.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rd_xx_UtoE_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_xx_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_xx_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_xx_UtoE_life30.csv")
+
+
+
+
+library(tidyverse)
+
+
+read_csv("./transportation/Life_extension/Rail_tm_EtoU_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_tm_EtoU_life30.csv")
+
+
+read_csv("./transportation/Life_extension/Rail_xx_EtoU_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_xx_EtoU_life30.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rail_tm_UtoE_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_tm_UtoE_life30.csv")
+
+
+read_csv("./transportation/Life_extension/Rail_xx_UtoE_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_xx_UtoE_life30.csv")
+
+
+
+##道路
+library(tidyverse)
+
+readxl::read_xlsx("./MI_road.xlsx") -> cof
+
+
+read_csv("./transportation/Life_extension/Rd_tm_EtoU_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_tm_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_tm_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_tm_EtoU_life60.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rd_xx_EtoU_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_xx_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_xx_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_xx_EtoU_life60.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rd_tm_UtoE_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_tm_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_tm_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_tm_UtoE_life60.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rd_xx_UtoE_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+    ms_Asphalt=ms*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ms_xx_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+    in_Asphalt=inflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_in_xx_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+    ou_Asphalt=outflow3*Asphalt,
+  ) %>% 
+  dplyr::select(-c(7:16)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rd_ou_xx_UtoE_life60.csv")
+
+
+
+
+library(tidyverse)
+
+
+read_csv("./transportation/Life_extension/Rail_tm_EtoU_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_tm_EtoU_life60.csv")
+
+
+read_csv("./transportation/Life_extension/Rail_xx_EtoU_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_xx_EtoU_life60.csv")
+
+
+
+read_csv("./transportation/Life_extension/Rail_tm_UtoE_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_tm_UtoE_life60.csv")
+
+
+read_csv("./transportation/Life_extension/Rail_xx_UtoE_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*209.8689333,
+    ms_Aluminum=ms*24.69046275,
+    ms_Copper=ms*12.34523137,
+    ms_Cement=ms*316.2713287,
+    ms_Gravel=ms*4233.578989,
+    ms_Sand=ms*1813.909091,
+    ms_Wood=ms*99.0228,
+    
+    in_Steel=inflow3*209.8689333,
+    in_Aluminum=inflow3*24.69046275,
+    in_Copper=inflow3*12.34523137,
+    in_Cement=inflow3*316.2713287,
+    in_Gravel=inflow3*4233.578989,
+    in_Sand=inflow3*1813.909091,
+    in_Wood=inflow3*99.0228,
+    
+    ou_Steel=outflow3*209.8689333,
+    ou_Aluminum=outflow3*24.69046275,
+    ou_Copper=outflow3*12.34523137,
+    ou_Cement=outflow3*316.2713287,
+    ou_Gravel=outflow3*4233.578989,
+    ou_Sand=outflow3*1813.909091,
+    ou_Wood=outflow3*99.0228,
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./transportation/Life_extension/Mat_Rail_xx_UtoE_life60.csv")
+
+
+
+
+
+
+##能源
+library(tidyverse)
+
+readxl::read_xlsx("./MI_epoint.xlsx") -> cof
+
+
+read_csv("./power/Life_extension/PW_tm_EtoU_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_tm_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_tm_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_tm_EtoU_life30.csv")
+
+
+read_csv("./power/Life_extension/PW_xx_EtoU_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_xx_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_xx_EtoU_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_xx_EtoU_life30.csv")
+
+
+
+read_csv("./power/Life_extension/PW_tm_UtoE_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_tm_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_tm_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_tm_UtoE_life30.csv")
+
+
+read_csv("./power/Life_extension/PW_xx_UtoE_life30.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_xx_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_xx_UtoE_life30.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_xx_UtoE_life30.csv")
+
+
+
+
+library(tidyverse)
+
+
+read_csv("./power/Life_extension/els_tm_EtoU_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_tm_EtoU_life30.csv")
+
+
+read_csv("./power/Life_extension/els_xx_EtoU_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_xx_EtoU_life30.csv")
+
+
+read_csv("./power/Life_extension/els_tm_UtoE_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_tm_UtoE_life30.csv")
+
+
+read_csv("./power/Life_extension/els_xx_UtoE_life30.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_xx_UtoE_life30.csv")
+
+
+
+
+##能源
+library(tidyverse)
+
+readxl::read_xlsx("./MI_epoint.xlsx") -> cof
+
+
+read_csv("./power/Life_extension/PW_tm_EtoU_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_tm_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_tm_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_tm_EtoU_life60.csv")
+
+
+read_csv("./power/Life_extension/PW_xx_EtoU_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_xx_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_xx_EtoU_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_xx_EtoU_life60.csv")
+
+
+
+read_csv("./power/Life_extension/PW_tm_UtoE_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_tm_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_tm_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_tm_UtoE_life60.csv")
+
+
+read_csv("./power/Life_extension/PW_xx_UtoE_life60.csv") %>% 
+  dplyr::select(-ou, -inflow2) %>% 
+  left_join(cof) -> df
+
+df %>% 
+  mutate(
+    ms_Steel=ms*Steel,
+    ms_Aluminum=ms*Aluminum,
+    ms_Copper=ms*Copper,
+    ms_Cement=ms*Cement,
+    ms_Sand=ms*Sand,
+    ms_Gravel=ms*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ms_xx_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    in_Steel=inflow3*Steel,
+    in_Aluminum=inflow3*Aluminum,
+    in_Copper=inflow3*Copper,
+    in_Cement=inflow3*Cement,
+    in_Sand=inflow3*Sand,
+    in_Gravel=inflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_in_xx_UtoE_life60.csv")
+
+df %>% 
+  mutate(
+    ou_Steel=outflow3*Steel,
+    ou_Aluminum=outflow3*Aluminum,
+    ou_Copper=outflow3*Copper,
+    ou_Cement=outflow3*Cement,
+    ou_Sand=outflow3*Sand,
+    ou_Gravel=outflow3*Gravel,
+  ) %>% 
+  dplyr::select(-c(7:15)) %>% 
+  write_csv("./power/Life_extension/Mat_pw_ou_xx_UtoE_life60.csv")
+
+
+
+
+library(tidyverse)
+
+
+read_csv("./power/Life_extension/els_tm_EtoU_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_tm_EtoU_life60.csv")
+
+
+read_csv("./power/Life_extension/els_xx_EtoU_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_xx_EtoU_life60.csv")
+
+
+read_csv("./power/Life_extension/els_tm_UtoE_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_tm_UtoE_life60.csv")
+
+
+read_csv("./power/Life_extension/els_xx_UtoE_life60.csv") %>% 
+  mutate(
+    ms_Steel=ms*20,
+    ms_Aluminum=ms*9,
+    ms_Cement=ms*4.5,
+    ms_Gravel=ms*14,
+    ms_Sand=ms*6,
+    
+    in_Steel=inflow3*20,
+    in_Aluminum=inflow3*9,
+    in_Cement=inflow3*4.5,
+    in_Gravel=inflow3*14,
+    in_Sand=inflow3*6,
+    
+    ou_Steel=outflow3*20,
+    ou_Aluminum=outflow3*9,
+    ou_Cement=outflow3*4.5,
+    ou_Gravel=outflow3*14,
+    ou_Sand=outflow3*6
+  ) %>% 
+  dplyr::select(-c(6:10)) %>% 
+  write_csv("./power/Life_extension/Mat_els_xx_UtoE_life60.csv")
+
+
 
 
 

@@ -1,0 +1,473 @@
+
+
+###### 15. Operational carbon emissions
+
+
+
+library(tidyverse)
+
+readxl::read_xlsx("./opt_cof_EnergyConsumption2.xlsx") %>%  ##Energy consumption and thresholds in African cities
+  dplyr::select(ISO3,e_area=e_b1, f_area=f_b1, e_tm=yz_e_tm_b1, f_tm=yz_f_tm_b1,  e_xx=yz_e_xx_b1, f_xx=yz_f_xx_b1) -> df
+
+df %>% 
+  dplyr::select(ISO3, e_area, e_tm) %>% 
+  mutate(year0=2020, year1=2050) %>% 
+  rename(y0=e_area, y1=e_tm) %>% 
+  mutate(ttt="e_tm_UtoE") -> e_tm_UtoE
+df %>% 
+  dplyr::select(ISO3, e_area, e_tm) %>% 
+  mutate(year0=2020, year1=2070) %>% 
+  rename(y0=e_area, y1=e_tm) %>% 
+  mutate(ttt="e_tm_EtoU") -> e_tm_EtoU
+df %>% 
+  dplyr::select(ISO3, f_area, f_tm) %>% 
+  mutate(year0=2020, year1=2050) %>% 
+  rename(y0=f_area, y1=f_tm) %>% 
+  mutate(ttt="f_tm_UtoE") -> f_tm_UtoE
+df %>% 
+  dplyr::select(ISO3, f_area, f_tm) %>% 
+  mutate(year0=2020, year1=2070) %>% 
+  rename(y0=f_area, y1=f_tm) %>% 
+  mutate(ttt="f_tm_EtoU") -> f_tm_EtoU
+df %>% 
+  dplyr::select(ISO3, e_area, e_xx) %>% 
+  mutate(year0=2020, year1=2050) %>% 
+  rename(y0=e_area, y1=e_xx) %>% 
+  mutate(ttt="e_xx_UtoE") -> e_xx_UtoE
+df %>% 
+  dplyr::select(ISO3, e_area, e_xx) %>% 
+  mutate(year0=2020, year1=2070) %>% 
+  rename(y0=e_area, y1=e_xx) %>% 
+  mutate(ttt="e_xx_EtoU") -> e_xx_EtoU
+df %>% 
+  dplyr::select(ISO3, f_area, f_xx) %>% 
+  mutate(year0=2020, year1=2050) %>% 
+  rename(y0=f_area, y1=f_xx) %>% 
+  mutate(ttt="f_xx_UtoE") -> f_xx_UtoE
+df %>% 
+  dplyr::select(ISO3, f_area, f_xx) %>% 
+  mutate(year0=2020, year1=2070) %>% 
+  rename(y0=f_area, y1=f_xx) %>% 
+  mutate(ttt="f_xx_EtoU") -> f_xx_EtoU
+
+
+e_tm_UtoE %>% 
+  bind_rows(e_tm_EtoU) %>% 
+  bind_rows(f_tm_UtoE) %>% 
+  bind_rows(f_tm_EtoU) %>% 
+  bind_rows(e_xx_UtoE) %>% 
+  bind_rows(e_xx_EtoU) %>% 
+  bind_rows(f_xx_UtoE) %>% 
+  bind_rows(f_xx_EtoU) %>% 
+  unite("link", ISO3, ttt) -> df1
+
+
+s_curve_int <- function(year0, y0, year1, y1, k = 10, midpoint = NULL) {
+  if (is.null(midpoint)) {
+    midpoint <- (year0 + year1) / 2
+  }
+  tibble(
+    xx = seq(year0, year1, by = 1)
+  ) %>%
+    mutate(
+      t = (xx - midpoint) / (year1 - year0),
+      s = 1 / (1 + exp(-k * t)),
+      yy = y0 + (s - min(s)) / (max(s) - min(s)) * (y1 - y0)
+    )
+}
+
+
+df1 %>% 
+  mutate(jss=pmap(list(year0,y0,year1,y1), s_curve_int)) %>% 
+  unnest(jss) %>% 
+  dplyr::select(link, xx, yy) %>% 
+  separate(link, into = c("ISO","type","sce","ord"), sep = "_") %>% 
+  unite("link",ISO, type, sce) %>% 
+  rename(year=xx)-> df3
+
+##UtoE
+df3 %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  dplyr::filter(year==2050) %>% 
+  dplyr::select(-year) %>% 
+  crossing(year=c(2051:2100)) -> tmp1
+##EtoU
+df3 %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  dplyr::filter(year==2070) %>% 
+  dplyr::select(-year) %>% 
+  crossing(year=c(2071:2100)) -> tmp2
+df3 %>% 
+  bind_rows(tmp1) %>% 
+  bind_rows(tmp2) %>% 
+  unite("link1",link, ord) -> df4
+df4 %>% 
+  dplyr::filter(year==2020) %>% 
+  dplyr::select(-year) %>% 
+  crossing(year=c(2000:2019)) -> tmp3
+df4 %>% 
+  bind_rows(tmp3) %>% 
+  separate(link1, into = c("ISO","type","sce","ord"), sep = "_") %>% 
+  rename(eng_area=yy) %>% 
+  mutate(prod="b1") -> df_b1
+
+df_b1 %>% 
+  bind_rows(df_b2) %>% 
+  bind_rows(df_b3) %>% 
+  bind_rows(df_b4) %>% 
+  bind_rows(df_b5) -> dfn
+
+dfn %>% 
+  write_csv("./opt_EnergyConsumption_perArea.csv")
+
+readxl::read_xlsx("./opt_cof_electricityFactor.xlsx") -> df  #Emission factors for electricity and non-electric energy sources
+
+
+df %>% 
+  dplyr::filter(elc_GJ < elc_yz) %>% 
+  dplyr::select(ISO3, y0=elc_GJ, y1=elc_yz) %>% 
+  mutate(year0=2020, year1=2050) %>% 
+  mutate(ord="UtoE") %>% 
+  unite("link", ISO3, ord) -> a1
+df %>% 
+  dplyr::filter(elc_GJ < elc_yz) %>% 
+  dplyr::select(ISO3, y0=elc_GJ, y1=elc_yz) %>% 
+  mutate(year0=2020, year1=2070) %>% 
+  mutate(ord="EtoU")  %>% 
+  unite("link", ISO3, ord) -> a2
+
+
+s_curve_int <- function(year0, y0, year1, y1, k = 10, midpoint = NULL) {
+  if (is.null(midpoint)) {
+    midpoint <- (year0 + year1) / 2
+  }
+  tibble(
+    xx = seq(year0, year1, by = 1)
+  ) %>%
+    mutate(
+      t = (xx - midpoint) / (year1 - year0),
+      s = 1 / (1 + exp(-k * t)),
+      yy = y0 + (s - min(s)) / (max(s) - min(s)) * (y1 - y0)
+    )
+}
+
+##UtoE
+a1 %>% 
+  mutate(jss=pmap(list(year0,y0,year1,y1), s_curve_int)) %>% 
+  unnest(jss) %>% 
+  dplyr::select(link, year=xx, yy) -> b1
+a1 %>% 
+  dplyr::select(link, yy=y1) %>% 
+  crossing(year=c(2051:2100)) -> c1
+a1 %>% 
+  dplyr::select(link, yy=y0) %>% 
+  crossing(year=c(2000:2019)) -> d1
+b1 %>% 
+  bind_rows(c1) %>% 
+  bind_rows(d1) -> e1
+
+
+##EtoU
+a2 %>% 
+  mutate(jss=pmap(list(year0,y0,year1,y1), s_curve_int)) %>% 
+  unnest(jss) %>% 
+  dplyr::select(link, year=xx, yy) -> b2
+a2 %>% 
+  dplyr::select(link, yy=y1) %>% 
+  crossing(year=c(2071:2100)) -> c2
+a2 %>% 
+  dplyr::select(link, yy=y0) %>% 
+  crossing(year=c(2000:2019)) -> d2
+b2 %>% 
+  bind_rows(c2) %>% 
+  bind_rows(d2) -> e2
+
+##
+e1 %>% bind_rows(e2) -> e3
+
+###
+df %>% 
+  dplyr::filter(elc_GJ  > elc_yz) %>% 
+  dplyr::select(ISO3, yy=elc_GJ) %>% 
+  crossing(year=c(2000:2100)) -> tmp1
+tmp1 %>% 
+  mutate(ord="EtoU") -> tt1
+tmp1 %>% 
+  mutate(ord="UtoE") -> tt2
+tt1 %>% 
+  bind_rows(tt2) %>% 
+  unite("link", ISO3, ord) -> tt3
+e3 %>% bind_rows(tt3) %>% 
+  crossing(sce=c("tm","xx")) %>% 
+  mutate(type="ele") -> lzz1
+lzz1 %>% 
+  separate(link, into = c("ISO","ord"), sep = "_") %>% 
+  rename(e_fac=yy) -> lzzz1
+
+df %>% 
+  dplyr::select(ISO3, noe_GJ) %>% 
+  crossing(year=c(2000:2100)) %>% 
+  crossing(sce=c("tm","xx")) %>% 
+  crossing(ord=c("EtoU","UtoE"))%>% 
+  mutate(type="noe") -> lzz2
+lzz2 %>% 
+  rename(ISO=ISO3,e_fac=noe_GJ) -> lzzz2
+lzzz1 %>% bind_rows(lzzz2) %>% 
+  crossing(paste0("b",prod=c(1:5))) %>% 
+  write_csv("./opt_electricFactor_tCO2GJ.csv")
+
+##tm_EtoU
+
+read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, eng_area) %>% 
+  rename(eng_e=e, eng_f=f) -> eng
+read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, e_fac) %>% 
+  rename(fat_ele=ele, fat_noe=noe) -> fat
+eng %>% 
+  left_join(fat) %>% 
+  separate(link, into = c("ISO", "sce", "ord", "year", "prod"), sep = "_") %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  dplyr::select(-sce, -ord) %>% 
+  unite("link", ISO, year, prod) -> fff
+
+##Building areas
+read_csv("./Bs_tm_EtoU.csv") %>% 
+  dplyr::select(sce, ord, ssp, city, year, ms, prod) %>% 
+  mutate(hhh=case_when(
+    prod=="b1"~3,
+    prod=="b2"~3,
+    prod=="b3"~3,
+    prod=="b4"~3.5,
+    prod=="b5"~5
+  )) %>% 
+  mutate(bs=ms/hhh) %>% 
+  dplyr::select(-ms, -hhh) -> df
+read_csv("./afc_nms333.csv") %>% 
+  dplyr::select(city, ISO=ISO3) -> nms
+df %>% 
+  left_join(nms) %>% 
+  mutate(year1=year, prod1=prod) %>% 
+  unite("link", ISO, year1, prod1) %>% 
+  left_join(fff) %>% 
+  mutate(ce_Operational=bs*(eng_e*fat_ele+eng_f*fat_noe)) %>% 
+  dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
+  write_csv("./CE_Opt_tm_EtoU.csv")
+
+
+
+##xx_EtoU
+
+read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, eng_area) %>% 
+  rename(eng_e=e, eng_f=f) -> eng
+read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, e_fac) %>% 
+  rename(fat_ele=ele, fat_noe=noe) -> fat
+eng %>% 
+  left_join(fat) %>% 
+  separate(link, into = c("ISO", "sce", "ord", "year", "prod"), sep = "_") %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="EtoU") %>% 
+  dplyr::select(-sce, -ord) %>% 
+  unite("link", ISO, year, prod) -> fff
+
+##准备建筑面积
+read_csv("./Bs_xx_EtoU.csv") %>% 
+  dplyr::select(sce, ord, ssp, city, year, ms, prod) %>% 
+  mutate(hhh=case_when(
+    prod=="b1"~3,
+    prod=="b2"~3,
+    prod=="b3"~3,
+    prod=="b4"~3.5,
+    prod=="b5"~5
+  )) %>% 
+  mutate(bs=ms/hhh) %>% 
+  dplyr::select(-ms, -hhh) -> df
+read_csv("./afc_nms333.csv") %>% 
+  dplyr::select(city, ISO=ISO3) -> nms
+df %>% 
+  left_join(nms) %>% 
+  mutate(year1=year, prod1=prod) %>% 
+  unite("link", ISO, year1, prod1) %>% 
+  left_join(fff) %>% 
+  mutate(ce_Operational=bs*(eng_e*fat_ele+eng_f*fat_noe)) %>% 
+  dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
+  write_csv("./CE_Opt_xx_EtoU.csv")
+
+
+
+
+##tm_UtoE
+
+read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, eng_area) %>% 
+  rename(eng_e=e, eng_f=f) -> eng
+read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, e_fac) %>% 
+  rename(fat_ele=ele, fat_noe=noe) -> fat
+eng %>% 
+  left_join(fat) %>% 
+  separate(link, into = c("ISO", "sce", "ord", "year", "prod"), sep = "_") %>% 
+  dplyr::filter(sce=="tm") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  dplyr::select(-sce, -ord) %>% 
+  unite("link", ISO, year, prod) -> fff
+
+##准备建筑面积
+read_csv("./Bs_tm_UtoE.csv") %>% 
+  dplyr::select(sce, ord, ssp, city, year, ms, prod) %>% 
+  mutate(hhh=case_when(
+    prod=="b1"~3,
+    prod=="b2"~3,
+    prod=="b3"~3,
+    prod=="b4"~3.5,
+    prod=="b5"~5
+  )) %>% 
+  mutate(bs=ms/hhh) %>% 
+  dplyr::select(-ms, -hhh) -> df
+read_csv("./afc_nms333.csv") %>% 
+  dplyr::select(city, ISO=ISO3) -> nms
+df %>% 
+  left_join(nms) %>% 
+  mutate(year1=year, prod1=prod) %>% 
+  unite("link", ISO, year1, prod1) %>% 
+  left_join(fff) %>% 
+  mutate(ce_Operational=bs*(eng_e*fat_ele+eng_f*fat_noe)) %>% 
+  dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
+  write_csv("./CE_Opt_tm_UtoE.csv")
+
+
+
+##xx_UtoE
+
+read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, eng_area) %>% 
+  rename(eng_e=e, eng_f=f) -> eng
+read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+  unite("link", ISO, sce, ord, year, prod) %>% 
+  spread(type, e_fac) %>% 
+  rename(fat_ele=ele, fat_noe=noe) -> fat
+eng %>% 
+  left_join(fat) %>% 
+  separate(link, into = c("ISO", "sce", "ord", "year", "prod"), sep = "_") %>% 
+  dplyr::filter(sce=="xx") %>% 
+  dplyr::filter(ord=="UtoE") %>% 
+  dplyr::select(-sce, -ord) %>% 
+  unite("link", ISO, year, prod) -> fff
+
+##准备建筑面积
+read_csv("./Bs_xx_UtoE.csv") %>% 
+  dplyr::select(sce, ord, ssp, city, year, ms, prod) %>% 
+  mutate(hhh=case_when(
+    prod=="b1"~3,
+    prod=="b2"~3,
+    prod=="b3"~3,
+    prod=="b4"~3.5,
+    prod=="b5"~5
+  )) %>% 
+  mutate(bs=ms/hhh) %>% 
+  dplyr::select(-ms, -hhh) -> df
+read_csv("./afc_nms333.csv") %>% 
+  dplyr::select(city, ISO=ISO3) -> nms
+df %>% 
+  left_join(nms) %>% 
+  mutate(year1=year, prod1=prod) %>% 
+  unite("link", ISO, year1, prod1) %>% 
+  left_join(fff) %>% 
+  mutate(ce_Operational=bs*(eng_e*fat_ele+eng_f*fat_noe)) %>% 
+  dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
+  write_csv("./CE_Opt_xx_UtoE.csv")
+
+
+
+
+##tm_UtoE
+read_csv("./CE_Opt_tm_UtoE.csv") %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Operational) -> df1
+read_csv("./CE_tm_UtoE.csv") %>% 
+  dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
+  mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
+  unite("link", ssp1, city1, year1, prod1) %>% 
+  left_join(df1) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_opt=ce_Operational+ce_End,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_tm_UtoE2.csv")
+
+##xx_UtoE
+read_csv("./CE_Opt_xx_UtoE.csv") %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Operational) -> df1
+read_csv("./CE_xx_UtoE.csv") %>% 
+  dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
+  mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
+  unite("link", ssp1, city1, year1, prod1) %>% 
+  left_join(df1) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_opt=ce_Operational+ce_End,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_xx_UtoE2.csv")
+
+
+##tm_EtoU
+read_csv("./CE_Opt_tm_EtoU.csv") %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Operational) -> df1
+read_csv("./CE_tm_EtoU.csv") %>% 
+  dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
+  mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
+  unite("link", ssp1, city1, year1, prod1) %>% 
+  left_join(df1) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_opt=ce_Operational+ce_End,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_tm_EtoU2.csv")
+
+##xx_EtoU
+read_csv("./CE_Opt_xx_EtoU.csv") %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Operational) -> df1
+read_csv("./CE_xx_EtoU.csv") %>% 
+  dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
+  mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
+  unite("link", ssp1, city1, year1, prod1) %>% 
+  left_join(df1) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_opt=ce_Operational+ce_End,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_xx_EtoU2.csv")
+
+##修改
+read_csv("./CE_tm_UtoE.csv") %>% 
+  dplyr::select(-ce_End) %>% 
+  mutate(ce_opt=ce_Operational,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_tm_UtoE.csv")
+read_csv("./CE_xx_UtoE.csv") %>% 
+  dplyr::select(-ce_End) %>% 
+  mutate(ce_opt=ce_Operational,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_xx_UtoE.csv")
+read_csv("./CE_tm_EtoU.csv") %>% 
+  dplyr::select(-ce_End) %>% 
+  mutate(ce_opt=ce_Operational,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_tm_EtoU.csv")
+read_csv("./CE_xx_EtoU.csv") %>% 
+  dplyr::select(-ce_End) %>% 
+  mutate(ce_opt=ce_Operational,
+         ce_total=ce_opt+ce_emb) %>% 
+  write_csv("./CE_xx_EtoU.csv")
+
+
+

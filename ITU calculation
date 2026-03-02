@@ -1,0 +1,1265 @@
+
+#####11. ITU calculation
+
+
+library(tidyverse)
+
+readxl::read_xlsx("./carbonIntensity2.xlsx") -> ccc
+readxl::read_xlsx("./indusTech.xlsx") %>% 
+  mutate(Process="Manufacturing") %>% 
+  unite("link", Materials, Process) -> df
+
+ccc %>% 
+  unite("link", Materials, Process) %>% 
+  left_join(df) -> df1
+
+df1 %>% 
+  mutate(Carbon=if_else(is.na(small), Carbon, Carbon*small)) %>% 
+  dplyr::select(-small, -big) %>% 
+  separate(link, into = c("Materials", "Process"), sep = "_") %>%
+  writexl::write_xlsx("./carbonIntensity_idus_small.xlsx")
+
+df1 %>% 
+  mutate(Carbon=if_else(is.na(big), Carbon, Carbon*big)) %>% 
+  dplyr::select(-small, -big) %>% 
+  separate(link, into = c("Materials", "Process"), sep = "_") %>%
+  writexl::write_xlsx("./carbonIntensity_idus_big.xlsx")
+
+
+
+
+
+###Section 28: 减排措施之 工业技术升级开始
+
+library(tidyverse)
+
+## ms for  operational
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Sectors=="building") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product)-> ccc
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Sectors=="building") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product)-> ccc1
+
+read_csv("./building/baseline/Mat_ms_tm_EtoU.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_tm_EtoU.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_tm_EtoU_small.csv")
+
+
+
+read_csv("./building/baseline/Mat_ms_xx_EtoU.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_xx_EtoU.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_xx_EtoU_small.csv")
+
+
+read_csv("./building/baseline/Mat_ms_tm_UtoE.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_tm_UtoE.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_tm_UtoE_small.csv")
+
+
+
+read_csv("./building/baseline/Mat_ms_xx_UtoE.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_xx_UtoE.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_xx_UtoE_small.csv")
+
+
+
+library(tidyverse)
+
+## ms for  operational
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Sectors=="building") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product)-> ccc
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Sectors=="building") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product)-> ccc1
+
+read_csv("./building/baseline/Mat_ms_tm_EtoU.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_tm_EtoU.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_tm_EtoU_big.csv")
+
+
+
+read_csv("./building/baseline/Mat_ms_xx_EtoU.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_xx_EtoU.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_xx_EtoU_big.csv")
+
+
+read_csv("./building/baseline/Mat_ms_tm_UtoE.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_tm_UtoE.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_tm_UtoE_big.csv")
+
+
+
+read_csv("./building/baseline/Mat_ms_xx_UtoE.csv") %>% 
+  left_join(ccc) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Glass*Glass_Operational/1000+ms_Brick*Brick_Operational/1000+ms_Wood*Wood_Operational/1000+ms_Asphalt*Asphalt_Operational/1000+ms_Plastic*Plastic_Operational/1000+ms_Rubber*Rubber_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Glass*Glass_End/1000+ms_Brick*Brick_End/1000+ms_Wood*Wood_End/1000+ms_Asphalt*Asphalt_End/1000+ms_Plastic*Plastic_End/1000+ms_Rubber*Rubber_End/1000,
+    ce_opt=ce_Operational+ce_End
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) -> df1
+
+read_csv("./building/baseline/Mat_in_xx_UtoE.csv") %>% 
+  left_join(ccc1) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Glass*Glass_Extraction/1000+in_Brick*Brick_Extraction/1000+in_Wood*Wood_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000+in_Plastic*Plastic_Extraction/1000+in_Rubber*Rubber_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Glass*Glass_Manufacturing/1000+in_Brick*Brick_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000+in_Plastic*Plastic_Manufacturing/1000+in_Rubber*Rubber_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Glass*Glass_Transportation/1000+in_Brick*Brick_Transportation/1000+in_Wood*Wood_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000+in_Plastic*Plastic_Transportation/1000+in_Rubber*Rubber_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(-c(7:42)) %>% 
+  unite("link", ssp, city, year, prod) %>% 
+  dplyr::select(link, ce_Extraction, ce_Manufacturing, ce_Transportation, ce_emb) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  mutate(ce_total=ce_opt+ce_emb) %>% 
+  separate(link, into = c("ssp", "city", "year", "prod"), sep = "_") %>% 
+  write_csv("./building/Industry_tech/CE_xx_UtoE_big.csv")
+
+
+
+##交通
+
+library(tidyverse)
+
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Sectors=="roads") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  dplyr::filter(Materials!="Wood") %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> ooo
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Sectors=="roads") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  dplyr::filter(Materials!="Wood") %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> eee
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Product=="Railroads") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> o_rail
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Product=="Railroads") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> e_rail
+
+
+
+##tm_EtoU
+read_csv("./transportation/baseline/Mat_Rd_ms_tm_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_tm_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_tm_EtoU.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_tm_EtoU_small.csv")
+
+
+##xx_EtoU
+read_csv("./transportation/baseline/Mat_Rd_ms_xx_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_xx_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_xx_EtoU.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_xx_EtoU_small.csv")
+
+
+
+##tm_UtoE
+read_csv("./transportation/baseline/Mat_Rd_ms_tm_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_tm_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_tm_UtoE.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_tm_UtoE_small.csv")
+
+
+##xx_UtoE
+read_csv("./transportation/baseline/Mat_Rd_ms_xx_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_xx_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_xx_UtoE.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_xx_UtoE_small.csv")
+
+
+
+##交通
+
+library(tidyverse)
+
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Sectors=="roads") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  dplyr::filter(Materials!="Wood") %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> ooo
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Sectors=="roads") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  dplyr::filter(Materials!="Wood") %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> eee
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Product=="Railroads") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> o_rail
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Product=="Railroads") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> e_rail
+
+
+
+##tm_EtoU
+read_csv("./transportation/baseline/Mat_Rd_ms_tm_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_tm_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_tm_EtoU.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_tm_EtoU_big.csv")
+
+
+##xx_EtoU
+read_csv("./transportation/baseline/Mat_Rd_ms_xx_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_xx_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_xx_EtoU.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_xx_EtoU_big.csv")
+
+
+
+##tm_UtoE
+read_csv("./transportation/baseline/Mat_Rd_ms_tm_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_tm_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_tm_UtoE.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_tm_UtoE_big.csv")
+
+
+##xx_UtoE
+read_csv("./transportation/baseline/Mat_Rd_ms_xx_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Asphalt*Asphalt_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Asphalt*Asphalt_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./transportation/baseline/Mat_Rd_in_xx_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Asphalt*Asphalt_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Asphalt*Asphalt_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Asphalt*Asphalt_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./transportation/baseline/Mat_Rail_xx_UtoE.csv") %>% 
+  mutate(prod="Railroads") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_rail) %>% 
+  left_join(o_rail) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000+ms_Wood*Wood_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000+ms_Wood*Wood_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000+in_Wood*Wood_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000+in_Wood*Wood_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000+in_Wood*Wood_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./transportation/Industry_tech/CE_xx_UtoE_big.csv")
+
+
+
+
+##能源
+
+library(tidyverse)
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Sectors=="energy") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> ooo
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Sectors=="energy") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> eee
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Product=="els") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> o_els
+
+readxl::read_xlsx("./carbonIntensity_idus_small.xlsx") %>% 
+  dplyr::filter(Product=="els") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> e_els
+
+
+
+##tm_EtoU
+read_csv("./power/baseline/Mat_pw_ms_tm_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_tm_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_tm_EtoU.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_tm_EtoU_small.csv")
+
+
+##xx_EtoU
+read_csv("./power/baseline/Mat_pw_ms_xx_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_xx_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_xx_EtoU.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_xx_EtoU_small.csv")
+
+
+##tm_UtoE
+read_csv("./power/baseline/Mat_pw_ms_tm_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_tm_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_tm_UtoE.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_tm_UtoE_small.csv")
+
+
+##xx_UtoE
+read_csv("./power/baseline/Mat_pw_ms_xx_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_xx_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_xx_UtoE.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_xx_UtoE_small.csv")
+
+
+
+##能源
+
+library(tidyverse)
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Sectors=="energy") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> ooo
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Sectors=="energy") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) %>% 
+  na.omit() -> eee
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Product=="els") %>% 
+  dplyr::filter(Process=="Operational"|Process=="End") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> o_els
+
+readxl::read_xlsx("./carbonIntensity_idus_big.xlsx") %>% 
+  dplyr::filter(Product=="els") %>% 
+  dplyr::filter(Process=="Extraction"|Process=="Manufacturing"|Process=="Transportation") %>% 
+  dplyr::select(-Sectors) %>% 
+  unite("link", Materials, Process) %>% 
+  spread(link, Carbon) %>% 
+  rename(prod=Product) -> e_els
+
+
+
+##tm_EtoU
+read_csv("./power/baseline/Mat_pw_ms_tm_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_tm_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_tm_EtoU.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_tm_EtoU_big.csv")
+
+
+##xx_EtoU
+read_csv("./power/baseline/Mat_pw_ms_xx_EtoU.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_xx_EtoU.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_xx_EtoU.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_xx_EtoU_big.csv")
+
+
+##tm_UtoE
+read_csv("./power/baseline/Mat_pw_ms_tm_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_tm_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_tm_UtoE.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_tm_UtoE_big.csv")
+
+
+##xx_UtoE
+read_csv("./power/baseline/Mat_pw_ms_xx_UtoE.csv") %>% 
+  left_join(ooo) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Copper*Copper_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Copper*Copper_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt) %>% 
+  mutate(prod1=prod, ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", prod1, ssp1, city1, year1) -> df1
+
+read_csv("./power/baseline/Mat_pw_in_xx_UtoE.csv") %>% 
+  left_join(eee) %>% 
+  mutate(
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Copper*Copper_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Copper*Copper_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Copper*Copper_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation) %>% 
+  dplyr::select(prod, ssp, city, year, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  unite("link", prod, ssp, city, year) -> df2
+
+df1 %>% 
+  left_join(df2) %>% 
+  dplyr::select(-link) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> df3
+
+
+read_csv("./power/baseline/Mat_els_xx_UtoE.csv") %>% 
+  mutate(prod="els") %>% 
+  dplyr::select(prod, everything()) %>% 
+  left_join(e_els) %>% 
+  left_join(o_els) %>% 
+  mutate(
+    ce_Operational=ms_Steel*Steel_Operational/1000+ms_Aluminum*Aluminum_Operational/1000+ms_Cement*Cement_Operational/1000+ms_Sand*Sand_Operational/1000+ms_Gravel*Gravel_Operational/1000,
+    ce_End=ms_Steel*Steel_End/1000+ms_Aluminum*Aluminum_End/1000+ms_Cement*Cement_End/1000+ms_Sand*Sand_End/1000+ms_Gravel*Gravel_End/1000,
+    ce_opt=ce_Operational+ce_End,
+    ce_Extraction=in_Steel*Steel_Extraction/1000+in_Aluminum*Aluminum_Extraction/1000+in_Cement*Cement_Extraction/1000+in_Sand*Sand_Extraction/1000+in_Gravel*Gravel_Extraction/1000,
+    ce_Manufacturing=in_Steel*Steel_Manufacturing/1000+in_Aluminum*Aluminum_Manufacturing/1000+in_Cement*Cement_Manufacturing/1000+in_Sand*Sand_Manufacturing/1000+in_Gravel*Gravel_Manufacturing/1000,
+    ce_Transportation=in_Steel*Steel_Transportation/1000+in_Aluminum*Aluminum_Transportation/1000+in_Cement*Cement_Transportation/1000+in_Sand*Sand_Transportation/1000+in_Gravel*Gravel_Transportation/1000,
+    ce_emb=ce_Extraction+ce_Manufacturing+ce_Transportation
+  ) %>% 
+  dplyr::select(prod, sce, ord, ssp, city, year, ce_Operational, ce_End,ce_opt, ce_Extraction, ce_Manufacturing,ce_Transportation,ce_emb) %>% 
+  mutate(ce_total=ce_opt+ce_emb) -> sj1
+
+df3 %>% 
+  bind_rows(sj1) %>% 
+  write_csv("./power/Industry_tech/CE_xx_UtoE_big.csv")
+
+
+
+

@@ -1,6 +1,6 @@
 
 
-##7. wind direction, best direction, and energy saving
+##8 wind direction, best direction, and energy saving
 
 library(tidyverse)
 library(terra)

@@ -1,21 +1,16 @@
 
 
-##### 16. Carbon budget calculation
-
-
-
-
-
-###Carbon budget calculation
+## 5  Carbon budget under different SSP/Targets
 
 library(tidyverse)
 
-readxl::read_xlsx("./iamc_db.xlsx") %>% 
+##National
+readxl::read_xlsx("AFCC/new20205/data/iamc_db.xlsx") %>% 
   rename(ISO3=Region) %>% 
   dplyr::filter(ISO3=="World") %>% 
   rename(ssp=Scenario,nms=ISO3)-> wd1
 
-readxl::read_xlsx("./ssp_isoPOP.xlsx") %>% 
+readxl::read_xlsx("AFCC/new20205/data/ssp_isoPOP.xlsx") %>% 
   split(.$Scenario) %>% 
   map(function(x)
     tibble(
@@ -43,20 +38,20 @@ readxl::read_xlsx("./ssp_isoPOP.xlsx") %>%
   bind_rows() %>% 
   mutate(ssp=paste0("ssp",row_number())) -> df
 
-##1.5度下是全球是225Gt, 1.7度是475Gt, 2.0度是775Gt
+##National budget of 1.5=225Gt, 1.7=475Gt, 2.0=775Gt
 df %>% 
   mutate(afc15=rr*225*10^9,
          afc17=rr*475*10^9,
          afc20=rr*775*10^9) -> df1
 
-##其次，计算城市人口所能分配到比例
-readxl::read_xlsx("./AFCpopRatio_UnderSSP.xlsx") -> sp1
-readxl::read_xlsx("./WorldBank_PopData2020.xlsx") -> wb1
+##Urban population distribution
+readxl::read_xlsx("AFCC/new20205/data/AFCpopRatio_UnderSSP.xlsx") -> sp1
+readxl::read_xlsx("AFCC/new20205/data/WorldBank_PopData2020.xlsx") -> wb1
 sp1 %>% 
   left_join(wb1) %>% 
   dplyr::select(ISO3, Scenario, wb2020, everything()) %>% 
-  writexl::write_xlsx("./AFCpopCount_UnderSSP.xlsx")
-readxl::read_xlsx("./AFCpopCount_UnderSSP.xlsx") -> nt_pop
+  writexl::write_xlsx("AFCC/new20205/data/AFCpopCount_UnderSSP.xlsx")
+readxl::read_xlsx("AFCC/new20205/data/AFCpopCount_UnderSSP.xlsx") -> nt_pop
 
 nt_pop %>% 
   dplyr::select(-ISO3) %>% 
@@ -67,7 +62,7 @@ nt_pop %>%
   bind_rows() %>% 
   mutate(ssp=paste0("ssp",row_number())) %>%  ##year seq(2020,2100, by=5) 
   rename(nt_pop=value) -> nt_pop1
-read_csv("./FutData_2020_2100.csv") -> pp0
+read_csv("AFCC/new20205/data/FutData_2020_2100.csv") -> pp0
 
 pp0 %>% 
   dplyr::filter(year %in% seq(2020,2100, by=5)) %>% 
@@ -88,12 +83,12 @@ df1 %>%
          ct20=afc20*r_pop) -> df2
 
 df2 %>% 
-  write_csv("./PermittedEmissions_TotalAFC.csv")
+  write_csv("AFCC/new20205/data/PermittedEmissions_TotalAFC.csv")
 
 df2 %>% 
   dplyr::select(ssp, ct15, ct17, ct20) -> df3
 
-read_csv("./afc_nms333.csv") %>% 
+read_csv("AFCC/new20205/shp/afc_nms333.csv") %>% 
   dplyr::select(city, ISO3)-> nms
 
 pp0 %>% 
@@ -110,7 +105,7 @@ pp0 %>%
   set_names("link", "pop") %>% 
   separate(link, into = c("ssp","iso"), sep = "_") %>% 
   spread(ssp, pop) -> iso_pop
-
+  
 iso_pop %>% 
   mutate(s1=ssp1/sum(iso_pop$ssp1),
          s2=ssp2/sum(iso_pop$ssp2),
@@ -150,5 +145,7 @@ iso_pop1 %>%
   left_join(ctt15) %>% 
   left_join(ctt17) %>% 
   left_join(ctt20) %>% 
-  write_csv("./PermittedEmissions_TotalISO.csv")
+  write_csv("AFCC/new20205/data/PermittedEmissions_TotalISO.csv")
+  
+
 

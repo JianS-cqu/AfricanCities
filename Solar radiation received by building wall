@@ -1,131 +1,151 @@
 
-##6. Solar radiation received by building wall
+##7 Solar radiation received by building wall
+
+
+
+
 
 library(tidyverse)
 
-read_csv("./sun_all.csv") %>% 
+read_csv("AFCC/sunrise/sun_all.csv") %>% 
   dplyr::select(-rise, -down,-yy,-mm) -> df
 
-readxl::read_xlsx("./capitalCity.xlsx") %>% 
-  dplyr::select(1) -> ctt
 
-afc_cc <- function(acode, cita) {
-  df %>% 
-    dplyr::filter(city==acode) %>% 
-    mutate(fwj1=cita) %>% 
-    mutate(dlwd=latt*(pi/180),
-           zenith=zenith*(pi/180),
-           dem=dem/1000) %>% 
-    mutate(Gon=1367*(1+0.033*cos((360*nn2)/365))) %>% 
-    mutate(tb=0.4237-0.00821*(6-dem)^2+(0.5055+0.00595*(6.5-dem)^2)*exp(-(0.2711+0.01858*(2.5-dem)^2)/cos(zenith))) %>% 
-    mutate(td=0.271-0.294*tb) %>% 
-    mutate(cwj=(23.45*sin(360*(284+nn2)/365))*(pi/180)) %>% 
+afc_cc_fixed <- function(acode, cita) {
+  df %>%
+    dplyr::filter(city == acode) %>%
     mutate(
-      fwj = fwj1 * pi / 180,
-      beta = 90 * pi / 180,  
-      ws = acos(-tan(dlwd) * tan(cwj)),
-      A = sin(fwj) * cos(cwj),
-      B = sin(dlwd) * cos(fwj) * cos(cwj),
-      C = 0,
-      D = ws * sin(fwj) * sin(cwj) + sin(ws) * cos(fwj),
-      x = sin(dlwd) / tan(fwj),
-      y = tan(cwj) * cos(dlwd) / tan(fwj),
-      w1 = acos((x * y - sqrt(x^2 - y^2 + 1)) / (x^2 + 1)),
-      w2 = acos((x * y + sqrt(x^2 - y^2 + 1)) / (x^2 + 1)),
-      
-      a = sin(cwj)*sin(dlwd),
-      b = cos(cwj)*cos(dlwd),
-      c = 0,
-      d = abs(b),
-      k = 0.2711+0.01858*(2.5-dem)^2,
-      w_1 = acos(-a/k)+asin(c/k),
-      w_2 = abs(-acos(-a/d)+asin(c/d)),
-      w1 = ifelse(is.nan(w1), w_1, w1),
-      w2 = ifelse(is.nan(w2), w_2, w2),
-      wss1 = pmin(ws, w2),  
-      wsr1 = -pmin(ws, w1),
-      wss2=pmin(ws,w1),
-      wsr2=-pmin(ws,w2)) %>%
+      fwj1 = cita,                  
+      lat_rad = latt * pi / 180,
+      zenith_rad = zenith * pi / 180,
+      dem_km = dem / 1000,
+      nn2 = nn2,
+      Gon = 1367 * (1 + 0.033 * cos(2 * pi * nn2 / 365)),
+      decl_rad = (23.45 * sin(2 * pi * (284 + nn2) / 365)) * pi / 180,
+      tb = 0.4237 - 0.00821 * (6 - dem_km)^2 +
+        (0.5055 + 0.00595 * (6.5 - dem_km)^2) * exp(-(0.2711 + 0.01858 * (2.5 - dem_km)^2) / pmax(cos(zenith_rad), 1e-8)),
+      td = 0.271 - 0.294 * tb
+    ) %>%
     mutate(
-      Rb1 = (C * (wss1 - wsr1) + B * (sin(wss1) - sin(wsr1)) + A * (cos(wss1) - cos(wsr1))) / (2 * D),
-      Rb2 = (C * (wss2 - wsr2) + B * (sin(wss2) - sin(wsr2)) + A * (cos(wss2) - cos(wsr2))) / (2 * D),
-      Rb3=if_else(fwj1<=0, Rb1, Rb2)
-    ) %>% 
-    dplyr::select(dd, nn2,time_hrs, zenith,Gon, tb,td, fwj1, Rb3)
-  
+      H_rad = (time_hrs - 12) * 15 * pi / 180 
+    ) %>%
+    mutate(
+      s_x = cos(decl_rad) * sin(H_rad), 
+      s_y = cos(decl_rad) * cos(H_rad) * sin(lat_rad) - sin(decl_rad) * cos(lat_rad),
+      s_z = cos(decl_rad) * cos(H_rad) * cos(lat_rad) + sin(decl_rad) * sin(lat_rad)
+    ) %>%
+    mutate(
+      gamma_f = fwj1 * pi / 180,  
+      beta = pi / 2 
+    ) %>%
+    mutate(
+      n_x = sin(beta) * sin(gamma_f),  
+      n_y = sin(beta) * cos(gamma_f), 
+      n_z = cos(beta) 
+    ) %>%
+    mutate(
+      cos_inc = s_x * n_x + s_y * n_y + s_z * n_z,
+      cos_zenith = s_z,  
+      cos_inc_pos = pmax(0, cos_inc),
+      cos_zenith_pos = pmax(cos_zenith, 1e-12),
+      Rb = if_else(cos_zenith > 0 & cos_inc > 0, cos_inc_pos / cos_zenith_pos, 0),
+      Hb = Gon * tb * cos_zenith,
+      Hd = Gon * td * cos_zenith,
+      Hdg = 0.2 * 0.5 * (Hb + Hd),
+      Ht_inst = Hb * Rb + Hd * 2/3 + Hdg
+    ) %>%
+    summarise(Ht_total = sum(pmax(Ht_inst, 0), na.rm = TRUE)) %>% 
+    pull(Ht_total)
 }
 
 
-crossing(ctt, 
+crossing(unique(df$city), 
          seq(-90, 90, by = 1)) %>% 
   set_names("acode", "cita") -> rdss
 
-
-#####################################################################
-#####################################################################
 #####################################################################
 
 usethis::edit_r_profile()
 
 
 library(parallel)
-makeCluster(9) -> cl
+makeCluster(8) -> cl
 
-
-parLapply(cl, seq(1, nrow(rdss), by = 181), function(x){
+# 20:29
+parLapply(cl, seq(1, nrow(rdss), by = 1448), function(x){
   rdss %>% 
-    slice(x:(x+180)) %>% 
-    mutate(js=map2(acode, cita, afc_cc)) %>% 
-    write_rds(paste0("AFCC/ztemp/x_", x, ".rds"))
+    slice(x:(x+1447)) %>% 
+    mutate(js=map2(acode, cita, afc_cc_fixed)) %>% 
+    write_rds(paste0("AFCC/new20205/ztemp/s_", x, ".rds"))
 }
 )
 
 
-lapply(fs::dir_ls("AFCC/ztemp"), function(x){
+lapply(fs::dir_ls("AFCC/new20205/ztemp"), function(x){
   read_rds(x)
 }) %>% 
   bind_rows() %>% 
-  unnest(js) -> df
-
-df %>% 
-  dplyr::filter(Rb3>-2) %>%
-  dplyr::filter(Rb3<2) %>%
-  filter(!(fwj1 < -50 & Rb3 > 0.5)) %>% 
-  filter(!(fwj1 > 50 & Rb3 > 0.5)) -> df1
-
-df1 %>% 
-  mutate(
-    Rb4=Rb3+abs(min(df1$Rb3)*1.00001),
-    Hb=Gon*tb*cos(zenith),
-    Hd=Gon*td*cos(zenith),
-    Hdg=0.2*0.5*(Hb+Hd),
-    Ht=Hb*Rb4+Hd*2/3+Hdg
-  ) -> df2
-
-df2 %>% write_csv("./capCity_solar.csv")
-
-df2 %>% 
-  unite("link", acode, cita) %>% 
-  dplyr::select(link, Ht) %>% 
-  split(.$link) %>% 
-  map(function(x)
-    tibble(dplyr::select(x, link) %>% unique(),
-           dplyr::select(x, Ht) %>% colSums()
-    )
-  ) %>% 
+  unnest(js) %>% 
+  rename(Ht=js) %>% 
+  split(.$acode) %>% 
+  map(function(x) 
+    x %>% mutate(mm=min(x$Ht))) %>% 
   bind_rows() %>% 
-  set_names("link", "ht") %>% 
-  separate(link, into = c("city","cita"), sep = "_") %>% 
-  mutate(city=as.numeric(city)) %>% 
-  mutate(cita=as.numeric(cita)) -> df3
+  mutate(rr=(Ht-mm)/Ht) %>% 
+  write_csv("AFCC/new20205/data/sun_Ht0.csv")
 
-df3 %>% 
-  mutate(city=as.character(city)) %>% 
-  ggplot(aes(x=cita, y=ht, group=city, color=city))+
-  geom_line()+
-  theme(legend.position = "")
 
-df3 %>% 
-  write_csv("./cCity_SolarByCita.csv")
+
+library(tidyverse)
+
+read_csv("AFCC/new20205/data/sun_Ht0.csv") %>% 
+  mutate(rr=if_else(rr==0,0.000000001,rr)) -> dfn
+
+js_solar <- function(ccode) {
+  read_csv(paste0("AFCC/new20205/rstt/ac_",ccode,"/z_",ccode,".csv")) %>% 
+    mutate(acode=ccode) %>% 
+    dplyr::select(acode, cita=cita111, area=area_m2) %>% 
+    mutate(cita=round(cita, digits = 0))-> btv
+  dfn %>% 
+    dplyr::filter(acode==ccode) %>% 
+    dplyr::select(cita, rr) -> jpp
+  btv %>% 
+    left_join(jpp) %>% 
+    mutate(part1 = area*0.2,
+           part2 = area - part1) %>% 
+    mutate(js_part1= (1-rr)* part1) %>% 
+    mutate(total1=(js_part1+part2)) -> lgy3
+  (sum(lgy3$total1)/sum(lgy3$area)) -> rd_low
+  btv %>% 
+    left_join(jpp) %>% 
+    mutate(part1 = area*0.4,
+           part2 = area - part1) %>% 
+    mutate(js_part1= (1-rr)* part1) %>% 
+    mutate(total1=(js_part1+part2)) -> lgy6
+  (sum(lgy6$total1)/sum(lgy6$area)) -> rd_high
+  
+  tibble(rd_low, rd_high) %>% 
+    mutate(city=ccode) %>% 
+    write_csv(paste0("AFCC/new20205/ztmp_sun/ss_",ccode,".csv"))
+  
+}
+
+
+read_csv("AFCC/new20205/shp/afc_nms333.csv") %>% 
+  dplyr::select(ccode=city) %>% 
+  mutate(js=map(ccode, js_solar)) -> df
+
+
+lapply(fs::dir_ls("AFCC/new20205/ztmp_sun/"), function(x){
+  read_csv(x)
+}) %>% 
+  bind_rows() -> df1
+
+read_csv("AFCC/new20205/shp/afc_nms333.csv") %>% 
+  dplyr::select(city, ISO3) %>% 
+  left_join(df1) %>% 
+  writexl::write_xlsx("AFCC/new20205/data/solar_Reduction.xlsx")
+
+
 
 

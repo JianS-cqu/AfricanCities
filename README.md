@@ -18,4 +18,4 @@ The code consists of the following scripts:
 17. Sensitivity
 
 
-##For further enquiries please contact the email: sunjian143687@163.com
+##For further enquiries please contact the email: jian.s@cqu.edu.cn; CS-JIAN.SUN@ntu.edu.sg

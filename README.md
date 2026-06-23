@@ -4,12 +4,13 @@ The code consists of the following scripts:
 3. Embodied carbon emissions
 4. Operational carbon emissions
 5. Carbon budget calculation
-6. Solar radiation received by building wall
-7. Wind direction, best direction, and energy saving
-8. LEN calculation
-9. MRC calcultion
-10. ITU calculation
-11. OEC calculation
+6. Building azimuth or orientation
+7. Solar radiation received by building wall
+8. Wind direction, best direction, and energy saving
+9. LEN calculation
+10. MRC calcultion
+11. ITU calculation
+12. OEC calculation
 13. EST calculation
 14. RSP calculation
 15. Sensitivity

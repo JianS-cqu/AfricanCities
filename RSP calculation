@@ -2,15 +2,23 @@
 ####15 RSP calculation
 
 
+
+
+
+#Low-efficiency PV (115 W/m2): ~0.5 GJ/m2/yr
+#High-efficiency PV (185 W/m2): ~0.8 GJ/m2/yr
+#Details in manuscript.
+
+
 library(tidyverse)
 library(collapse)
 
 
-read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+read_csv("AFCC/new20205/data/opt_EnergyConsumption_perArea.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, eng_area) %>% 
   rename(eng_e=e, eng_f=f) -> eng
-read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+read_csv("AFCC/new20205/data/opt_electricFactor_tCO2GJ.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, e_fac) %>% 
   rename(fat_ele=ele, fat_noe=noe) -> fat
@@ -22,8 +30,7 @@ eng %>%
   dplyr::select(-sce, -ord) %>% 
   unite("link", ISO, year, prod) -> fff
 
-##准备建筑面积
-read_csv("./building/baseline/Bs_tm_EtoU.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/Bs_tm_EtoU.csv") %>% 
   dplyr::select(sce, ord, ssp, city, year, ms, prod) -> pt00
 pt00 %>% 
   mutate(hhh=case_when(
@@ -35,7 +42,7 @@ pt00 %>%
   )) %>% 
   mutate(bs=ms/hhh) %>% 
   dplyr::select(-ms, -hhh) -> df
-read_csv("./afc_nms333.csv") %>% 
+read_csv("AFCC/new20205/shp/afc_nms333.csv") %>% 
   dplyr::select(city, ISO=ISO3) -> nms
 df %>% 
   left_join(nms) %>% 
@@ -43,7 +50,7 @@ df %>%
   unite("link", ISO, year1, prod1) %>% 
   left_join(fff) -> df1
 
-##pv面积
+
 df %>% 
   dplyr::select(ssp, city, year, prod, bs) %>% 
   dplyr::filter(year==2050) %>% 
@@ -143,13 +150,13 @@ fsummarise(
 sj8 %>% 
   left_join(lzz1) %>% 
   mutate(high_rr=high_GJ/bau_GJ,
-         low_rr=low_GJ/bau_GJ) -> sj9 #占比
+         low_rr=low_GJ/bau_GJ) -> sj9
 
 sj9 %>% 
   mutate(high_rr=if_else(high_rr>0.5, 0.5, high_rr),
-         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>%  ##不超过70%
+         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>% 
   mutate(rest_high=1-high_rr,
-         rest_low=1-low_rr) %>%  #剩余碳排放
+         rest_low=1-low_rr) %>% 
   dplyr::select(link,ssp, city, year,rest_high, rest_low) -> xs1
 
 dt00 %>% 
@@ -160,19 +167,18 @@ dt00 %>%
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_high+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_tm_EtoU_high.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_EtoU_high.csv")
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_low+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_tm_EtoU_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_EtoU_low.csv")
 
-##xx_EtoU
-##准备系数
-read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+
+read_csv("AFCC/new20205/data/opt_EnergyConsumption_perArea.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, eng_area) %>% 
   rename(eng_e=e, eng_f=f) -> eng
-read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+read_csv("AFCC/new20205/data/opt_electricFactor_tCO2GJ.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, e_fac) %>% 
   rename(fat_ele=ele, fat_noe=noe) -> fat
@@ -184,8 +190,8 @@ eng %>%
   dplyr::select(-sce, -ord) %>% 
   unite("link", ISO, year, prod) -> fff
 
-##准备建筑面积
-read_csv("./building/baseline/Bs_xx_EtoU.csv") %>% 
+
+read_csv("AFCC/new20205/data/building/baseline/Bs_xx_EtoU.csv") %>% 
   dplyr::select(sce, ord, ssp, city, year, ms, prod) -> pt00
 pt00 %>% 
   mutate(hhh=case_when(
@@ -197,7 +203,7 @@ pt00 %>%
   )) %>% 
   mutate(bs=ms/hhh) %>% 
   dplyr::select(-ms, -hhh) -> df
-read_csv("./afc_nms333.csv") %>% 
+read_csv("AFCC/new20205/shp/afc_nms333.csv") %>% 
   dplyr::select(city, ISO=ISO3) -> nms
 df %>% 
   left_join(nms) %>% 
@@ -205,7 +211,7 @@ df %>%
   unite("link", ISO, year1, prod1) %>% 
   left_join(fff) -> df1
 
-##pv面积
+
 df %>% 
   dplyr::select(ssp, city, year, prod, bs) %>% 
   dplyr::filter(year==2050) %>% 
@@ -305,13 +311,13 @@ fsummarise(
 sj8 %>% 
   left_join(lzz1) %>% 
   mutate(high_rr=high_GJ/bau_GJ,
-         low_rr=low_GJ/bau_GJ) -> sj9 #占比
+         low_rr=low_GJ/bau_GJ) -> sj9 
 
 sj9 %>% 
   mutate(high_rr=if_else(high_rr>0.5, 0.5, high_rr),
-         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>%  ##不超过70%
+         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>% 
   mutate(rest_high=1-high_rr,
-         rest_low=1-low_rr) %>%  #剩余碳排放
+         rest_low=1-low_rr) %>% 
   dplyr::select(link,ssp, city, year,rest_high, rest_low) -> xs1
 dt00 %>% 
   dplyr::select(-link) %>% 
@@ -321,20 +327,18 @@ dt00 %>%
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_high+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_xx_EtoU_high.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_EtoU_high.csv")
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_low+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_xx_EtoU_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_EtoU_low.csv")
 
 
-##tm_UtoE
-##准备系数
-read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+read_csv("AFCC/new20205/data/opt_EnergyConsumption_perArea.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, eng_area) %>% 
   rename(eng_e=e, eng_f=f) -> eng
-read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+read_csv("AFCC/new20205/data/opt_electricFactor_tCO2GJ.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, e_fac) %>% 
   rename(fat_ele=ele, fat_noe=noe) -> fat
@@ -346,8 +350,8 @@ eng %>%
   dplyr::select(-sce, -ord) %>% 
   unite("link", ISO, year, prod) -> fff
 
-##准备建筑面积
-read_csv("./building/baseline/Bs_tm_UtoE.csv") %>% 
+
+read_csv("AFCC/new20205/data/building/baseline/Bs_tm_UtoE.csv") %>% 
   dplyr::select(sce, ord, ssp, city, year, ms, prod) -> pt00
 pt00%>% 
   mutate(hhh=case_when(
@@ -359,7 +363,7 @@ pt00%>%
   )) %>% 
   mutate(bs=ms/hhh) %>% 
   dplyr::select(-ms, -hhh) -> df
-read_csv("./afc_nms333.csv") %>% 
+read_csv("AFCC/new20205/shp/afc_nms333.csv") %>% 
   dplyr::select(city, ISO=ISO3) -> nms
 df %>% 
   left_join(nms) %>% 
@@ -367,7 +371,6 @@ df %>%
   unite("link", ISO, year1, prod1) %>% 
   left_join(fff) -> df1
 
-##pv面积
 df %>% 
   dplyr::select(ssp, city, year, prod, bs) %>% 
   dplyr::filter(year==2050) %>% 
@@ -467,13 +470,13 @@ fsummarise(
 sj8 %>% 
   left_join(lzz1) %>% 
   mutate(high_rr=high_GJ/bau_GJ,
-         low_rr=low_GJ/bau_GJ) -> sj9 #占比
+         low_rr=low_GJ/bau_GJ) -> sj9
 
 sj9 %>% 
   mutate(high_rr=if_else(high_rr>0.5, 0.5, high_rr),
-         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>%  ##不超过70%
+         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>%
   mutate(rest_high=1-high_rr,
-         rest_low=1-low_rr) %>%  #剩余碳排放
+         rest_low=1-low_rr) %>% 
   dplyr::select(link,ssp, city, year,rest_high, rest_low) -> xs1
 
 dt00 %>% 
@@ -484,19 +487,18 @@ dt00 %>%
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_high+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_tm_UtoE_high.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_UtoE_high.csv")
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_low+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_tm_UtoE_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_UtoE_low.csv")
 
-##xx_UtoE
-##准备系数
-read_csv("./opt_EnergyConsumption_perArea.csv") %>% 
+
+read_csv("AFCC/new20205/data/opt_EnergyConsumption_perArea.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, eng_area) %>% 
   rename(eng_e=e, eng_f=f) -> eng
-read_csv("./opt_electricFactor_tCO2GJ.csv") %>% 
+read_csv("AFCC/new20205/data/opt_electricFactor_tCO2GJ.csv") %>% 
   unite("link", ISO, sce, ord, year, prod) %>% 
   spread(type, e_fac) %>% 
   rename(fat_ele=ele, fat_noe=noe) -> fat
@@ -508,8 +510,8 @@ eng %>%
   dplyr::select(-sce, -ord) %>% 
   unite("link", ISO, year, prod) -> fff
 
-##准备建筑面积
-read_csv("./building/baseline/Bs_xx_UtoE.csv") %>% 
+
+read_csv("AFCC/new20205/data/building/baseline/Bs_xx_UtoE.csv") %>% 
   dplyr::select(sce, ord, ssp, city, year, ms, prod) -> pt00
 pt00 %>% 
   mutate(hhh=case_when(
@@ -521,7 +523,7 @@ pt00 %>%
   )) %>% 
   mutate(bs=ms/hhh) %>% 
   dplyr::select(-ms, -hhh) -> df
-read_csv("./afc_nms333.csv") %>% 
+read_csv("AFCC/new20205/shp/afc_nms333.csv") %>% 
   dplyr::select(city, ISO=ISO3) -> nms
 df %>% 
   left_join(nms) %>% 
@@ -529,7 +531,7 @@ df %>%
   unite("link", ISO, year1, prod1) %>% 
   left_join(fff) -> df1
 
-##pv面积
+
 df %>% 
   dplyr::select(ssp, city, year, prod, bs) %>% 
   dplyr::filter(year==2050) %>% 
@@ -629,13 +631,13 @@ fsummarise(
 sj8 %>% 
   left_join(lzz1) %>% 
   mutate(high_rr=high_GJ/bau_GJ,
-         low_rr=low_GJ/bau_GJ) -> sj9 #占比
+         low_rr=low_GJ/bau_GJ) -> sj9 
 
 sj9 %>% 
   mutate(high_rr=if_else(high_rr>0.5, 0.5, high_rr),
-         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>%  ##不超过70%
+         low_rr=if_else(low_rr>0.3, 0.3, low_rr)) %>% 
   mutate(rest_high=1-high_rr,
-         rest_low=1-low_rr) %>%  #剩余碳排放
+         rest_low=1-low_rr) %>% 
   dplyr::select(link,ssp, city, year,rest_high, rest_low) -> xs1
 
 dt00 %>% 
@@ -646,24 +648,21 @@ dt00 %>%
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_high+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_xx_UtoE_high.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_UtoE_high.csv")
 df2 %>% 
   mutate(ce_Operational=bs*eng_e*fat_ele*rest_low+bs*eng_f*fat_noe) %>% 
   dplyr::select(sce, ord, ssp, city, year, prod, ce_Operational) %>% 
-  write_csv("./building/solar_pv/CE_Opt_xx_UtoE_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_UtoE_low.csv")
 
 
-
-
-#2. 做建筑的总排放
 
 library(tidyverse)
 
 ##tm_UtoE_high
-read_csv("./building/solar_pv/CE_Opt_tm_UtoE_high.csv") %>% 
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_UtoE_high.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_tm_UtoE.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_tm_UtoE.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -671,11 +670,11 @@ read_csv("./building/baseline/CE_tm_UtoE.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_tm_UtoE_high.csv")
-read_csv("./building/solar_pv/CE_Opt_tm_UtoE_low.csv") %>% 
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_tm_UtoE_high.csv")
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_UtoE_low.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_tm_UtoE.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_tm_UtoE.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -683,14 +682,14 @@ read_csv("./building/baseline/CE_tm_UtoE.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_tm_UtoE_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_tm_UtoE_low.csv")
 
 
 
-read_csv("./building/solar_pv/CE_Opt_xx_UtoE_high.csv") %>% 
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_UtoE_high.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_xx_UtoE.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_xx_UtoE.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -698,11 +697,11 @@ read_csv("./building/baseline/CE_xx_UtoE.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_xx_UtoE_high.csv")
-read_csv("./building/solar_pv/CE_Opt_xx_UtoE_low.csv") %>% 
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_xx_UtoE_high.csv")
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_UtoE_low.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_xx_UtoE.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_xx_UtoE.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -710,13 +709,13 @@ read_csv("./building/baseline/CE_xx_UtoE.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_xx_UtoE_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_xx_UtoE_low.csv")
 
 ##tm_EtoU_high
-read_csv("./building/solar_pv/CE_Opt_tm_EtoU_high.csv") %>% 
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_EtoU_high.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_tm_EtoU.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_tm_EtoU.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -724,11 +723,11 @@ read_csv("./building/baseline/CE_tm_EtoU.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_tm_EtoU_high.csv")
-read_csv("./building/solar_pv/CE_Opt_tm_EtoU_low.csv") %>% 
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_tm_EtoU_high.csv")
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_tm_EtoU_low.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_tm_EtoU.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_tm_EtoU.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -736,14 +735,14 @@ read_csv("./building/baseline/CE_tm_EtoU.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_tm_EtoU_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_tm_EtoU_low.csv")
 
 
 
-read_csv("./building/solar_pv/CE_Opt_xx_EtoU_high.csv") %>% 
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_EtoU_high.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_xx_EtoU.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_xx_EtoU.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -751,11 +750,11 @@ read_csv("./building/baseline/CE_xx_EtoU.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_xx_EtoU_high.csv")
-read_csv("./building/solar_pv/CE_Opt_xx_EtoU_low.csv") %>% 
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_xx_EtoU_high.csv")
+read_csv("AFCC/new20205/data/building/solar_pv/CE_Opt_xx_EtoU_low.csv") %>% 
   unite("link", ssp, city, year, prod) %>% 
   dplyr::select(link, ce_Operational) -> df
-read_csv("./building/baseline/CE_xx_EtoU.csv") %>% 
+read_csv("AFCC/new20205/data/building/baseline/CE_xx_EtoU.csv") %>% 
   dplyr::select(-ce_Operational, -ce_opt, -ce_total) %>% 
   mutate(ssp1=ssp, city1=city, year1=year, prod1=prod) %>% 
   unite("link", ssp1, city1, year1, prod1) %>% 
@@ -763,19 +762,17 @@ read_csv("./building/baseline/CE_xx_EtoU.csv") %>%
   dplyr::select(-link) %>% 
   mutate(ce_opt=ce_Operational,
          ce_total=ce_opt+ce_emb) %>% 
-  write_csv("./building/solar_pv/CE_xx_EtoU_low.csv")
+  write_csv("AFCC/new20205/data/building/solar_pv/CE_xx_EtoU_low.csv")
 
 
 
-
-#3. 做措施的总排放
 
 library(tidyverse)
 library(collapse)
 
-read_csv("./building/solar_pv/CE_tm_EtoU_low.csv") -> bud
-read_csv("./transportation/baseline/CE_tm_EtoU.csv") -> tra
-read_csv("./power/baseline/CE_tm_EtoU.csv") -> pwr
+read_csv("AFCC/new20205/data/building/solar_pv/CE_tm_EtoU_low.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_tm_EtoU.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_tm_EtoU.csv") -> pwr
 
 bud %>% 
   mutate(ssp1=ssp, city1=city, year1=year) %>% 
@@ -843,88 +840,12 @@ nms %>%
     afc_opt=bud_opt+tra_opt+pwr_opt,
     afc_total=bud_total+tra_total+pwr_total
   ) %>% 
-  write_csv("./Total/CE_tm_EtoU_pv_low.csv")
+  write_csv("AFCC/new20205/data/Total/CE_tm_EtoU_pv_low.csv")
 
 
-read_csv("./building/solar_pv/CE_tm_EtoU_high.csv") -> bud
-read_csv("./transportation/baseline/CE_tm_EtoU.csv") -> tra
-read_csv("./power/baseline/CE_tm_EtoU.csv") -> pwr
-
-bud %>% 
-  mutate(ssp1=ssp, city1=city, year1=year) %>% 
-  unite("link", ssp1, city1, year1) %>%
-  dplyr::select(link, sce, ord, ssp, city, year) %>% 
-  unique() -> nms
-
-bud %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> bud1 
-fsummarise(
-  fgroup_by(bud1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(bud_Extraction=ce_Extraction, 
-         bud_Manufacturing=ce_Manufacturing, 
-         bud_Transportation=ce_Transportation, 
-         bud_Operational=ce_Operational, 
-         
-         bud_emb=ce_emb, 
-         bud_opt=ce_opt, 
-         bud_total=ce_total) -> bud3
-
-tra %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> tra1 
-fsummarise(
-  fgroup_by(tra1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(tra_Extraction=ce_Extraction, 
-         tra_Manufacturing=ce_Manufacturing, 
-         tra_Transportation=ce_Transportation, 
-         tra_Operational=ce_Operational, 
-         
-         tra_emb=ce_emb, 
-         tra_opt=ce_opt, 
-         tra_total=ce_total) -> tra3
-
-pwr %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> pwr1 
-fsummarise(
-  fgroup_by(pwr1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(pwr_Extraction=ce_Extraction, 
-         pwr_Manufacturing=ce_Manufacturing, 
-         pwr_Transportation=ce_Transportation, 
-         pwr_Operational=ce_Operational, 
-         
-         pwr_emb=ce_emb, 
-         pwr_opt=ce_opt, 
-         pwr_total=ce_total) -> pwr3
-
-nms %>% 
-  left_join(bud3) %>% 
-  left_join(tra3) %>% 
-  left_join(pwr3) %>% 
-  dplyr::select(-link) %>% 
-  mutate(
-    afc_Extraction=bud_Extraction+tra_Extraction+pwr_Extraction,
-    afc_Manufacturing=bud_Manufacturing+tra_Manufacturing+pwr_Manufacturing,
-    afc_Transportation=bud_Transportation+tra_Transportation+pwr_Transportation,
-    afc_Operational=bud_Operational+tra_Operational+pwr_Operational,
-    
-    afc_emb=bud_emb+tra_emb+pwr_emb,
-    afc_opt=bud_opt+tra_opt+pwr_opt,
-    afc_total=bud_total+tra_total+pwr_total
-  ) %>% 
-  write_csv("./Total/CE_tm_EtoU_pv_high.csv")
-
-
-
-
-
-read_csv("./building/solar_pv/CE_xx_EtoU_low.csv") -> bud
-read_csv("./transportation/baseline/CE_xx_EtoU.csv") -> tra
-read_csv("./power/baseline/CE_xx_EtoU.csv") -> pwr
+read_csv("AFCC/new20205/data/building/solar_pv/CE_tm_EtoU_high.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_tm_EtoU.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_tm_EtoU.csv") -> pwr
 
 bud %>% 
   mutate(ssp1=ssp, city1=city, year1=year) %>% 
@@ -992,88 +913,15 @@ nms %>%
     afc_opt=bud_opt+tra_opt+pwr_opt,
     afc_total=bud_total+tra_total+pwr_total
   ) %>% 
-  write_csv("./Total/CE_xx_EtoU_pv_low.csv")
-
-
-read_csv("./building/solar_pv/CE_xx_EtoU_high.csv") -> bud
-read_csv("./transportation/baseline/CE_xx_EtoU.csv") -> tra
-read_csv("./power/baseline/CE_xx_EtoU.csv") -> pwr
-
-bud %>% 
-  mutate(ssp1=ssp, city1=city, year1=year) %>% 
-  unite("link", ssp1, city1, year1) %>%
-  dplyr::select(link, sce, ord, ssp, city, year) %>% 
-  unique() -> nms
-
-bud %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> bud1 
-fsummarise(
-  fgroup_by(bud1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(bud_Extraction=ce_Extraction, 
-         bud_Manufacturing=ce_Manufacturing, 
-         bud_Transportation=ce_Transportation, 
-         bud_Operational=ce_Operational, 
-         
-         bud_emb=ce_emb, 
-         bud_opt=ce_opt, 
-         bud_total=ce_total) -> bud3
-
-tra %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> tra1 
-fsummarise(
-  fgroup_by(tra1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(tra_Extraction=ce_Extraction, 
-         tra_Manufacturing=ce_Manufacturing, 
-         tra_Transportation=ce_Transportation, 
-         tra_Operational=ce_Operational, 
-         
-         tra_emb=ce_emb, 
-         tra_opt=ce_opt, 
-         tra_total=ce_total) -> tra3
-
-pwr %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> pwr1 
-fsummarise(
-  fgroup_by(pwr1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(pwr_Extraction=ce_Extraction, 
-         pwr_Manufacturing=ce_Manufacturing, 
-         pwr_Transportation=ce_Transportation, 
-         pwr_Operational=ce_Operational, 
-         
-         pwr_emb=ce_emb, 
-         pwr_opt=ce_opt, 
-         pwr_total=ce_total) -> pwr3
-
-nms %>% 
-  left_join(bud3) %>% 
-  left_join(tra3) %>% 
-  left_join(pwr3) %>% 
-  dplyr::select(-link) %>% 
-  mutate(
-    afc_Extraction=bud_Extraction+tra_Extraction+pwr_Extraction,
-    afc_Manufacturing=bud_Manufacturing+tra_Manufacturing+pwr_Manufacturing,
-    afc_Transportation=bud_Transportation+tra_Transportation+pwr_Transportation,
-    afc_Operational=bud_Operational+tra_Operational+pwr_Operational,
-    
-    afc_emb=bud_emb+tra_emb+pwr_emb,
-    afc_opt=bud_opt+tra_opt+pwr_opt,
-    afc_total=bud_total+tra_total+pwr_total
-  ) %>% 
-  write_csv("./Total/CE_xx_EtoU_pv_high.csv")
+  write_csv("AFCC/new20205/data/Total/CE_tm_EtoU_pv_high.csv")
 
 
 
 
 
-read_csv("./building/solar_pv/CE_tm_UtoE_low.csv") -> bud
-read_csv("./transportation/baseline/CE_tm_UtoE.csv") -> tra
-read_csv("./power/baseline/CE_tm_UtoE.csv") -> pwr
+read_csv("AFCC/new20205/data/building/solar_pv/CE_xx_EtoU_low.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_xx_EtoU.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_xx_EtoU.csv") -> pwr
 
 bud %>% 
   mutate(ssp1=ssp, city1=city, year1=year) %>% 
@@ -1141,88 +989,12 @@ nms %>%
     afc_opt=bud_opt+tra_opt+pwr_opt,
     afc_total=bud_total+tra_total+pwr_total
   ) %>% 
-  write_csv("./Total/CE_tm_UtoE_pv_low.csv")
+  write_csv("AFCC/new20205/data/Total/CE_xx_EtoU_pv_low.csv")
 
 
-read_csv("./building/solar_pv/CE_tm_UtoE_high.csv") -> bud
-read_csv("./transportation/baseline/CE_tm_UtoE.csv") -> tra
-read_csv("./power/baseline/CE_tm_UtoE.csv") -> pwr
-
-bud %>% 
-  mutate(ssp1=ssp, city1=city, year1=year) %>% 
-  unite("link", ssp1, city1, year1) %>%
-  dplyr::select(link, sce, ord, ssp, city, year) %>% 
-  unique() -> nms
-
-bud %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> bud1 
-fsummarise(
-  fgroup_by(bud1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(bud_Extraction=ce_Extraction, 
-         bud_Manufacturing=ce_Manufacturing, 
-         bud_Transportation=ce_Transportation, 
-         bud_Operational=ce_Operational, 
-         
-         bud_emb=ce_emb, 
-         bud_opt=ce_opt, 
-         bud_total=ce_total) -> bud3
-
-tra %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> tra1 
-fsummarise(
-  fgroup_by(tra1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(tra_Extraction=ce_Extraction, 
-         tra_Manufacturing=ce_Manufacturing, 
-         tra_Transportation=ce_Transportation, 
-         tra_Operational=ce_Operational, 
-         
-         tra_emb=ce_emb, 
-         tra_opt=ce_opt, 
-         tra_total=ce_total) -> tra3
-
-pwr %>% 
-  mutate(link = paste(ssp, city, year, sep = "_")) -> pwr1 
-fsummarise(
-  fgroup_by(pwr1, link),
-  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
-) %>% 
-  rename(pwr_Extraction=ce_Extraction, 
-         pwr_Manufacturing=ce_Manufacturing, 
-         pwr_Transportation=ce_Transportation, 
-         pwr_Operational=ce_Operational, 
-         
-         pwr_emb=ce_emb, 
-         pwr_opt=ce_opt, 
-         pwr_total=ce_total) -> pwr3
-
-nms %>% 
-  left_join(bud3) %>% 
-  left_join(tra3) %>% 
-  left_join(pwr3) %>% 
-  dplyr::select(-link) %>% 
-  mutate(
-    afc_Extraction=bud_Extraction+tra_Extraction+pwr_Extraction,
-    afc_Manufacturing=bud_Manufacturing+tra_Manufacturing+pwr_Manufacturing,
-    afc_Transportation=bud_Transportation+tra_Transportation+pwr_Transportation,
-    afc_Operational=bud_Operational+tra_Operational+pwr_Operational,
-    
-    afc_emb=bud_emb+tra_emb+pwr_emb,
-    afc_opt=bud_opt+tra_opt+pwr_opt,
-    afc_total=bud_total+tra_total+pwr_total
-  ) %>% 
-  write_csv("./Total/CE_tm_UtoE_pv_high.csv")
-
-
-
-
-
-read_csv("./building/solar_pv/CE_xx_UtoE_low.csv") -> bud
-read_csv("./transportation/baseline/CE_xx_UtoE.csv") -> tra
-read_csv("./power/baseline/CE_xx_UtoE.csv") -> pwr
+read_csv("AFCC/new20205/data/building/solar_pv/CE_xx_EtoU_high.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_xx_EtoU.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_xx_EtoU.csv") -> pwr
 
 bud %>% 
   mutate(ssp1=ssp, city1=city, year1=year) %>% 
@@ -1290,12 +1062,15 @@ nms %>%
     afc_opt=bud_opt+tra_opt+pwr_opt,
     afc_total=bud_total+tra_total+pwr_total
   ) %>% 
-  write_csv("./Total/CE_xx_UtoE_pv_low.csv")
+  write_csv("AFCC/new20205/data/Total/CE_xx_EtoU_pv_high.csv")
 
 
-read_csv("./building/solar_pv/CE_xx_UtoE_high.csv") -> bud
-read_csv("./transportation/baseline/CE_xx_UtoE.csv") -> tra
-read_csv("./power/baseline/CE_xx_UtoE.csv") -> pwr
+
+
+
+read_csv("AFCC/new20205/data/building/solar_pv/CE_tm_UtoE_low.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_tm_UtoE.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_tm_UtoE.csv") -> pwr
 
 bud %>% 
   mutate(ssp1=ssp, city1=city, year1=year) %>% 
@@ -1363,7 +1138,235 @@ nms %>%
     afc_opt=bud_opt+tra_opt+pwr_opt,
     afc_total=bud_total+tra_total+pwr_total
   ) %>% 
-  write_csv("./Total/CE_xx_UtoE_pv_high.csv")
+  write_csv("AFCC/new20205/data/Total/CE_tm_UtoE_pv_low.csv")
+
+
+read_csv("AFCC/new20205/data/building/solar_pv/CE_tm_UtoE_high.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_tm_UtoE.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_tm_UtoE.csv") -> pwr
+
+bud %>% 
+  mutate(ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", ssp1, city1, year1) %>%
+  dplyr::select(link, sce, ord, ssp, city, year) %>% 
+  unique() -> nms
+
+bud %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> bud1 
+fsummarise(
+  fgroup_by(bud1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(bud_Extraction=ce_Extraction, 
+         bud_Manufacturing=ce_Manufacturing, 
+         bud_Transportation=ce_Transportation, 
+         bud_Operational=ce_Operational, 
+         
+         bud_emb=ce_emb, 
+         bud_opt=ce_opt, 
+         bud_total=ce_total) -> bud3
+
+tra %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> tra1 
+fsummarise(
+  fgroup_by(tra1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(tra_Extraction=ce_Extraction, 
+         tra_Manufacturing=ce_Manufacturing, 
+         tra_Transportation=ce_Transportation, 
+         tra_Operational=ce_Operational, 
+         
+         tra_emb=ce_emb, 
+         tra_opt=ce_opt, 
+         tra_total=ce_total) -> tra3
+
+pwr %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> pwr1 
+fsummarise(
+  fgroup_by(pwr1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(pwr_Extraction=ce_Extraction, 
+         pwr_Manufacturing=ce_Manufacturing, 
+         pwr_Transportation=ce_Transportation, 
+         pwr_Operational=ce_Operational, 
+         
+         pwr_emb=ce_emb, 
+         pwr_opt=ce_opt, 
+         pwr_total=ce_total) -> pwr3
+
+nms %>% 
+  left_join(bud3) %>% 
+  left_join(tra3) %>% 
+  left_join(pwr3) %>% 
+  dplyr::select(-link) %>% 
+  mutate(
+    afc_Extraction=bud_Extraction+tra_Extraction+pwr_Extraction,
+    afc_Manufacturing=bud_Manufacturing+tra_Manufacturing+pwr_Manufacturing,
+    afc_Transportation=bud_Transportation+tra_Transportation+pwr_Transportation,
+    afc_Operational=bud_Operational+tra_Operational+pwr_Operational,
+    
+    afc_emb=bud_emb+tra_emb+pwr_emb,
+    afc_opt=bud_opt+tra_opt+pwr_opt,
+    afc_total=bud_total+tra_total+pwr_total
+  ) %>% 
+  write_csv("AFCC/new20205/data/Total/CE_tm_UtoE_pv_high.csv")
+
+
+
+
+
+read_csv("AFCC/new20205/data/building/solar_pv/CE_xx_UtoE_low.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_xx_UtoE.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_xx_UtoE.csv") -> pwr
+
+bud %>% 
+  mutate(ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", ssp1, city1, year1) %>%
+  dplyr::select(link, sce, ord, ssp, city, year) %>% 
+  unique() -> nms
+
+bud %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> bud1 
+fsummarise(
+  fgroup_by(bud1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(bud_Extraction=ce_Extraction, 
+         bud_Manufacturing=ce_Manufacturing, 
+         bud_Transportation=ce_Transportation, 
+         bud_Operational=ce_Operational, 
+         
+         bud_emb=ce_emb, 
+         bud_opt=ce_opt, 
+         bud_total=ce_total) -> bud3
+
+tra %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> tra1 
+fsummarise(
+  fgroup_by(tra1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(tra_Extraction=ce_Extraction, 
+         tra_Manufacturing=ce_Manufacturing, 
+         tra_Transportation=ce_Transportation, 
+         tra_Operational=ce_Operational, 
+         
+         tra_emb=ce_emb, 
+         tra_opt=ce_opt, 
+         tra_total=ce_total) -> tra3
+
+pwr %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> pwr1 
+fsummarise(
+  fgroup_by(pwr1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(pwr_Extraction=ce_Extraction, 
+         pwr_Manufacturing=ce_Manufacturing, 
+         pwr_Transportation=ce_Transportation, 
+         pwr_Operational=ce_Operational, 
+         
+         pwr_emb=ce_emb, 
+         pwr_opt=ce_opt, 
+         pwr_total=ce_total) -> pwr3
+
+nms %>% 
+  left_join(bud3) %>% 
+  left_join(tra3) %>% 
+  left_join(pwr3) %>% 
+  dplyr::select(-link) %>% 
+  mutate(
+    afc_Extraction=bud_Extraction+tra_Extraction+pwr_Extraction,
+    afc_Manufacturing=bud_Manufacturing+tra_Manufacturing+pwr_Manufacturing,
+    afc_Transportation=bud_Transportation+tra_Transportation+pwr_Transportation,
+    afc_Operational=bud_Operational+tra_Operational+pwr_Operational,
+    
+    afc_emb=bud_emb+tra_emb+pwr_emb,
+    afc_opt=bud_opt+tra_opt+pwr_opt,
+    afc_total=bud_total+tra_total+pwr_total
+  ) %>% 
+  write_csv("AFCC/new20205/data/Total/CE_xx_UtoE_pv_low.csv")
+
+
+read_csv("AFCC/new20205/data/building/solar_pv/CE_xx_UtoE_high.csv") -> bud
+read_csv("AFCC/new20205/data/transportation/baseline/CE_xx_UtoE.csv") -> tra
+read_csv("AFCC/new20205/data/power/baseline/CE_xx_UtoE.csv") -> pwr
+
+bud %>% 
+  mutate(ssp1=ssp, city1=city, year1=year) %>% 
+  unite("link", ssp1, city1, year1) %>%
+  dplyr::select(link, sce, ord, ssp, city, year) %>% 
+  unique() -> nms
+
+bud %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> bud1 
+fsummarise(
+  fgroup_by(bud1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(bud_Extraction=ce_Extraction, 
+         bud_Manufacturing=ce_Manufacturing, 
+         bud_Transportation=ce_Transportation, 
+         bud_Operational=ce_Operational, 
+         
+         bud_emb=ce_emb, 
+         bud_opt=ce_opt, 
+         bud_total=ce_total) -> bud3
+
+tra %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> tra1 
+fsummarise(
+  fgroup_by(tra1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(tra_Extraction=ce_Extraction, 
+         tra_Manufacturing=ce_Manufacturing, 
+         tra_Transportation=ce_Transportation, 
+         tra_Operational=ce_Operational, 
+         
+         tra_emb=ce_emb, 
+         tra_opt=ce_opt, 
+         tra_total=ce_total) -> tra3
+
+pwr %>% 
+  mutate(link = paste(ssp, city, year, sep = "_")) -> pwr1 
+fsummarise(
+  fgroup_by(pwr1, link),
+  across(c(ce_Extraction, ce_Manufacturing, ce_Transportation, ce_Operational, ce_emb, ce_opt, ce_total), fsum)
+) %>% 
+  rename(pwr_Extraction=ce_Extraction, 
+         pwr_Manufacturing=ce_Manufacturing, 
+         pwr_Transportation=ce_Transportation, 
+         pwr_Operational=ce_Operational, 
+         
+         pwr_emb=ce_emb, 
+         pwr_opt=ce_opt, 
+         pwr_total=ce_total) -> pwr3
+
+nms %>% 
+  left_join(bud3) %>% 
+  left_join(tra3) %>% 
+  left_join(pwr3) %>% 
+  dplyr::select(-link) %>% 
+  mutate(
+    afc_Extraction=bud_Extraction+tra_Extraction+pwr_Extraction,
+    afc_Manufacturing=bud_Manufacturing+tra_Manufacturing+pwr_Manufacturing,
+    afc_Transportation=bud_Transportation+tra_Transportation+pwr_Transportation,
+    afc_Operational=bud_Operational+tra_Operational+pwr_Operational,
+    
+    afc_emb=bud_emb+tra_emb+pwr_emb,
+    afc_opt=bud_opt+tra_opt+pwr_opt,
+    afc_total=bud_total+tra_total+pwr_total
+  ) %>% 
+  write_csv("AFCC/new20205/data/Total/CE_xx_UtoE_pv_high.csv")
+
+
+
+
+
+
 
 
 
